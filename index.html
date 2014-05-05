@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Selection API Specification</title>
+    <meta charset='utf-8'>
+    <script src='http://www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
+    <script class='remove'>
+      var respecConfig = {
+          // specification status (e.g. WD, LCWD, WG-NOTE, etc.). If in doubt use ED.
+          specStatus:           "unofficial",
+          
+          // the specification's short name, as in http://www.w3.org/TR/short-name/
+          shortName:            "selection-api",
+
+          // if your specification has a subtitle that goes below the main
+          // formal title, define it here
+          //subtitle:             "",
+
+          // if you wish the publication date to be other than the last modification, set this
+          // publishDate:  "2009-08-06",
+
+          // if the specification's copyright date is a range of years, specify
+          // the start date here:
+          // copyrightStart: "2005"
+
+          // if there is a previously published draft, uncomment this and set its YYYY-MM-DD date
+          // and its maturity status
+          // previousPublishDate:  "1977-03-15",
+          // previousMaturity:  "WD",
+
+          // if there a publicly available Editor's Draft, this is the link
+          // edDraftURI:           "http://berjon.com/",
+
+          // if this is a LCWD, uncomment and set the end of its review period
+          // lcEnd: "2009-08-05",
+
+          // editors, add as many as you like
+          // only "name" is required
+          editors:  [
+              {
+                  name:       "Ryosuke Niwa"
+//              ,   url:        "http://example.org/"
+              ,   mailto:     "rniwa@apple.com"
+              ,   company:    "Apple Inc."
+              ,   companyURL: "http://www.apple.com/"
+              },
+          ],
+
+          // name of the WG
+          wg:           "Web Applications Working Group",
+
+          // URI of the public WG page
+          wgURI:        "http://example.org/really-cool-wg",
+
+          // name (without the @w3c.org) of the public mailing to which comments are due
+          wgPublicList: "public-webapps",
+
+          // URI of the patent status for this WG, for Rec-track documents
+          // !!!! IMPORTANT !!!!
+          // This is important for Rec-track documents, do not copy a patent URI from a random
+          // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
+          // Team Contact.
+          wgPatentURI:  "",
+          // !!!! IMPORTANT !!!! MAKE THE ABOVE BLINK IN YOUR HEAD
+      };
+    </script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p>
+        This document is a preliminary draft of a specification for the Selection API and selection related functionality.
+        It replaces a couple of old sections of the <a href="http://www.w3.org/TR/html5/">HTML specification</a>,
+        the selection part of the old <a href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-Range-20001113/ranges.html">DOM Range specification</a>.
+      </p>
+      <p>
+      </p>
+    </section>
+    
+    <section id='sotd'>
+      <p>Since this specification is intended to be charted by the Web Applications Working Group,
+        any feedback or discussion of this specification should be posted to
+        <a href="http://lists.w3.org/Archives/Public/public-webapps/">public-webapps mailing list</a>
+        with "[Selection API]" in the subject.</p>
+
+      <p>
+        This specification is based on the <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing API specification</a>
+        edited by Aryeh Gregor and published by the <a href="https://www.w3.org/community/editing/">W3C Editing APIs Community Group</a>.
+        Copyright &copy; 2011-2014 the Contributors to the <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing APIs Specification</a>,
+        published by the <a href="https://www.w3.org/community/editing/">W3C Editing APIs Community Group</a> under the
+        <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+      </p>
+    </section>
+
+    <section class="informative">
+      <h2>Background</h2>
+
+      <p>IE9 and Firefox 6.0a2 allow arbitrary ranges in the selection, which follows what this spec originally said.
+        However, this leads to unpleasant corner cases that authors, implementers, and spec writers all have to deal with,
+        and they don't make any real sense.  Chrome 14 dev and Opera 11.11 aggressively normalize selections,
+        like not letting them lie inside empty elements and things like that, but this is also viewed as a bad idea,
+        because it takes flexibility away from authors.</p>
+
+      <p>So I changed the spec to a made-up compromise that allows some simplification but doesn't constrain authors much.
+        See <a href="http://lists.whatwg.org/pipermail/whatwg-whatwg.org/2011-June/032072.html">discussion</a>.
+        Basically it would throw exceptions in some places to try to stop the selection from containing a range that had
+        a boundary point other than an Element or Text node, or a boundary point that didn't descend from a Document.</p>
+
+      <p>But this meant getRangeAt() had to start returning a copy, not a reference.
+        Also, it would be prone to things failing weirdly in corner cases. Perhaps most significantly, all sorts of problems
+        might arise when DOM mutations transpire, like if a boundary point's node is removed from its parent and
+        the mutation rules would place the new boundary point inside a non-Text/Element node.
+        And finally, the previously-specified behavior had the advantage of matching two major implementations,
+        while the new behavior matched no one.  So I changed it back.</p>
+
+      <div class=note>
+      <p>See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15470">bug 15470</a>. IE9, Firefox 12.0a1, Chrome 17 dev,
+        and Opera Next 12.00 alpha all make the range initially null.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Definition</h2>
+
+      <p>Every <dfn><a href="http://www.w3.org/TR/dom/#document">document</a></dfn> ([[DOM4]]) with
+        a <dfn><a href="http://www.w3.org/TR/html5/browsers.html#browsing-context">browsing context</a></dfn> ([[HTML5]])
+        has a unique <a href="#idl-def-Selection"><code>Selection</code></a> object associated with it.
+        <a>Selection</a> objects are known as <dfn>selection</dfn>s.</p>
+
+      <p class=note>This is a requirement of the HTML spec.
+        IE9 and Opera Next 12.00 alpha seem to follow it, while Firefox 12.0a1 and Chrome 17 dev seem not to.
+        See <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=717339">Mozilla bug</a>,
+        <a href="https://bugs.webkit.org/show_bug.cgi?id=76114">WebKit bug</a>.</p>
+
+      <p>This one <a>selection</a> must be shared by all the content of the <a>document</a>
+        (though not by nested <a>document</a>s), including any editing hosts in the document.
+        <dfn>Editing hosts</dfn> (<a href="http://www.w3.org/TR/html5/editing.html#editing-host">defined</a> in [[HTML5]]) that are not
+        inside a <a>document</a> cannot have a <a>selection</a></p>
+
+      <p class=issue>We need to define what it means to say editing hosts can't have selection.</p>
+
+      <p>Each <a>selection</a> can be associated with a single <dfn>range</dfn> (<a href="http://www.w3.org/TR/dom/#range">defined</a> in [[DOM4]]).
+        When there is no <a>range</a> associated with the <a>selection</a>, the </a>selection</a> is <dfn>empty</dfn>.
+        The selection must be initially <a>empty</a>.</p>
+
+      <p class=note>A <a>document</a>'s <a>selection</a> is a singleton object associated with that <a>document</a>,
+        so it gets replaced with a new object when <code>Document.open()</code> is called.
+        See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15470">bug 15470</a>.
+        IE9 and Opera Next 12.00 alpha allow the user to reset the range to null after the fact by clicking somewhere;
+        Firefox 12.0a1 and Chrome 17 dev do not.
+        We follow Gecko/WebKit, because it lessens the chance of getRangeAt(0) throwing.</p>
+
+      <p>Once a <a>selection</a> is associated with a given <a>range</a>,
+        it must continue to be associated with that same <a>range</a> until this specification requires otherwise.</p>
+
+      <p class=note>For instance, if the DOM changes in a way that changes the range's boundary points,
+        or a script modifies the boundary points of the range, the same range object must continue to be associated with the selection.
+        However, if the user changes the selection or a script calls <code>addRange()</code>,
+        the selection must be associated with a new range object, as required elsewhere in this specification.</p>
+
+      <p class=issue>This paragraph is vague.
+        It needs to be replaced by detailed conformance requirements saying exactly what to do for particular keystrokes,
+        like we have for backspace/delete/etc.</p>
+
+      <p>If the <a>selection</a>'s <a>range</a> is not null and is
+        <a href="http://www.w3.org/TR/dom/#dom-range-collapsed"><dfn id="range-collapsed">collapsed</dfn></a> ([[DOM4]]),
+        then the caret position must be at that <a>range</a>'s <a href="http://www.w3.org/TR/dom/#concept-range-bp"><dfn>boundary point</dfn></a>.
+        <a></a><dfn></dfn>
+        When the <a>selection</a> is not empty, this specification does not define the caret position;
+        user agents should follow platform conventions in deciding whether the caret is at the start of the <a>selection</a>,
+        the end of the <a>selection</a>, or somewhere else.
+
+      <p class=note>This short-changes Mac users. See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=13909">bug 13909</a>.
+
+      <p>Each <a>selection</a> has a <dfn>direction</dfn>, <dfn>forwards</dfn>, <dfn>backwards</dfn>, or <dfn>directionless</dfn>.
+        If the user creates a <a>selection</a> by indicating first one <a>boundary point</a> of the <a>range</a>
+        and then the other (such as by clicking on one point and dragging to another),
+        and the first indicated <a>boundary point</a> is <a href="http://www.w3.org/TR/dom/#concept-range-bp-after"><dfn>after</dfn></a> ([[DOM4]]) the second,
+        then the corresponding <a>selection</a> must initially be <a>backwards</a>.
+        If the first indicated <a>boundary point</a> is <a href="http://www.w3.org/TR/dom/#concept-range-bp-before"><dfn>before</dfn></a> ([[DOM4]]) the second,
+        then the corresponding <a>selection</a> must initially be <a>forwards</a>.
+        Otherwise, it must be <a>directionless</a>.</p>
+
+      <p class=issue>Should <code>addRange()</code> and <code>removeAllRanges()</code> reset direction?</p>
+
+      <p><a>Selection</a>s also have an <dfn>anchor</dfn> and a <dfn>focus</dfn>.
+        If the <a>selection</a>'s <a>range</a> is null, its <a>anchor</a> and <a>focus</a> are both null.
+        If the <a>selection</a>'s <a>range</a> is not null and its <a>direction</a> is <a>forwards</a>, its <a>anchor</a> is the <a>range</a>'s
+        <a>start</a>, and its <a>focus</a> is the <a>end</a>.
+        Otherwise, its <a>focus</a> is the <a>start</a> and its <a>anchor</a> is the <a>end</a>.</p>
+
+      <dl title="interface Selection" class="idl">
+        <dt>readonly attribute Node? anchorNode</dt>
+        <dd>
+          <p>The attribute must return the <a>anchor</a> <dfn><a href="http://www.w3.org/TR/dom/#concept-node">node</a></dfn> ([[DOM4]])
+          of the <dfn><a href="http://www.w3.org/TR/dom/#context-object">context object</a></dfn> ([[DOM4]]),
+          or <code>null</code> if the <a>anchor</a> is null.</p>
+        </dd>
+
+        <dt>readonly attribute unsigned long anchorOffset</dt>
+        <dd>
+          <p>The attribute must return the <a>anchor</a> <dfn><a href="http://www.w3.org/TR/dom/#concept-range-bp-offset">offset</a></dfn> ([[DOM4]])
+          of the <a>context object</a>, or <code>0</code> if the <a>anchor</a> is null.</p>
+        </dd>
+
+        <dt>readonly attribute Node? focusNode</dt>
+        <dd>
+          <p>The attribute must return the <a>focus</a> <a>node</a> of the <a>context object</a>,
+          or <code>null</code> if the <a>anchor</a> is null.</p>
+        </dd>
+
+        <dt>readonly attribute unsigned long focusOffset</dt>
+        <dd>
+          <p>The attribute must return the <a>focus</a> <a>offset</a> of the <a>context object</a>,
+          or <code>0</code> if the <a>focus</a> is null.</p>
+        </dd>
+
+        <dt>readonly attribute boolean isCollapsed</dt>
+        <dd>
+          <p>The attribute must return true if and only if the <span>anchor</span> and <span>focus</span> are the same (including if both are null).
+          Otherwise it must return false.</p>
+        </dd>
+
+        <dt>readonly attribute unsigned long rangeCount</dt>
+        <dd>
+          <p>The attribute must return <code>0</code> if the <a>context object</a>'s <a>range</a> is <a>empty</a>,
+          and must return <code>1</code> otherwise.</p>
+        </dd>
+
+        <dt>Range getRangeAt(unsigned long index)</dt>
+        <dd>
+          <p>The method must throw an <dfn><a href="http://www.w3.org/TR/dom/#indexsizeerror"><code>IndexSizeError</code></a></dfn> ([[DOM4]]) exception
+          if <var>index</var> is not <code>0</code>, or if the <a>context object</a> is <a>empty</a>.
+          Otherwise, it must return a reference to (not a copy of) the <a>context object</a>'s <a>range</a>.</p>
+
+          <p class=note>Thus subsequent calls of this method returns the same <a>range</a> object
+            if nothing has removed the <a>context object</a>'s range in the meantime.
+            In particular, <code>getSelection().getRangeAt(0) === getSelection().getRangeAt(0)</code> evaluates to <code>true</code>
+            if the <a>selection</a> is not <a>empty</a>.</p>
+
+          <p class=note>IE9 and Firefox 4.0 return the same object every time, as the spec says.
+            Chrome 12 dev and Opera 11.10 return a different object every time.</p>
+        </dd>
+  
+        <dt>void addRange(Range range)</dt>
+        <dd>
+          <p>The method must set the <a>context object</a>'s range to <var>range</var> by a strong reference (not by making a copy).</p>
+  
+          <p class=note>Since <a>range</a> is added by reference, subsequent calls to <code>getRangeAt(0)</code> returns the same object,
+            and any changes that a script makes to <a>range</a> after it is added must be reflected in the <a>selection</a>,
+            until something else removes or replaces the <a>context object</a>'s <a>range</a>.
+            In particular, the <a>selection</a> will contain <var>b</var> as opposed to <var>a</var> after running the following code:
+            <code>var r = document.createRange(); r.selectNode(a); getSelection().addRange(r); r.selectNode(b);</code></p>
+
+          <div class=note>
+          <p>IE9 and Firefox 4.0 store a reference, as described here.
+            Chrome 12 dev and Opera 11.10 appear to store a copy, so changes don't affect the selection.</p>
+
+          <p>Chrome 15 dev seems to ignore addRange() if there's already a range.
+            IE9 replaces the existing range.
+            Firefox 9.0a2, of course, just gives you a multi-range selection.
+            IE is likely to behave closest to Firefox, and is also more useful than silent failure, so the spec goes with that.</p>
+          </div>
+        </dd>
+  
+        <dt>void removeRange(Range range)</dt>
+        <dd>
+          <p>The method must make the <a>context object</a> <a>empty</a> by disassociating its <a>range</a>
+            if the <a>context object</a>'s <a>range</a> is <var>range</var>.
+            Otherwise, it must do nothing.</p>
+          <p class=issue>Should we set the <a>direction</a> to <a>forwards</a> like we do in <a><code>removeAllRanges</code></a>?</p>
+          <p class=issue>Should we check for object equality here or just equality of boundary points?</p>
+        </dd>
+
+        <dt>void removeAllRanges()</dt>
+        <dd>
+          <p>The method must make the <a>context object</a> <a>empty</a> by disassociating its <a>range</a>
+            if the <a>context object</a>'s <a>range</a> is <var>range</var>.
+            Otherwise, it must do nothing.</p>
+          <p class=issue>Should we check for object equality here or just equality of boundary points?</p>
+        </dd>
+
+        <dt>void collapse(Node node, unsigned long offset)</dt>
+        <dd>
+          <p>The method must throw an <a><code>IndexSizeError</code></a> exception if if <var>offset</var> is negative or longer than <var>node</var>'s
+          <dfn><a href="http://www.w3.org/TR/dom/#concept-node-length">length</a></dfn> ([[DOM4]]).
+          Otherwise, it must create a new <a>range</a>, <dfn id="range-set"><a href="http://www.w3.org/TR/dom/#concept-range-bp-set">set</a></dfn> ([[DOM4]])
+          both its <a href="#range-start">start</a> and <a href="#range-end">end</a> to (<var>node</var>, <var>offset</var>),
+          and set the <a>context object</a>'s <a>range</a> to the newly-created <a>range</a>.</p>
+        </dd>
+
+        <dt>void collapseToStart()</dt>
+        <dd>
+          <p>The method must throw <dfn><a href="http://www.w3.org/TR/dom/#invalidstateerror"><code>InvalidStateError</code></a></dfn> ([[DOM4]]) exception
+          if the <a>context object</a> is <a>empty</a>.
+          Otherwise, it must create a new <a>range</a>, <a href="#range-set">set</a> both its <a href="#range-start">start</a> and <a href="#range-end">end</a>
+          to the <a href="#range-start">start</a> of the <a>context object</a>'s <a>range</a>,
+          and then set the <a>context object</a>'s <a>range</a> to the newly-created <a>range</a>.</p>
+
+          <p class=note>For collapseToStart/End, IE9 mutates the existing range, while Firefox 9.0a2 and Chrome 15 dev replace it with a new one.
+            The spec follows the majority and replaces it with a new one, leaving the old Range object unchanged.</p>
+        </dd>
+
+        <dt>void collapseToEnd()</dt>
+        <dd>
+          <p>The method must throw <a><code>InvalidStateError</code></a> exception if the <a>context object</a> is <a>empty</a>.
+          Otherwise, it must create a new <a>range</a>, <a href="#range-set">set</a> both its <a href="#range-start">start</a> and <a href="#range-end">end</a>
+          to the <a href="#range-end">end</a> of the <a>context object</a>'s <a>range</a>,
+          and then set the <a>context object</a>'s <a>range</a> to the newly-created <a>range</a>.</p>
+        </dd>
+
+        <dt>void extend(Node node, unsigned long offset)</dt>
+        <dd>
+          <p>The method must follow these steps:</p>
+          <ol>
+            <li>If the <a>context object</a> is <a>empty</a>, throw an <a><code>InvalidStateError</code></a> exception and abort these steps.</li>
+            <li>Let <var>oldAnchor</var> and <var>oldFocus</var> be the <a>context object</a>'s <a>anchor</a> and <a>focus</a>,
+              and let <var>newFocus</var> be the <a>boundary point</a> (<var>node</var>, <var>offset</var>).</li>
+            <li>Let <var>newRange</var> be a new <a>range</a>.</li>
+            <li>If <var>node</var>'s <dfn><a href="http://www.w3.org/TR/dom/#concept-tree-root">root</a></dfn> ([[DOM4]]) is not the same as
+              the <a>context object</a>'s <a>range</a>'s <a>root</a>, <a href="#range-set">set</a> <var>newRange</var>'s
+              <a href="#range-start">start</a> and <a href="#range-end">end</a> to <var>newFocus</var>.</li>
+            <li>Otherwise, if <var>oldAnchor</var> is <a>before</a> or equal to <var>newFocus</var>,
+              <a href="#range-set">set</a> <var>newRange</var>'s <a href="#range-start">start</a> to <var>oldAnchor</var>,
+              then <a href="#range-set">set</a> its <a href="#range-end">end</a> to <var>newFocus</var>.</li>
+            <li>Otherwise, <a href="#range-set">set</a> <var>newRange</var>'s <a href="#range-start">start</a> to <var>newFocus</var>,
+              then <a href="#range-set">set</a> its <a href="#range-end">end</a> to <var>oldAnchor</var>.</li>
+            <li>Set the <a>context object</a>'s <a>range</a> to <a>newRange</a>.</li>
+            <li>If <var>newFocus</var> is <a>before</a> <var>oldAnchor</var>, set the <a>context object</a>'s <a>direction</a> to <a>backwards</a>.
+              Otherwise, set it to <a>forwards</a>.</li>
+          </ol>
+          <p class=note>Reverse-engineered circa January 2011.
+            IE doesn't support it, so I'm relying on Firefox (implemented extend() sometime before 2000) and WebKit (implemented extend() in 2007).
+            I'm mostly ignoring Opera, because gsnedders tells me its implementation isn't compatible.
+
+            Firefox 12.0a1 seems to mutate the existing range.
+            IE9 doesn't support extend(), and it's impossible to tell whether Chrome 17 dev or Opera Next 12.00 alpha mutate or replace,
+            because getRangeAt() returns a copy anyway.
+            Nevertheless, I go against Gecko here, to be consistent with collapse().</p>
+        </dd>
+
+        <dt>void selectAllChildren(Node node)</dt>
+        <dd>
+          <p>The method must follow these steps:</p>
+          <ol>
+            <li>Let <var>newRange</var> be a new <a>range</a> and <var>nodeLength</var> be the <a>length</a> of <var>node</var>.</li>
+            <li>Set <var>newRange</var>'s <a href="range-start">start</a> to (<var>node</var>, <code>0</code>).</li>
+            <li>Set <var>newRange</var>'s <a href="range-end">end</a> to (<var>node</var>, <var>nodeLength</var>).</li>
+            <li>Set the <a>context object</a>'s <a>range</a> to <var>newRange</var>.</li>
+            <li>Set the <a>context object</a>'s <a>direction</a> to <var>forwards</var>.</li>
+          </ol>
+  
+          <div class=note>
+          <p>Based mostly on Firefox 9.0a2.  It has a bug that I didn't reproduce, namely
+          that if you pass a Document as the argument, the end offset becomes 1 instead
+          of the number of children it has.  It also throws a RangeException instead of
+          DOMException, because its implementation predated their merging.
+
+          <p>IE9 behaves similarly but with glitches.  It throws "Unspecified error." if
+          the node is detached or display:none, and apparently in some random other cases
+          too.  It throws "Invalid argument." for detached comments (only!).  Finally, if
+          you pass it a comment, it seems to select the whole comment, unlike with text
+          nodes.
+
+          <p>Chrome 16 dev behaves as you'd expect given its Selection implementation.
+          It refuses to select anything that's not visible, so it's almost always wrong.
+          Opera 11.50 just does nothing in all my tests, as usual.
+
+          <p>The new range replaces any existing one, doesn't mutate it.
+          This matches IE9 and Firefox 12.0a1.  (Chrome 17 dev and Opera Next 12.00
+          alpha can't be tested, because getRangeAt() returns a copy anyway.)
+          </div>
+        </dd>
+
+        <dt>void deleteFromDocument()</dt>
+        <dd>
+          <p>The method must invoke <dfn><a href="http://dom.spec.whatwg.org/#dom-range-deletecontents"><code>deleteContents()</code></a></dfn> ([[DOM4]])
+          on the <a>context object</a>'s <a>range</a> if the <a>context object</a> is not <a>empty</a>.
+          Otherwise the method must do nothing.</p>
+  
+          <p class=note>This is the one method that actually mutates the range instead of replacing it.
+            This matches IE9 and Firefox 12.0a1. (Chrome 17 dev and Opera Next 12.00 alpha can't be tested,
+            because getRangeAt() returns a copy anyway.)</p>
+
+          <p class=issue>Should we replace the range rather than mutating it here?
+            This is currently the only Selection method that actually mutates an existing range in place.</p>
+        </dd>
+
+        <dt>stringifier DOMString ()</dt>
+        <dd>
+          See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=10583">W3C bug 10583</a>.
+          <p class=issue>Completely under-spec'ed.</p>
+        </dd>
+      </dl>
+
+      <p class=note>See also <a href="https://mxr.mozilla.org/mozilla/source/content/base/public/nsISelection.idl">nsISelection.idl</a> from Gecko.
+        This spec doesn't have everything from there yet, in particular selectionLanguageChange() and containsNode() are missing.
+        They are missing because I couldn't work out how to define them in terms of Ranges.</p>
+
+      <section class=note>
+        <p>Originally, the Selection interface was a Netscape feature.
+          The original implementation was carried on into Gecko (Firefox), and the feature was later implemented independently by other browser engines.
+          The Netscape implementation always allowed multiple ranges in a single selection, for instance so the user could select a column of a table
+          However, multi-range selections proved to be an unpleasant corner case
+          that web developers didn't know about and even Gecko developers rarely handled correctly.
+          Other browser engines never implemented the feature, and clamped selections to a single range in various incompatible fashions.</p>
+
+        <p>This specification follows non-Gecko engines in restricting selections to at most one range,
+          but the API was still originally designed for selections with arbitrary numbers of ranges.
+          This explains oddities like the coexistence of <code>removeRange()</code> and <code>removeAllRanges()</code>,
+          and a <code>getRangeAt()</code> method that takes an integer argument that must always be zero.</p>
+      </section>
+
+      <p>All of the members of the <code>Selection</code> interface are defined
+        in terms of operations on the <code><a>range</a></code> object (if any) represented by the object.
+        These operations can raise exceptions, as defined for the <a href="http://www.w3.org/TR/dom/#range"><code>Range</code></a> ([[DOM4]]) interface;
+        this can therefore result in the members of the <a href="#idl-def-Selection"><code>Selection</code></a> interface raising exceptions as well,
+        in addition to any explicitly called out below.</p>
+
+      <p class=issue>We need to ensure we can only add ranges that are in the document associated with the selection.</p>
+    </section>
+
+    <section>
+      <h2>Extensions to Other Interfaces</h2>
+
+      <p>This specification extends several interfaces to provide entry points to the
+      interfaces defined in this specification.</p>
+
+      <h3>Extensions to <code>Document</code> interface</h3>
+      <dl title="partial interface Document" class="idl">
+        <dt>Selection? getSelection()</dt>
+        <dd>
+          <p>The method must return the <a>selection</a> associated with <a>context object</a>
+            if the <a>context object</a> has an associated <a>browsing context</a>,
+            and it must return <code>null</code> otherwise.</p>
+        </dd>
+      </dl>
+      <p class=note>
+        If we create a Document object with no browsing context
+        (say via <code>document.implementation.createHTMLDocument("")</cpde> and call </code>getSelection()</code> on it),
+        IE9 seems to return a different Selection object.
+        Firefox 12.0a1 and Opera Next 12.00 alpha return the same object as for the current window.
+        Chrome 17 dev returns null.
+        See <a href="https://lists.w3.org/Archives/Public/public-webapps/2012JanMar/0159.html">discussion</a>.
+        There's no meaningful selection associated with such a document, so we follow WebKit and require returning <code>null</code>.</p>
+
+      <h3>Extensions to <code>Window</code> interface</h3>
+      <dl title="partial interface Window" class="idl">
+        <dt>Selection? getSelection()</dt>
+        <dd>
+          <p>The method must invoke and return the result of <a><code>getSelection()</code></a> on the <a>context object</a>'s
+          <a href="http://www.w3.org/TR/html5/browsers.html#dom-document-0"><code>document</code></a> ([[HTML5]]) property.</p>
+        </dd>
+      </dl>
+  
+    </section>
+
+    <section>
+      <h2>User Interactions</h2>
+
+      <p>The user agent should allow the user to change the <a>selection</a> associated with the <dfn>active document</dfn>
+        (<a href="http://www.w3.org/TR/html5/browsers.html#active-document">defined</a> in [[HTML5]]).
+        If the user makes any modification to a <a>selection</a>, the user agent must create a new <a>range</a> with suitable
+        <a href="http://www.w3.org/TR/dom/#concept-range-start"><dfn id="range-start">start</dfn></a> and 
+        <a href="http://www.w3.org/TR/dom/#concept-range-end"><dfn id="range-end">end</dfn></a> of the <a>range</a> ([[DOM4]])
+        and associate the <a>selection</a> with this new <a>range</a> (not modify the existing <a>range</a>).</p>
+
+      <p>The user agent must not make a <a>selection</a> <a>empty</a> if it was not already <a>empty</a>
+        in response to any user actions (e.g. clicking on a non-editable region).</p>
+
+      <p class=note>See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15470">bug 15470</a>.
+        IE9 and Opera Next 12.00 alpha allow the user to reset the range to null after the fact by clicking somewhere;
+        Firefox 12.0a1 and Chrome 17 dev do not.
+        I follow Gecko/WebKit, because it lessens the chance of getRangeAt(0) throwing.</p>
+
+      <p class=issue>Define <code>select</code> and <code>selectionchange</code> events.</p>
+
+    </section>
+
+    <section class='appendix'>
+      <h2>Acknowledgements</h2>
+      <p>Many thanks to</p>
+      <ul>
+        <li><p>Aryeh Gregor, who is the original author of this specification as well as <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing API specification</a>.</p></li>
+        <li><p>Contributors to the <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing API specification</a> - 
+          Ehsan Akhgari, Tab Atkins, Mathias Bynens, Tim Down, Markus Ernst, Daniel Glazman, Tali Gregor (née Fuss),
+          Stig Halvorsen, Jeff Harris, Ian Hickson, Cameron Heavon-Jones, Anne van Kesteren, Alfonso Martínez de Lizarrondo,
+          Glenn Maynard, Ms2ger, Robert O'Callahan, Julie Parent, Simon Pieters, Michael A. Puls II,
+          Rich Schwerdtfeger, Jonas Sicking, Henri Sivonen, Smylers, Hallvord R. M. Steen, Roland Steiner, Annie Sullivan,
+          timeless, Ojan Vafai, Brett Zamir, and Boris Zbarsky for their feedback, participation, or other helpful contributions</p></li>
+        <li>Robin Berjon for making our lives so much easier with his cool tool.</li>
+      </p>
+    </section>
+
+  </body>
+</html>
