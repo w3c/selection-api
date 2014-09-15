@@ -385,6 +385,28 @@
             This is currently the only Selection method that actually mutates an existing range in place.</p>
         </dd>
 
+        <dt>bool containsNode(Node node, bool allowPartialContainment)</dt>
+        <dd>
+          <p>The method must return <a><code>false</code></a> if the <a>context object</a> is <a>empty</a>
+            or if <var>node</var> is not in the same document as the <a>context object</a>.</p>
+
+          <p>Otherwise, if <var>allowPartialContainment</var> is <code>false</code>,
+          the method must return <code>true</code> if and only if
+          <a href="#range-start">start</a> of its <a>range</a> is <a>before</a> or visually equivalent to
+            the first <a>boundary point</a> in the <var>node</var>
+            <strong>and</strong> <a href="#range-end">end</a> of its <a>range</a> is <a>after</a> or visually equivalent to
+            the last <a>boundary point</a> in the <var>node</var>.</p>
+
+          <p>If <var>allowPartialContainment</var> is <code>true</code>,
+          the method must return <code>true</code> if and only if
+          <a href="#range-start">start</a> of its <a>range</a> is <a>before</a> or visually equivalent to
+            the first <a>boundary point</a> in the <var>node</var>
+            <strong>or</strong> <a href="#range-end">end</a> of its <a>range</a> is <a>after</a> or visually equivalent to
+            the last <a>boundary point</a> in the <var>node</var>.</p>
+
+          <p class=note>We need to define the visually equivalency.</p>
+        </dd>
+
         <dt>stringifier DOMString ()</dt>
         <dd>
           See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=10583">W3C bug 10583</a>.
