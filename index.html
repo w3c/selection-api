@@ -338,6 +338,24 @@
             Nevertheless, I go against Gecko here, to be consistent with collapse().</p>
         </dd>
 
+        <dt>void setBaseAndExtent(Node anchorNode, unsigned long anchorOffset, Node focusNode, unsigned long focusOffset)</dt>
+        <dd>
+          <p>The method must follow these steps:</p>
+          <ol>
+            <li>If <var>anchorOffset</var> is negative or longer than <var>anchorNode</var>'s <a>length</a>
+              or if <var>focusOffset</var> is negative or longer than <var>focusNode</var>'s <a>length</a>,
+              throw an <a><code>IndexSizeError</code></a> exception and abort these steps.</li>
+            <li>If <var>anchorNode</var>'s <a>document</a> or <var>focusNode</var>'s <a>document</a> is different from
+              the <a>context object</a>'s document, abort these steps.</li>
+            <li>Set the <a>context object</a>'s <a>anchor</a> to (<var>anchorNode</var>, <var>anchorOffset</var>)
+              and its <a>focus</a> to (<var>focusNode</var>, <var>focusOffset</var>).</li>
+            <li>Create a new <a>range</a>.</li>
+            <li>If the new <a>anchor</a> is <a>before</a> the new <a>focus</a>,
+              <a href="#range-set">set</a> the range's <a href="#range-start">start</a> to the new <a>anchor</a>
+              and its <a href="#range-end">end</a> to the new <a>focus</a>.
+              Otherwise, <a href="#range-set">set</a> them to <a>focus</a> and <a>anchor</a> respectively.</li>
+        </dd>
+
         <dt>void selectAllChildren(Node node)</dt>
         <dd>
           <p>The method must follow these steps:</p>
