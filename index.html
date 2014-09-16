@@ -506,7 +506,10 @@
         If the user makes any modification to a <a>selection</a>, the user agent must create a new <a>range</a> with suitable
         <a href="http://www.w3.org/TR/dom/#concept-range-start"><dfn id="range-start">start</dfn></a> and 
         <a href="http://www.w3.org/TR/dom/#concept-range-end"><dfn id="range-end">end</dfn></a> of the <a>range</a> ([[DOM4]])
-        and associate the <a>selection</a> with this new <a>range</a> (not modify the existing <a>range</a>).</p>
+        and associate the <a>selection</a> with this new <a>range</a> (not modify the existing <a>range</a>),
+        and set update <a>selection</a>'s <a>direction</a> to <a>forwards</a> if the <a>start</a> is <a>before</a> or equal to the <a>end</a>,
+        <a>backwards</a> if if the <a>end</a> is <a>before</a> the <a>start</a>,
+        or <a>directionless</a> if the <a>start</a> and the <a>end</a> cannot be ordered due to the platform convention.</p>
 
       <p>The user agent must not make a <a>selection</a> <a>empty</a> if it was not already <a>empty</a>
         in response to any user actions (e.g. clicking on a non-editable region).</p>
@@ -516,7 +519,25 @@
         Firefox 12.0a1 and Chrome 17 dev do not.
         I follow Gecko/WebKit, because it lessens the chance of getRangeAt(0) throwing.</p>
 
-      <p class=issue>Define <code>select</code> and <code>selectionchange</code> events.</p>
+      <section>
+        <h3><code>selectstart</code> event</h3>
+
+        <p>When the user agent is about to change (i.e. prior to changing) the <a>selection</a> in response to a user initiated action,
+          the user agent must <dfn><a href="http://www.w3.org/TR/dom/#concept-event-fire">fire</a></dfn> ([[DOM4]])
+          an event with the name <code>selectstart</code>, which bubbles and is cancelable</a>,
+          at the <a>node</a> associated with the <a>boundary point</a> of the associated <a>range</a>'s <a>start</a>.</p>
+
+        <p>If the event is canceled, the user agent must not change the <a>selection</a>.</p>
+      </section>
+
+      <section>
+        <h3><code>selectionchange</code> event</h3>
+
+        <p>When the <a>selection</a> is changed either by the user or the content script,
+          the user agent must <dfn><a href="http://www.w3.org/html/wg/drafts/html/master/webappapis.html#queue-a-task">queue a task</a></dfn> ([[HTML5]])
+          to <a>fire</a> an event with the name <code>selectionchange</code>, which does not bubble and is not cancelable</a>,
+          at the <a>document</a> associated with the <a>selection</a>.</p>
+      </section>
 
     </section>
 
