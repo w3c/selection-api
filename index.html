@@ -465,32 +465,36 @@
       <p>This specification extends several interfaces to provide entry points to the
       interfaces defined in this specification.</p>
 
-      <h3>Extensions to <code>Document</code> interface</h3>
-      <dl title="partial interface Document" class="idl">
-        <dt>Selection? getSelection()</dt>
-        <dd>
-          <p>The method must return the <a>selection</a> associated with <a>context object</a>
-            if the <a>context object</a> has an associated <a>browsing context</a>,
-            and it must return <code>null</code> otherwise.</p>
-        </dd>
-      </dl>
-      <p class=note>
-        If we create a Document object with no browsing context
-        (say via <code>document.implementation.createHTMLDocument("")</cpde> and call </code>getSelection()</code> on it),
-        IE9 seems to return a different Selection object.
-        Firefox 12.0a1 and Opera Next 12.00 alpha return the same object as for the current window.
-        Chrome 17 dev returns null.
-        See <a href="https://lists.w3.org/Archives/Public/public-webapps/2012JanMar/0159.html">discussion</a>.
-        There's no meaningful selection associated with such a document, so we follow WebKit and require returning <code>null</code>.</p>
+      <section>
+        <h3>Extensions to <code>Document</code> interface</h3>
+        <dl title="partial interface Document" class="idl">
+          <dt>Selection? getSelection()</dt>
+          <dd>
+            <p>The method must return the <a>selection</a> associated with <a>context object</a>
+              if the <a>context object</a> has an associated <a>browsing context</a>,
+              and it must return <code>null</code> otherwise.</p>
+          </dd>
+        </dl>
+        <p class=note>
+          If we create a Document object with no browsing context
+          (say via <code>document.implementation.createHTMLDocument("")</cpde> and call </code>getSelection()</code> on it),
+          IE9 seems to return a different Selection object.
+          Firefox 12.0a1 and Opera Next 12.00 alpha return the same object as for the current window.
+          Chrome 17 dev returns null.
+          See <a href="https://lists.w3.org/Archives/Public/public-webapps/2012JanMar/0159.html">discussion</a>.
+          There's no meaningful selection associated with such a document, so we follow WebKit and require returning <code>null</code>.</p>
+      </section>
 
-      <h3>Extensions to <code>Window</code> interface</h3>
-      <dl title="partial interface Window" class="idl">
-        <dt>Selection? getSelection()</dt>
-        <dd>
-          <p>The method must invoke and return the result of <a><code>getSelection()</code></a> on the <a>context object</a>'s
-          <a href="http://www.w3.org/TR/html5/browsers.html#dom-document-0"><code>document</code></a> ([[HTML5]]) property.</p>
-        </dd>
-      </dl>
+      <section>
+        <h3>Extensions to <code>Window</code> interface</h3>
+        <dl title="partial interface Window" class="idl">
+          <dt>Selection? getSelection()</dt>
+          <dd>
+            <p>The method must invoke and return the result of <a><code>getSelection()</code></a> on the <a>context object</a>'s
+            <a href="http://www.w3.org/TR/html5/browsers.html#dom-document-0"><code>document</code></a> ([[HTML5]]) property.</p>
+          </dd>
+        </dl>
+      </section>
   
     </section>
 
