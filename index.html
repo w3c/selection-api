@@ -531,12 +531,15 @@
       <section>
         <h3><code>selectstart</code> event</h3>
 
-        <p>When the user agent is about to change (i.e. prior to changing) the <a>selection</a> in response to a user initiated action,
+        <p>When the user agent is about to associate a new range <var>newRange</var> to the <a>selection</a> in response to a user initiated action,
           the user agent must <dfn><a href="http://www.w3.org/TR/dom/#concept-event-fire">fire</a></dfn> ([[DOM4]])
           an event with the name <code>selectstart</code>, which bubbles and is cancelable</a>,
-          at the <a>node</a> associated with the <a>boundary point</a> of the associated <a>range</a>'s <a>start</a>.</p>
+          at the <a>node</a> associated with the <a>boundary point</a> of <var>newRange</var>'s <a>start</a>
+          prior to changing the selection.</p>
 
         <p>If the event is canceled, the user agent must not change the <a>selection</a>.</p>
+
+        <p>The user agent must not <a>fire</a> the event when the user agent sets the <a>selection</a> <a>empty</a>.</p>
       </section>
 
       <section>
