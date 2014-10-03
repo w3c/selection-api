@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" typeof="bibo:Document " about="" property="dcterms:language" content="en">
+<head>
+    <title>Selection API Specification</title>
+    <meta charset="utf-8">
+    
+    
+  <style>/*****************************************************************
+ * ReSpec 3 CSS
+ * Robin Berjon - http://berjon.com/
+ *****************************************************************/
+
+/* --- INLINES --- */
+em.rfc2119 { 
+    text-transform:     lowercase;
+    font-variant:       small-caps;
+    font-style:         normal;
+    color:              #900;
+}
+
+h1 acronym, h2 acronym, h3 acronym, h4 acronym, h5 acronym, h6 acronym, a acronym,
+h1 abbr, h2 abbr, h3 abbr, h4 abbr, h5 abbr, h6 abbr, a abbr {
+    border: none;
+}
+
+dfn {
+    font-weight:    bold;
+}
+
+a.internalDFN {
+    color:  inherit;
+    border-bottom:  1px solid #99c;
+    text-decoration:    none;
+}
+
+a.externalDFN {
+    color:  inherit;
+    border-bottom:  1px dotted #ccc;
+    text-decoration:    none;
+}
+
+a.bibref {
+    text-decoration:    none;
+}
+
+cite .bibref {
+    font-style: normal;
+}
+
+code {
+    color:  #C83500;
+}
+
+/* --- TOC --- */
+.toc a, .tof a {
+    text-decoration:    none;
+}
+
+a .secno, a .figno {
+    color:  #000;
+}
+
+ul.tof, ol.tof {
+    list-style: none outside none;
+}
+
+.caption {
+    margin-top: 0.5em;
+    font-style:   italic;
+}
+
+/* --- TABLE --- */
+table.simple {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    border-bottom:  3px solid #005a9c;
+}
+
+.simple th {
+    background: #005a9c;
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+}
+
+.simple th[scope="row"] {
+    background: inherit;
+    color:  inherit;
+    border-top: 1px solid #ddd;
+}
+
+.simple td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+}
+
+.simple tr:nth-child(even) {
+    background: #f0f6ff;
+}
+
+/* --- DL --- */
+.section dd > p:first-child {
+    margin-top: 0;
+}
+
+.section dd > p:last-child {
+    margin-bottom: 0;
+}
+
+.section dd {
+    margin-bottom:  1em;
+}
+
+.section dl.attrs dd, .section dl.eldef dd {
+    margin-bottom:  0;
+}
+
+@media print {
+    .removeOnSave {
+        display: none;
+    }
+}
+</style><style>/* --- ISSUES/NOTES --- */
+div.issue-title, div.note-title {
+    padding-right:  1em;
+    min-width: 7.5em;
+    color: #b9ab2d;
+}
+div.issue-title { color: #e05252; }
+div.note-title { color: #2b2; }
+div.issue-title span, div.note-title span {
+    text-transform: uppercase;
+}
+div.note, div.issue {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+.note > p:first-child, .issue > p:first-child { margin-top: 0 }
+.issue, .note {
+    padding: .5em;
+    border-left-width: .5em;
+    border-left-style: solid;
+}
+div.issue, div.note {
+    padding: 1em 1.2em 0.5em;
+    margin: 1em 0;
+    position: relative;
+    clear: both;
+}
+span.note, span.issue { padding: .1em .5em .15em; }
+
+.issue {
+    border-color: #e05252;
+    background: #fbe9e9;
+}
+.note {
+    border-color: #52e052;
+    background: #e9fbe9;
+}
+
+
+</style><style>/* --- WEB IDL --- */
+pre.idl {
+    border-top: 1px solid #90b8de;
+    border-bottom: 1px solid #90b8de;
+    padding:    1em;
+    line-height:    120%;
+}
+
+pre.idl::before {
+    content:    "WebIDL";
+    display:    block;
+    width:      150px;
+    background: #90b8de;
+    color:  #fff;
+    font-family:    initial;
+    padding:    3px;
+    font-weight:    bold;
+    margin: -1em 0 1em -1em;
+}
+
+.idlType {
+    color:  #ff4500;
+    font-weight:    bold;
+    text-decoration:    none;
+}
+
+/*.idlModule*/
+/*.idlModuleID*/
+/*.idlInterface*/
+.idlInterfaceID, .idlDictionaryID, .idlCallbackID, .idlEnumID {
+    font-weight:    bold;
+    color:  #005a9c;
+}
+a.idlEnumItem {
+    color:  #000;
+    border-bottom:  1px dotted #ccc;
+    text-decoration: none;
+}
+
+.idlSuperclass {
+    font-style: italic;
+    color:  #005a9c;
+}
+
+/*.idlAttribute*/
+.idlAttrType, .idlFieldType, .idlMemberType {
+    color:  #005a9c;
+}
+.idlAttrName, .idlFieldName, .idlMemberName {
+    color:  #ff4500;
+}
+.idlAttrName a, .idlFieldName a, .idlMemberName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlMethod*/
+.idlMethType, .idlCallbackType {
+    color:  #005a9c;
+}
+.idlMethName {
+    color:  #ff4500;
+}
+.idlMethName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlCtor*/
+.idlCtorName {
+    color:  #ff4500;
+}
+.idlCtorName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlParam*/
+.idlParamType {
+    color:  #005a9c;
+}
+.idlParamName, .idlDefaultValue {
+    font-style: italic;
+}
+
+.extAttr {
+    color:  #666;
+}
+
+/*.idlSectionComment*/
+.idlSectionComment {
+    color: gray;
+}
+
+/*.idlConst*/
+.idlConstType {
+    color:  #005a9c;
+}
+.idlConstName {
+    color:  #ff4500;
+}
+.idlConstName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlException*/
+.idlExceptionID {
+    font-weight:    bold;
+    color:  #c00;
+}
+
+.idlTypedefID, .idlTypedefType {
+    color:  #005a9c;
+}
+
+.idlRaises, .idlRaises a.idlType, .idlRaises a.idlType code, .excName a, .excName a code {
+    color:  #c00;
+    font-weight:    normal;
+}
+
+.excName a {
+    font-family:    monospace;
+}
+
+.idlRaises a.idlType, .excName a.idlType {
+    border-bottom:  1px dotted #c00;
+}
+
+.excGetSetTrue, .excGetSetFalse, .prmNullTrue, .prmNullFalse, .prmOptTrue, .prmOptFalse {
+    width:  45px;
+    text-align: center;
+}
+.excGetSetTrue, .prmNullTrue, .prmOptTrue { color:  #0c0; }
+.excGetSetFalse, .prmNullFalse, .prmOptFalse { color:  #c00; }
+
+.idlImplements a {
+    font-weight:    bold;
+}
+
+dl.attributes, dl.methods, dl.constants, dl.constructors, dl.fields, dl.dictionary-members {
+    margin-left:    2em;
+}
+
+.attributes dt, .methods dt, .constants dt, .constructors dt, .fields dt, .dictionary-members dt {
+    font-weight:    normal;
+}
+
+.attributes dt code, .methods dt code, .constants dt code, .constructors dt code, .fields dt code, .dictionary-members dt code {
+    font-weight:    bold;
+    color:  #000;
+    font-family:    monospace;
+}
+
+.attributes dt code, .fields dt code, .dictionary-members dt code {
+    background:  #ffffd2;
+}
+
+.attributes dt .idlAttrType code, .fields dt .idlFieldType code, .dictionary-members dt .idlMemberType code {
+    color:  #005a9c;
+    background:  transparent;
+    font-family:    inherit;
+    font-weight:    normal;
+    font-style: italic;
+}
+
+.methods dt code {
+    background:  #d9e6f8;
+}
+
+.constants dt code {
+    background:  #ddffd2;
+}
+
+.constructors dt code {
+    background:  #cfc;
+}
+
+.attributes dd, .methods dd, .constants dd, .constructors dd, .fields dd, .dictionary-members dd {
+    margin-bottom:  1em;
+}
+
+table.parameters, table.exceptions {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    margin: 0.5em 0;
+    width:  100%;
+}
+table.parameters { border-bottom:  1px solid #90b8de; }
+table.exceptions { border-bottom:  1px solid #deb890; }
+
+.parameters th, .exceptions th {
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+    font-family:    initial;
+    font-weight:    normal;
+    text-shadow:    #666 1px 1px 0;
+}
+.parameters th { background: #90b8de; }
+.exceptions th { background: #deb890; }
+
+.parameters td, .exceptions td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.parameters tr:first-child td, .exceptions tr:first-child td {
+    border-top: none;
+}
+
+.parameters td.prmName, .exceptions td.excName, .exceptions td.excCodeName {
+    width:  100px;
+}
+
+.parameters td.prmType {
+    width:  120px;
+}
+
+table.exceptions table {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    width:  100%;
+}
+</style><link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/W3C-WD"><!--[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]--></head>
+  <body data-feedly-mini="yes" class="h-entry" role="document" id="respecDocument"><div class="head" role="contentinfo" id="respecHeader">
+  <p>
+      
+        
+            <a href="http://www.w3.org/"><img width="72" height="48" src="https://www.w3.org/Icons/w3c_home" alt="W3C"></a>
+        
+      
+  </p>
+  <h1 class="title p-name" id="title" property="dcterms:title">Selection API Specification</h1>
+  
+  <h2 property="dcterms:issued" datatype="xsd:dateTime" content="2014-10-07T04:00:00.000Z" id="w3c-first-public-working-draft-07-october-2014"><abbr title="World Wide Web Consortium">W3C</abbr> First Public Working Draft <time class="dt-published" datetime="2014-10-07">07 October 2014</time></h2>
+  <dl>
+    
+      <dt>This version:</dt>
+      <dd><a class="u-url" href="http://www.w3.org/TR/2014/WD-selection-api-20141007/">http://www.w3.org/TR/2014/WD-selection-api-20141007/</a></dd>
+      <dt>Latest published version:</dt>
+      <dd><a href="http://www.w3.org/TR/selection-api/">http://www.w3.org/TR/selection-api/</a></dd>
+    
+    
+      <dt>Latest editor's draft:</dt>
+      <dd><a href="http://w3c.github.io/selection-api/">http://w3c.github.io/selection-api/</a></dd>
+    
+    
+    
+    
+    
+    
+    
+    <dt>Editor:</dt>
+    <dd class="p-author h-card vcard" rel="bibo:editor" inlist=""><span typeof="foaf:Person"><span property="foaf:name" class="p-name fn">Ryosuke Niwa</span>, <a rel="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://www.apple.com/">Apple Inc.</a>, <span class="ed_mailto"><a class="u-email email" rel="foaf:mbox" href="mailto:rniwa@apple.com">rniwa@apple.com</a></span></span>
+</dd>
+
+    
+    
+      
+        
+          <dt>Participate:</dt>
+          
+             
+                
+                  <dd>
+                    <a href="https://github.com/w3c/selection-api">
+                      We are on Github.
+                    </a>
+                  </dd>
+                
+             
+                
+                  <dd>
+                    <a href="https://github.com/w3c/selection-api/issues">
+                      File a bug.
+                    </a>
+                  </dd>
+                
+             
+                
+                  <dd>
+                    <a href="https://github.com/w3c/selection-api/commits/gh-pages">
+                      Commit history.
+                    </a>
+                  </dd>
+                
+             
+                
+                  <dd>
+                    <a href="http://lists.w3.org/Archives/Public/public-webapps/">
+                      Mailing list.
+                    </a>
+                  </dd>
+                
+             
+          
+        
+      
+    
+  </dl>
+  
+  
+  
+  
+    
+      <p class="copyright">
+        <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> ©
+        2014
+        
+        <a href="http://www.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr></a><sup>®</sup>
+        (<a href="http://www.csail.mit.edu/"><abbr title="Massachusetts Institute of Technology">MIT</abbr></a>,
+        <a href="http://www.ercim.eu/"><abbr title="European Research Consortium for Informatics and Mathematics">ERCIM</abbr></a>,
+        <a href="http://www.keio.ac.jp/">Keio</a>, <a href="http://ev.buaa.edu.cn/">Beihang</a>), 
+        
+        All Rights Reserved.
+        
+        <abbr title="World Wide Web Consortium">W3C</abbr> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>,
+        <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and
+        
+          <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a>
+        
+        rules apply.
+      </p>
+    
+  
+  <hr>
+</div>
+    <section id="abstract" class="introductory" property="dcterms:abstract" datatype="" typeof="bibo:Chapter" resource="#abstract" rel="bibo:Chapter"><h2 role="heading" id="h2_abstract">Abstract</h2>
+      <p>
+        This document is a preliminary draft of a specification for the Selection API and selection related functionality.
+        It replaces a couple of old sections of the <a href="http://www.w3.org/TR/html5/">HTML specification</a>,
+        the selection part of the old <a href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-Range-20001113/ranges.html">DOM Range specification</a>.
+      </p>
+      <p>
+      </p>
+    </section><section id="sotd" class="introductory" typeof="bibo:Chapter" resource="#sotd" rel="bibo:Chapter"><h2 role="heading" id="h2_sotd">Status of This Document</h2>
+  
+    
+      
+        <p>
+          <em>This section describes the status of this document at the time of its publication.
+          Other documents may supersede this document. A list of current <abbr title="World Wide Web Consortium">W3C</abbr> publications and the
+          latest revision of this technical report can be found in the <a href="http://www.w3.org/TR/"><abbr title="World Wide Web Consortium">W3C</abbr> technical reports index</a> at
+          http://www.w3.org/TR/.</em>
+        </p>
+        
+      <p>Since this specification is intended to be charted by the Web Applications Working Group,
+        any feedback or discussion of this specification should be posted to
+        <a href="http://lists.w3.org/Archives/Public/public-webapps/">public-webapps mailing list</a>
+        with "[Selection API]" in the subject.</p>
+
+      <p>
+        This specification is based on the <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing API specification</a>
+        edited by Aryeh Gregor and published by the <a href="https://www.w3.org/community/editing/"><abbr title="World Wide Web Consortium">W3C</abbr> Editing APIs Community Group</a>.
+        Copyright © 2011-2014 the Contributors to the <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing APIs Specification</a>,
+        published by the <a href="https://www.w3.org/community/editing/"><abbr title="World Wide Web Consortium">W3C</abbr> Editing APIs Community Group</a> under the
+        <a href="https://www.w3.org/community/about/agreements/cla/"><abbr title="World Wide Web Consortium">W3C</abbr> Community Contributor License Agreement (CLA)</a>.
+      </p>
+    
+        <p>
+          This document was published by the <a href="http://www.w3.org/2008/webapps/">Web Applications Working Group</a> as a First Public Working Draft.
+          
+            This document is intended to become a <abbr title="World Wide Web Consortium">W3C</abbr> Recommendation.
+          
+          
+            If you wish to make comments regarding this document, please send them to 
+            <a href="mailto:public-webapps@w3.org">public-webapps@w3.org</a> 
+            (<a href="mailto:public-webapps-request@w3.org?subject=subscribe">subscribe</a>,
+            <a href="http://lists.w3.org/Archives/Public/public-webapps/">archives</a>).
+          
+          
+          
+          
+            All comments are welcome.
+          
+        </p>
+        
+        
+          <p>
+            Publication as a First Public Working Draft does not imply endorsement by the <abbr title="World Wide Web Consortium">W3C</abbr>
+            Membership. This is a draft document and may be updated, replaced or obsoleted by other
+            documents at any time. It is inappropriate to cite this document as other than work in
+            progress.
+          </p>
+        
+        
+        
+        <p>
+          
+            This document was produced by a group operating under the 
+            <a id="sotd_patent" about="" rel="w3p:patentRules" href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <abbr title="World Wide Web Consortium">W3C</abbr> Patent
+            Policy</a>.
+          
+          
+          
+            
+              <abbr title="World Wide Web Consortium">W3C</abbr> maintains a <a href="http://www.w3.org/2004/01/pp-impl/42538/status" rel="disclosure">public list of any patent
+              disclosures</a> 
+            
+            made in connection with the deliverables of the group; that page also includes
+            instructions for disclosing a patent. An individual who has actual knowledge of a patent
+            which the individual believes contains
+            <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential
+            Claim(s)</a> must disclose the information in accordance with
+            <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section
+            6 of the <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>.
+          
+          
+        </p>
+        
+          <p>This document is governed by the <a id="w3c_process_revision" href="http://www.w3.org/2014/Process-20140801/">1 August 2014 <abbr title="World Wide Web Consortium">W3C</abbr> Process Document</a>.
+          </p>
+        
+        
+      
+    
+  
+</section><section id="toc"><h2 class="introductory" role="heading" id="h2_toc">Table of Contents</h2><ul class="toc" role="directory" id="respecContents"><li class="tocline"><a href="#background" class="tocxref"><span class="secno">1. </span>Background</a></li><li class="tocline"><a href="#definition" class="tocxref"><span class="secno">2. </span>Definition</a><ul class="toc"><li class="tocline"><a href="#attributes" class="tocxref"><span class="secno">2.1 </span>Attributes</a></li><li class="tocline"><a href="#methods" class="tocxref"><span class="secno">2.2 </span>Methods</a></li></ul></li><li class="tocline"><a href="#extensions-to-other-interfaces" class="tocxref"><span class="secno">3. </span>Extensions to Other Interfaces</a><ul class="toc"><li class="tocline"><a href="#extensions-to-document-interface" class="tocxref"><span class="secno">3.1 </span>Extensions to <code>Document</code> interface</a><ul class="toc"><li class="tocline"><a href="#methods-1" class="tocxref"><span class="secno">3.1.1 </span>Methods</a></li></ul></li><li class="tocline"><a href="#extensions-to-window-interface" class="tocxref"><span class="secno">3.2 </span>Extensions to <code>Window</code> interface</a><ul class="toc"><li class="tocline"><a href="#methods-2" class="tocxref"><span class="secno">3.2.1 </span>Methods</a></li></ul></li></ul></li><li class="tocline"><a href="#user-interactions" class="tocxref"><span class="secno">4. </span>User Interactions</a><ul class="toc"><li class="tocline"><a href="#selectstart-event" class="tocxref"><span class="secno">4.1 </span><code>selectstart</code> event</a></li><li class="tocline"><a href="#selectionchange-event" class="tocxref"><span class="secno">4.2 </span><code>selectionchange</code> event</a></li></ul></li><li class="tocline"><a href="#acknowledgements" class="tocxref"><span class="secno">A. </span>Acknowledgements</a></li><li class="tocline"><a href="#references" class="tocxref"><span class="secno">B. </span>References</a><ul class="toc"><li class="tocline"><a href="#informative-references" class="tocxref"><span class="secno">B.1 </span>Informative references</a></li></ul></li></ul></section>
+    
+    
+
+    <section class="informative" id="background">
+      <!--OddPage--><h2 role="heading" id="h2_background"><span class="secno">1. </span>Background</h2><p><em>This section is non-normative.</em></p>
+
+      <p>IE9 and Firefox 6.0a2 allow arbitrary ranges in the selection, which follows what this spec originally said.
+        However, this leads to unpleasant corner cases that authors, implementers, and spec writers all have to deal with,
+        and they don't make any real sense.  Chrome 14 dev and Opera 11.11 aggressively normalize selections,
+        like not letting them lie inside empty elements and things like that, but this is also viewed as a bad idea,
+        because it takes flexibility away from authors.</p>
+
+      <p>So I changed the spec to a made-up compromise that allows some simplification but doesn't constrain authors much.
+        See <a href="http://lists.whatwg.org/pipermail/whatwg-whatwg.org/2011-June/032072.html">discussion</a>.
+        Basically it would throw exceptions in some places to try to stop the selection from containing a range that had
+        a boundary point other than an Element or Text node, or a boundary point that didn't descend from a Document.</p>
+
+      <p>But this meant getRangeAt() had to start returning a copy, not a reference.
+        Also, it would be prone to things failing weirdly in corner cases. Perhaps most significantly, all sorts of problems
+        might arise when DOM mutations transpire, like if a boundary point's node is removed from its parent and
+        the mutation rules would place the new boundary point inside a non-Text/Element node.
+        And finally, the previously-specified behavior had the advantage of matching two major implementations,
+        while the new behavior matched no one.  So I changed it back.</p>
+
+      <div class="note"><div class="note-title" aria-level="1" role="heading" id="h_note_1"><span>Note</span></div><div class="">
+      <p>See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15470">bug 15470</a>. IE9, Firefox 12.0a1, Chrome 17 dev,
+        and Opera Next 12.00 alpha all make the range initially null.</p>
+      </div></div>
+    </section>
+
+    <section id="definition">
+      <!--OddPage--><h2 role="heading" id="h2_definition"><span class="secno">2. </span>Definition</h2>
+
+      <p>Every <dfn id="dfn-document"><a href="http://www.w3.org/TR/dom/#document">document</a></dfn> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>]) with
+        a <dfn id="dfn-browsing-context"><a href="http://www.w3.org/TR/html5/browsers.html#browsing-context">browsing context</a></dfn> ([<cite><a class="bibref" href="#bib-HTML5">HTML5</a></cite>])
+        has a unique <a href="#idl-def-Selection"><code>Selection</code></a> object associated with it.
+        <a href="#idl-def-Selection" class="idlType"><code>Selection</code></a> objects are known as <dfn id="dfn-selection">selection</dfn>s.</p>
+
+      <div class="note"><div class="note-title" aria-level="1" role="heading" id="h_note_2"><span>Note</span></div><p class="">This is a requirement of the HTML spec.
+        IE9 and Opera Next 12.00 alpha seem to follow it, while Firefox 12.0a1 and Chrome 17 dev seem not to.
+        See <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=717339">Mozilla bug</a>,
+        <a href="https://bugs.webkit.org/show_bug.cgi?id=76114">WebKit bug</a>.</p></div>
+
+      <p>This one <a href="#dfn-selection" class="internalDFN">selection</a> must be shared by all the content of the <a href="#dfn-document" class="internalDFN">document</a>
+        (though not by nested <a href="#dfn-document" class="internalDFN">document</a>s), including any editing hosts in the document.
+        <dfn id="dfn-editing-hosts">Editing hosts</dfn> (<a href="http://www.w3.org/TR/html5/editing.html#editing-host">defined</a> in [<cite><a class="bibref" href="#bib-HTML5">HTML5</a></cite>]) that are not
+        inside a <a href="#dfn-document" class="internalDFN">document</a> cannot have a <a href="#dfn-selection" class="internalDFN">selection</a></p>
+
+      <div class="issue"><div class="issue-title" aria-level="1" role="heading" id="h_issue_1"><span>Issue 1</span></div><p class="">We need to define what it means to say editing hosts can't have selection.</p></div>
+
+      <p>Each <a href="#dfn-selection" class="internalDFN">selection</a> can be associated with a single <dfn id="dfn-range">range</dfn> (<a href="http://www.w3.org/TR/dom/#range">defined</a> in [<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>]).
+        When there is no <a href="#dfn-range" class="internalDFN">range</a> associated with the <a href="#dfn-selection" class="internalDFN">selection</a>, the selection is <dfn id="dfn-empty">empty</dfn>.
+        The selection must be initially <a href="#dfn-empty" class="internalDFN">empty</a>.</p>
+
+      <div class="note"><div class="note-title" aria-level="1" role="heading" id="h_note_3"><span>Note</span></div><p class="">A <a href="#dfn-document" class="internalDFN">document</a>'s <a href="#dfn-selection" class="internalDFN">selection</a> is a singleton object associated with that <a href="#dfn-document" class="internalDFN">document</a>,
+        so it gets replaced with a new object when <code>Document.open()</code> is called.
+        See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15470">bug 15470</a>.
+        IE9 and Opera Next 12.00 alpha allow the user to reset the range to null after the fact by clicking somewhere;
+        Firefox 12.0a1 and Chrome 17 dev do not.
+        We follow Gecko/WebKit, because it lessens the chance of getRangeAt(0) throwing.</p></div>
+
+      <p>Once a <a href="#dfn-selection" class="internalDFN">selection</a> is associated with a given <a href="#dfn-range" class="internalDFN">range</a>,
+        it must continue to be associated with that same <a href="#dfn-range" class="internalDFN">range</a> until this specification requires otherwise.</p>
+
+      <div class="note"><div class="note-title" aria-level="1" role="heading" id="h_note_4"><span>Note</span></div><p class="">For instance, if the DOM changes in a way that changes the range's boundary points,
+        or a script modifies the boundary points of the range, the same range object must continue to be associated with the selection.
+        However, if the user changes the selection or a script calls <code>addRange()</code>,
+        the selection must be associated with a new range object, as required elsewhere in this specification.</p></div>
+
+      <div class="issue"><div class="issue-title" aria-level="1" role="heading" id="h_issue_2"><span>Issue 2</span></div><p class="">This paragraph is vague.
+        It needs to be replaced by detailed conformance requirements saying exactly what to do for particular keystrokes,
+        like we have for backspace/delete/etc.</p></div>
+
+      <p>If the <a href="#dfn-selection" class="internalDFN">selection</a>'s <a href="#dfn-range" class="internalDFN">range</a> is not null and is
+        <a href="http://www.w3.org/TR/dom/#dom-range-collapsed"><dfn id="range-collapsed">collapsed</dfn></a> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>]),
+        then the caret position must be at that <a href="#dfn-range" class="internalDFN">range</a>'s <a href="http://www.w3.org/TR/dom/#concept-range-bp"><dfn id="dfn-boundary-point">boundary point</dfn></a>.
+        <a href="#dfn-generatedID" class="internalDFN"></a><dfn id="dfn-generatedID"></dfn>
+        When the <a href="#dfn-selection" class="internalDFN">selection</a> is not empty, this specification does not define the caret position;
+        user agents should follow platform conventions in deciding whether the caret is at the start of the <a href="#dfn-selection" class="internalDFN">selection</a>,
+        the end of the <a href="#dfn-selection" class="internalDFN">selection</a>, or somewhere else.
+
+      </p><div class="note"><div class="note-title" aria-level="1" role="heading" id="h_note_5"><span>Note</span></div><p class="">This short-changes Mac users. See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=13909">bug 13909</a>.
+
+      </p></div><p>Each <a href="#dfn-selection" class="internalDFN">selection</a> has a <dfn id="dfn-direction">direction</dfn>, <dfn id="dfn-forwards">forwards</dfn>, <dfn id="dfn-backwards">backwards</dfn>, or <dfn id="dfn-directionless">directionless</dfn>.
+        If the user creates a <a href="#dfn-selection" class="internalDFN">selection</a> by indicating first one <a href="#dfn-boundary-point" class="internalDFN">boundary point</a> of the <a href="#dfn-range" class="internalDFN">range</a>
+        and then the other (such as by clicking on one point and dragging to another),
+        and the first indicated <a href="#dfn-boundary-point" class="internalDFN">boundary point</a> is <a href="http://www.w3.org/TR/dom/#concept-range-bp-after"><dfn id="dfn-after">after</dfn></a> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>]) the second,
+        then the corresponding <a href="#dfn-selection" class="internalDFN">selection</a> must initially be <a href="#dfn-backwards" class="internalDFN">backwards</a>.
+        If the first indicated <a href="#dfn-boundary-point" class="internalDFN">boundary point</a> is <a href="http://www.w3.org/TR/dom/#concept-range-bp-before"><dfn id="dfn-before">before</dfn></a> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>]) the second,
+        then the corresponding <a href="#dfn-selection" class="internalDFN">selection</a> must initially be <a href="#dfn-forwards" class="internalDFN">forwards</a>.
+        Otherwise, it must be <a href="#dfn-directionless" class="internalDFN">directionless</a>.</p>
+
+      <div class="issue"><div class="issue-title" aria-level="1" role="heading" id="h_issue_3"><span>Issue 3</span></div><p class="">Should <code>addRange()</code> and <code>removeAllRanges()</code> reset direction?</p></div>
+
+      <p><a href="#idl-def-Selection" class="idlType"><code>Selection</code></a>s also have an <dfn id="dfn-anchor">anchor</dfn> and a <dfn id="dfn-focus">focus</dfn>.
+        If the <a href="#dfn-selection" class="internalDFN">selection</a>'s <a href="#dfn-range" class="internalDFN">range</a> is null, its <a href="#dfn-anchor" class="internalDFN">anchor</a> and <a href="#dfn-focus" class="internalDFN">focus</a> are both null.
+        If the <a href="#dfn-selection" class="internalDFN">selection</a>'s <a href="#dfn-range" class="internalDFN">range</a> is not null and its <a href="#dfn-direction" class="internalDFN">direction</a> is <a href="#dfn-forwards" class="internalDFN">forwards</a>, its <a href="#dfn-anchor" class="internalDFN">anchor</a> is the <a href="#dfn-range" class="internalDFN">range</a>'s
+        <a href="#range-start" class="internalDFN">start</a>, and its <a href="#dfn-focus" class="internalDFN">focus</a> is the <a href="#range-end" class="internalDFN">end</a>.
+        Otherwise, its <a href="#dfn-focus" class="internalDFN">focus</a> is the <a href="#range-start" class="internalDFN">start</a> and its <a href="#dfn-anchor" class="internalDFN">anchor</a> is the <a href="#range-end" class="internalDFN">end</a>.</p>
+
+      <pre class="idl"><span class="idlInterface" id="idl-def-Selection">interface <span class="idlInterfaceID">Selection</span> {
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a href="#dfn-node" class="internalDFN">Node</a>?</span>         <span class="idlAttrName"><a href="#widl-Selection-anchorNode">anchorNode</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType">unsigned long</span> <span class="idlAttrName"><a href="#widl-Selection-anchorOffset">anchorOffset</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a href="#dfn-node" class="internalDFN">Node</a>?</span>         <span class="idlAttrName"><a href="#widl-Selection-focusNode">focusNode</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType">unsigned long</span> <span class="idlAttrName"><a href="#widl-Selection-focusOffset">focusOffset</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType">boolean</span>       <span class="idlAttrName"><a href="#widl-Selection-isCollapsed">isCollapsed</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType">unsigned long</span> <span class="idlAttrName"><a href="#widl-Selection-rangeCount">rangeCount</a></span>;</span>
+<span class="idlMethod">    <span class="idlMethType"><a href="#dfn-range" class="internalDFN">Range</a></span>       <span class="idlMethName"><a href="#widl-Selection-getRangeAt-Range-unsigned-long-index">getRangeAt</a></span> (<span class="idlParam"><span class="idlParamType">unsigned long</span> <span class="idlParamName">index</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType">void</span>        <span class="idlMethName"><a href="#widl-Selection-addRange-void-Range-range">addRange</a></span> (<span class="idlParam"><span class="idlParamType"><a href="#dfn-range" class="internalDFN">Range</a></span> <span class="idlParamName">range</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType">void</span>        <span class="idlMethName"><a href="#widl-Selection-removeRange-void-Range-range">removeRange</a></span> (<span class="idlParam"><span class="idlParamType"><a href="#dfn-range" class="internalDFN">Range</a></span> <span class="idlParamName">range</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType">void</span>        <span class="idlMethName"><a href="#widl-Selection-removeAllRanges-void">removeAllRanges</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType">void</span>        <span class="idlMethName"><a href="#widl-Selection-collapse-void-Node-node-unsigned-long-offset">collapse</a></span> (<span class="idlParam"><span class="idlParamType"><a href="#dfn-node" class="internalDFN">Node</a></span> <span class="idlParamName">node</span></span>, <span class="idlParam"><span class="idlParamType">unsigned long</span> <span class="idlParamName">offset</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType">void</span>        <span class="idlMethName"><a href="#widl-Selection-collapseToStart-void">collapseToStart</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType">void</span>        <span class="idlMethName"><a href="#widl-Selection-collapseToEnd-void">collapseToEnd</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType">void</span>        <span class="idlMethName"><a href="#widl-Selection-extend-void-Node-node-unsigned-long-offset">extend</a></span> (<span class="idlParam"><span class="idlParamType"><a href="#dfn-node" class="internalDFN">Node</a></span> <span class="idlParamName">node</span></span>, <span class="idlParam"><span class="idlParamType">unsigned long</span> <span class="idlParamName">offset</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType">void</span>        <span class="idlMethName"><a href="#widl-Selection-setBaseAndExtent-void-Node-anchorNode-unsigned-long-anchorOffset-Node-focusNode-unsigned-long-focusOffset">setBaseAndExtent</a></span> (<span class="idlParam"><span class="idlParamType"><a href="#dfn-node" class="internalDFN">Node</a></span> <span class="idlParamName">anchorNode</span></span>, <span class="idlParam"><span class="idlParamType">unsigned long</span> <span class="idlParamName">anchorOffset</span></span>, <span class="idlParam"><span class="idlParamType"><a href="#dfn-node" class="internalDFN">Node</a></span> <span class="idlParamName">focusNode</span></span>, <span class="idlParam"><span class="idlParamType">unsigned long</span> <span class="idlParamName">focusOffset</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType">void</span>        <span class="idlMethName"><a href="#widl-Selection-selectAllChildren-void-Node-node">selectAllChildren</a></span> (<span class="idlParam"><span class="idlParamType"><a href="#dfn-node" class="internalDFN">Node</a></span> <span class="idlParamName">node</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType">void</span>        <span class="idlMethName"><a href="#widl-Selection-deleteFromDocument-void">deleteFromDocument</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType">boolean</span>     <span class="idlMethName"><a href="#widl-Selection-containsNode-boolean-Node-node-boolean-allowPartialContainment">containsNode</a></span> (<span class="idlParam"><span class="idlParamType"><a href="#dfn-node" class="internalDFN">Node</a></span> <span class="idlParamName">node</span></span>, <span class="idlParam"><span class="idlParamType">boolean</span> <span class="idlParamName">allowPartialContainment</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType">stringifier</span> <span class="idlMethName"><a href="#widl-Selection-DOMString-stringifier">DOMString</a></span> ();</span>
+};</span></pre><section id="attributes"><h3 role="heading" id="h3_attributes"><span class="secno">2.1 </span>Attributes</h3><dl class="attributes"><dt id="widl-Selection-anchorNode"><code>anchorNode</code> of type <span class="idlAttrType"><a href="#dfn-node" class="internalDFN">Node</a></span>, readonly   , nullable</dt><dd>
+          <p>The attribute must return the <a href="#dfn-anchor" class="internalDFN">anchor</a> <dfn id="dfn-node"><a href="http://www.w3.org/TR/dom/#concept-node">node</a></dfn> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>])
+          of the <dfn id="dfn-context-object"><a href="http://www.w3.org/TR/dom/#context-object">context object</a></dfn> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>]),
+          or <code>null</code> if the <a href="#dfn-anchor" class="internalDFN">anchor</a> is null.</p>
+        </dd><dt id="widl-Selection-anchorOffset"><code>anchorOffset</code> of type <span class="idlAttrType">unsigned long</span>, readonly   </dt><dd>
+          <p>The attribute must return the <a href="#dfn-anchor" class="internalDFN">anchor</a> <dfn id="dfn-offset"><a href="http://www.w3.org/TR/dom/#concept-range-bp-offset">offset</a></dfn> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>])
+          of the <a href="#dfn-context-object" class="internalDFN">context object</a>, or <code>0</code> if the <a href="#dfn-anchor" class="internalDFN">anchor</a> is null.</p>
+        </dd><dt id="widl-Selection-focusNode"><code>focusNode</code> of type <span class="idlAttrType"><a href="#dfn-node" class="internalDFN">Node</a></span>, readonly   , nullable</dt><dd>
+          <p>The attribute must return the <a href="#dfn-focus" class="internalDFN">focus</a> <a href="#dfn-node" class="internalDFN">node</a> of the <a href="#dfn-context-object" class="internalDFN">context object</a>,
+          or <code>null</code> if the <a href="#dfn-anchor" class="internalDFN">anchor</a> is null.</p>
+        </dd><dt id="widl-Selection-focusOffset"><code>focusOffset</code> of type <span class="idlAttrType">unsigned long</span>, readonly   </dt><dd>
+          <p>The attribute must return the <a href="#dfn-focus" class="internalDFN">focus</a> <a href="#dfn-offset" class="internalDFN">offset</a> of the <a href="#dfn-context-object" class="internalDFN">context object</a>,
+          or <code>0</code> if the <a href="#dfn-focus" class="internalDFN">focus</a> is null.</p>
+        </dd><dt id="widl-Selection-isCollapsed"><code>isCollapsed</code> of type <span class="idlAttrType">boolean</span>, readonly   </dt><dd>
+          <p>The attribute must return true if and only if the <span>anchor</span> and <span>focus</span> are the same (including if both are null).
+          Otherwise it must return false.</p>
+        </dd><dt id="widl-Selection-rangeCount"><code>rangeCount</code> of type <span class="idlAttrType">unsigned long</span>, readonly   </dt><dd>
+          <p>The attribute must return <code>0</code> if the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a> is <a href="#dfn-empty" class="internalDFN">empty</a>,
+          and must return <code>1</code> otherwise.</p>
+        </dd></dl></section><section id="methods"><h3 role="heading" id="h3_methods"><span class="secno">2.2 </span>Methods</h3><dl class="methods"><dt id="widl-Selection-DOMString-stringifier"><code>DOMString</code></dt><dd>
+          See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=10583"><abbr title="World Wide Web Consortium">W3C</abbr> bug 10583</a>.
+          <div class="issue"><div class="issue-title" aria-level="2" role="heading" id="h_issue_4"><span>Issue 7</span></div><p class="">Completely under-spec'ed.</p></div>
+        <div><em>No parameters.</em></div><div><em>Return type: </em><code>stringifier</code></div></dd><dt id="widl-Selection-addRange-void-Range-range"><code>addRange</code></dt><dd>
+          <p>The method must set the <a href="#dfn-context-object" class="internalDFN">context object</a>'s range to <var>range</var> by a strong reference (not by making a copy)
+            if the <dfn id="dfn-root"><a href="http://www.w3.org/TR/dom/#concept-tree-root">root</a></dfn> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>])
+            of the <var>range</var>'s boundary points are the <a href="#dfn-document" class="internalDFN">document</a> associated with <a href="#dfn-context-object" class="internalDFN">context object</a>.
+            Otherwise, this method must do nothing.</p>
+  
+          <div class="note"><div class="note-title" aria-level="2" role="heading" id="h_note_6"><span>Note</span></div><p class="">Since <a href="#dfn-range" class="internalDFN">range</a> is added by reference, subsequent calls to <code>getRangeAt(0)</code> returns the same object,
+            and any changes that a script makes to <a href="#dfn-range" class="internalDFN">range</a> after it is added must be reflected in the <a href="#dfn-selection" class="internalDFN">selection</a>,
+            until something else removes or replaces the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a>.
+            In particular, the <a href="#dfn-selection" class="internalDFN">selection</a> will contain <var>b</var> as opposed to <var>a</var> after running the following code:
+            <code>var r = document.createRange(); r.selectNode(a); getSelection().addRange(r); r.selectNode(b);</code></p></div>
+
+          <div class="note"><div class="note-title" aria-level="2" role="heading" id="h_note_7"><span>Note</span></div><div class="">
+          <p>IE9 and Firefox 4.0 store a reference, as described here.
+            Chrome 12 dev and Opera 11.10 appear to store a copy, so changes don't affect the selection.</p>
+
+          <p>Chrome 15 dev seems to ignore addRange() if there's already a range.
+            IE9 replaces the existing range.
+            Firefox 9.0a2, of course, just gives you a multi-range selection.
+            IE is likely to behave closest to Firefox, and is also more useful than silent failure, so the spec goes with that.</p>
+          </div></div>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">range</td><td class="prmType"><code><a href="#dfn-range" class="internalDFN">Range</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>void</code></div></dd><dt id="widl-Selection-collapse-void-Node-node-unsigned-long-offset"><code>collapse</code></dt><dd>
+          <p>The method must follow these steps:</p>
+          <ol>
+            <li>The method must throw an <a href="#dfn-indexsizeerror" class="internalDFN"><code>IndexSizeError</code></a> exception if if <var>offset</var> is negative or longer than <var>node</var>'s
+              <dfn id="dfn-length"><a href="http://www.w3.org/TR/dom/#concept-node-length">length</a></dfn> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>]) and abort these steps.</li>
+            <li>If <var>node</var>'s <a href="#dfn-root" class="internalDFN">root</a> is not the <a href="#dfn-document" class="internalDFN">document</a> associated with the <a href="#dfn-context-object" class="internalDFN">context object</a>, abort these steps.</li>
+            <li>Otherwise, let <var>newRange</var> be a new <a href="#dfn-range" class="internalDFN">range</a>.</li>
+            <li><dfn id="range-set"><a href="http://www.w3.org/TR/dom/#concept-range-bp-set">Set</a></dfn> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>])
+              the <a href="#range-start">start</a> and the <a href="#range-end">end</a> of <var>newRange</var> to (<var>node</var>, <var>offset</var>).</li>
+            <li>Set the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a> to <var>newRange</var>.</li>
+          </ol>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">node</td><td class="prmType"><code><a href="#dfn-node" class="internalDFN">Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">offset</td><td class="prmType"><code>unsigned long</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>void</code></div></dd><dt id="widl-Selection-collapseToEnd-void"><code>collapseToEnd</code></dt><dd>
+          <p>The method must throw <a href="#dfn-invalidstateerror" class="internalDFN"><code>InvalidStateError</code></a> exception if the <a href="#dfn-context-object" class="internalDFN">context object</a> is <a href="#dfn-empty" class="internalDFN">empty</a>.
+          Otherwise, it must create a new <a href="#dfn-range" class="internalDFN">range</a>, <a href="#range-set">set</a> both its <a href="#range-start">start</a> and <a href="#range-end">end</a>
+          to the <a href="#range-end">end</a> of the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a>,
+          and then set the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a> to the newly-created <a href="#dfn-range" class="internalDFN">range</a>.</p>
+        <div><em>No parameters.</em></div><div><em>Return type: </em><code>void</code></div></dd><dt id="widl-Selection-collapseToStart-void"><code>collapseToStart</code></dt><dd>
+          <p>The method must throw <dfn id="dfn-invalidstateerror"><a href="http://www.w3.org/TR/dom/#invalidstateerror"><code>InvalidStateError</code></a></dfn> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>]) exception
+          if the <a href="#dfn-context-object" class="internalDFN">context object</a> is <a href="#dfn-empty" class="internalDFN">empty</a>.
+          Otherwise, it must create a new <a href="#dfn-range" class="internalDFN">range</a>, <a href="#range-set">set</a> both its <a href="#range-start">start</a> and <a href="#range-end">end</a>
+          to the <a href="#range-start">start</a> of the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a>,
+          and then set the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a> to the newly-created <a href="#dfn-range" class="internalDFN">range</a>.</p>
+
+          <div class="note"><div class="note-title" aria-level="2" role="heading" id="h_note_8"><span>Note</span></div><p class="">For collapseToStart/End, IE9 mutates the existing range, while Firefox 9.0a2 and Chrome 15 dev replace it with a new one.
+            The spec follows the majority and replaces it with a new one, leaving the old Range object unchanged.</p></div>
+        <div><em>No parameters.</em></div><div><em>Return type: </em><code>void</code></div></dd><dt id="widl-Selection-containsNode-boolean-Node-node-boolean-allowPartialContainment"><code>containsNode</code></dt><dd>
+          <p>The method must return <code>false</code> if the <a href="#dfn-context-object" class="internalDFN">context object</a> is <a href="#dfn-empty" class="internalDFN">empty</a>
+            or if <var>node</var>'s <a href="#dfn-root" class="internalDFN">root</a> is not the document associated with the <a href="#dfn-context-object" class="internalDFN">context object</a>.</p>
+
+          <p>Otherwise, if <var>allowPartialContainment</var> is <code>false</code>,
+          the method must return <code>true</code> if and only if
+          <a href="#range-start">start</a> of its <a href="#dfn-range" class="internalDFN">range</a> is <a href="#dfn-before" class="internalDFN">before</a> or visually equivalent to
+            the first <a href="#dfn-boundary-point" class="internalDFN">boundary point</a> in the <var>node</var>
+            <strong>and</strong> <a href="#range-end">end</a> of its <a href="#dfn-range" class="internalDFN">range</a> is <a href="#dfn-after" class="internalDFN">after</a> or visually equivalent to
+            the last <a href="#dfn-boundary-point" class="internalDFN">boundary point</a> in the <var>node</var>.</p>
+
+          <p>If <var>allowPartialContainment</var> is <code>true</code>,
+          the method must return <code>true</code> if and only if
+          <a href="#range-start">start</a> of its <a href="#dfn-range" class="internalDFN">range</a> is <a href="#dfn-before" class="internalDFN">before</a> or visually equivalent to
+            the first <a href="#dfn-boundary-point" class="internalDFN">boundary point</a> in the <var>node</var>
+            <strong>or</strong> <a href="#range-end">end</a> of its <a href="#dfn-range" class="internalDFN">range</a> is <a href="#dfn-after" class="internalDFN">after</a> or visually equivalent to
+            the last <a href="#dfn-boundary-point" class="internalDFN">boundary point</a> in the <var>node</var>.</p>
+
+          <div class="issue"><div class="issue-title" aria-level="2" role="heading" id="h_issue_5"><span>Issue 6</span></div><p class="">We need to define the visually equivalency.</p></div>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">node</td><td class="prmType"><code><a href="#dfn-node" class="internalDFN">Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">allowPartialContainment</td><td class="prmType"><code>boolean</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>boolean</code></div></dd><dt id="widl-Selection-deleteFromDocument-void"><code>deleteFromDocument</code></dt><dd>
+          <p>The method must invoke <dfn id="dfn-deletecontents"><a href="http://dom.spec.whatwg.org/#dom-range-deletecontents"><code>deleteContents()</code></a></dfn> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>])
+          on the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a> if the <a href="#dfn-context-object" class="internalDFN">context object</a> is not <a href="#dfn-empty" class="internalDFN">empty</a>.
+          Otherwise the method must do nothing.</p>
+  
+          <div class="note"><div class="note-title" aria-level="2" role="heading" id="h_note_9"><span>Note</span></div><p class="">This is the one method that actually mutates the range instead of replacing it.
+            This matches IE9 and Firefox 12.0a1. (Chrome 17 dev and Opera Next 12.00 alpha can't be tested,
+            because getRangeAt() returns a copy anyway.)</p></div>
+
+          <div class="issue"><div class="issue-title" aria-level="2" role="heading" id="h_issue_6"><span>Issue 5</span></div><p class="">Should we replace the range rather than mutating it here?
+            This is currently the only Selection method that actually mutates an existing range in place.</p></div>
+        <div><em>No parameters.</em></div><div><em>Return type: </em><code>void</code></div></dd><dt id="widl-Selection-extend-void-Node-node-unsigned-long-offset"><code>extend</code></dt><dd>
+          <p>The method must follow these steps:</p>
+          <ol>
+            <li>If <var>node</var>'s <a href="#dfn-root" class="internalDFN">root</a> is not the <a href="#dfn-document" class="internalDFN">document</a> associated with the <a href="#dfn-context-object" class="internalDFN">context object</a>, abort these steps.</li>
+            <li>If the <a href="#dfn-context-object" class="internalDFN">context object</a> is <a href="#dfn-empty" class="internalDFN">empty</a>, throw an <a href="#dfn-invalidstateerror" class="internalDFN"><code>InvalidStateError</code></a> exception and abort these steps.</li>
+            <li>Let <var>oldAnchor</var> and <var>oldFocus</var> be the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-anchor" class="internalDFN">anchor</a> and <a href="#dfn-focus" class="internalDFN">focus</a>,
+              and let <var>newFocus</var> be the <a href="#dfn-boundary-point" class="internalDFN">boundary point</a> (<var>node</var>, <var>offset</var>).</li>
+            <li>Let <var>newRange</var> be a new <a href="#dfn-range" class="internalDFN">range</a>.</li>
+            <li>If <var>node</var>'s <a href="#dfn-root" class="internalDFN">root</a> is not the same as
+              the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a>'s <a href="#dfn-root" class="internalDFN">root</a>, <a href="#range-set">set</a> <var>newRange</var>'s
+              <a href="#range-start">start</a> and <a href="#range-end">end</a> to <var>newFocus</var>.</li>
+            <li>Otherwise, if <var>oldAnchor</var> is <a href="#dfn-before" class="internalDFN">before</a> or equal to <var>newFocus</var>,
+              <a href="#range-set">set</a> <var>newRange</var>'s <a href="#range-start">start</a> to <var>oldAnchor</var>,
+              then <a href="#range-set">set</a> its <a href="#range-end">end</a> to <var>newFocus</var>.</li>
+            <li>Otherwise, <a href="#range-set">set</a> <var>newRange</var>'s <a href="#range-start">start</a> to <var>newFocus</var>,
+              then <a href="#range-set">set</a> its <a href="#range-end">end</a> to <var>oldAnchor</var>.</li>
+            <li>Set the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a> to newRange.</li>
+            <li>If <var>newFocus</var> is <a href="#dfn-before" class="internalDFN">before</a> <var>oldAnchor</var>, set the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-direction" class="internalDFN">direction</a> to <a href="#dfn-backwards" class="internalDFN">backwards</a>.
+              Otherwise, set it to <a href="#dfn-forwards" class="internalDFN">forwards</a>.</li>
+          </ol>
+          <div class="note"><div class="note-title" aria-level="2" role="heading" id="h_note_10"><span>Note</span></div><p class="">Reverse-engineered circa January 2011.
+            IE doesn't support it, so I'm relying on Firefox (implemented extend() sometime before 2000) and WebKit (implemented extend() in 2007).
+            I'm mostly ignoring Opera, because gsnedders tells me its implementation isn't compatible.
+
+            Firefox 12.0a1 seems to mutate the existing range.
+            IE9 doesn't support extend(), and it's impossible to tell whether Chrome 17 dev or Opera Next 12.00 alpha mutate or replace,
+            because getRangeAt() returns a copy anyway.
+            Nevertheless, I go against Gecko here, to be consistent with collapse().</p></div>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">node</td><td class="prmType"><code><a href="#dfn-node" class="internalDFN">Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">offset</td><td class="prmType"><code>unsigned long</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>void</code></div></dd><dt id="widl-Selection-getRangeAt-Range-unsigned-long-index"><code>getRangeAt</code></dt><dd>
+          <p>The method must throw an <dfn id="dfn-indexsizeerror"><a href="http://www.w3.org/TR/dom/#indexsizeerror"><code>IndexSizeError</code></a></dfn> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>]) exception
+          if <var>index</var> is not <code>0</code>, or if the <a href="#dfn-context-object" class="internalDFN">context object</a> is <a href="#dfn-empty" class="internalDFN">empty</a>.
+          Otherwise, it must return a reference to (not a copy of) the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a>.</p>
+
+          <div class="note"><div class="note-title" aria-level="2" role="heading" id="h_note_11"><span>Note</span></div><p class="">Thus subsequent calls of this method returns the same <a href="#dfn-range" class="internalDFN">range</a> object
+            if nothing has removed the <a href="#dfn-context-object" class="internalDFN">context object</a>'s range in the meantime.
+            In particular, <code>getSelection().getRangeAt(0) === getSelection().getRangeAt(0)</code> evaluates to <code>true</code>
+            if the <a href="#dfn-selection" class="internalDFN">selection</a> is not <a href="#dfn-empty" class="internalDFN">empty</a>.</p></div>
+
+          <div class="note"><div class="note-title" aria-level="2" role="heading" id="h_note_12"><span>Note</span></div><p class="">IE9 and Firefox 4.0 return the same object every time, as the spec says.
+            Chrome 12 dev and Opera 11.10 return a different object every time.</p></div>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">index</td><td class="prmType"><code>unsigned long</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code><a href="#dfn-range" class="internalDFN">Range</a></code></div></dd><dt id="widl-Selection-removeAllRanges-void"><code>removeAllRanges</code></dt><dd>
+          <p>The method must make the <a href="#dfn-context-object" class="internalDFN">context object</a> <a href="#dfn-empty" class="internalDFN">empty</a> by disassociating its <a href="#dfn-range" class="internalDFN">range</a>
+            if the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a> is <var>range</var>.
+            Otherwise, it must do nothing.</p>
+        <div><em>No parameters.</em></div><div><em>Return type: </em><code>void</code></div></dd><dt id="widl-Selection-removeRange-void-Range-range"><code>removeRange</code></dt><dd>
+          <p>The method must make the <a href="#dfn-context-object" class="internalDFN">context object</a> <a href="#dfn-empty" class="internalDFN">empty</a> by disassociating its <a href="#dfn-range" class="internalDFN">range</a>
+            if the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a> is <var>range</var>.
+            Otherwise, it must do nothing.</p>
+          <div class="issue"><div class="issue-title" aria-level="2" role="heading" id="h_issue_7"><span>Issue 4</span></div><p class="">Should we check for object equality here or just equality of boundary points?</p></div>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">range</td><td class="prmType"><code><a href="#dfn-range" class="internalDFN">Range</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>void</code></div></dd><dt id="widl-Selection-selectAllChildren-void-Node-node"><code>selectAllChildren</code></dt><dd>
+          <p>The method must follow these steps:</p>
+          <ol>
+            <li>If <var>node</var>'s <a href="#dfn-root" class="internalDFN">root</a> is not the <a href="#dfn-document" class="internalDFN">document</a> associated with the <a href="#dfn-context-object" class="internalDFN">context object</a>, abort these steps.</li>
+            <li>Let <var>newRange</var> be a new <a href="#dfn-range" class="internalDFN">range</a> and <var>nodeLength</var> be the <a href="#dfn-length" class="internalDFN">length</a> of <var>node</var>.</li>
+            <li>Set <var>newRange</var>'s <a href="range-start">start</a> to (<var>node</var>, <code>0</code>).</li>
+            <li>Set <var>newRange</var>'s <a href="range-end">end</a> to (<var>node</var>, <var>nodeLength</var>).</li>
+            <li>Set the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a> to <var>newRange</var>.</li>
+            <li>Set the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-direction" class="internalDFN">direction</a> to <var>forwards</var>.</li>
+          </ol>
+  
+          <div class="note"><div class="note-title" aria-level="2" role="heading" id="h_note_13"><span>Note</span></div><div class="">
+          <p>Based mostly on Firefox 9.0a2.  It has a bug that I didn't reproduce, namely
+          that if you pass a Document as the argument, the end offset becomes 1 instead
+          of the number of children it has.  It also throws a RangeException instead of
+          DOMException, because its implementation predated their merging.
+
+          </p><p>IE9 behaves similarly but with glitches.  It throws "Unspecified error." if
+          the node is detached or display:none, and apparently in some random other cases
+          too.  It throws "Invalid argument." for detached comments (only!).  Finally, if
+          you pass it a comment, it seems to select the whole comment, unlike with text
+          nodes.
+
+          </p><p>Chrome 16 dev behaves as you'd expect given its Selection implementation.
+          It refuses to select anything that's not visible, so it's almost always wrong.
+          Opera 11.50 just does nothing in all my tests, as usual.
+
+          </p><p>The new range replaces any existing one, doesn't mutate it.
+          This matches IE9 and Firefox 12.0a1.  (Chrome 17 dev and Opera Next 12.00
+          alpha can't be tested, because getRangeAt() returns a copy anyway.)
+          </p></div></div>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">node</td><td class="prmType"><code><a href="#dfn-node" class="internalDFN">Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>void</code></div></dd><dt id="widl-Selection-setBaseAndExtent-void-Node-anchorNode-unsigned-long-anchorOffset-Node-focusNode-unsigned-long-focusOffset"><code>setBaseAndExtent</code></dt><dd>
+          <p>The method must follow these steps:</p>
+          <ol>
+            <li>If <var>anchorOffset</var> is negative or longer than <var>anchorNode</var>'s <a href="#dfn-length" class="internalDFN">length</a>
+              or if <var>focusOffset</var> is negative or longer than <var>focusNode</var>'s <a href="#dfn-length" class="internalDFN">length</a>,
+              throw an <a href="#dfn-indexsizeerror" class="internalDFN"><code>IndexSizeError</code></a> exception and abort these steps.</li>
+            <li>If the <a href="#dfn-root" class="internalDFN">root</a>s of <var>anchorNode</var> or <var>focusNode</var> are not the <a href="#dfn-document" class="internalDFN">document</a> associated with <a href="#dfn-context-object" class="internalDFN">context object</a>,
+              abort these steps.</li>
+            <li>Let <var>anchor</var> be the <a href="#dfn-boundary-point" class="internalDFN">boundary point</a> (<var>anchorNode</var>, <var>anchorOffset</var>)
+              and let <var>focus</var> be the <a href="#dfn-boundary-point" class="internalDFN">boundary point</a> (<var>focusNode</var>, <var>focusOffset</var>).</li>
+            <li>Let <var>newRange</var> be a new <a href="#dfn-range" class="internalDFN">range</a>.</li>
+            <li>If <var>anchor</var> is <a href="#dfn-before" class="internalDFN">before</a> <var>focus</var>,
+              <a href="#range-set">set</a> the <var>newRange</var>'s <a href="#range-start">start</a> to <var>anchor</var>
+              and its <a href="#range-end">end</a> to <var>focus</var>.
+              Otherwise, <a href="#range-set">set</a> them to <var>focus</var> and <var>anchor</var> respectively.</li>
+            <li>Set the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a> to newRange.</li>
+            <li>If <var>focus</var> is <a href="#dfn-before" class="internalDFN">before</a> <var>anchor</var>, set <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-direction" class="internalDFN">direction</a> to <a href="#dfn-backwards" class="internalDFN">backwards</a>.
+              Otherwise, set it to <a href="#dfn-forwards" class="internalDFN">forwards</a></li>
+        </ol><table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">anchorNode</td><td class="prmType"><code><a href="#dfn-node" class="internalDFN">Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">anchorOffset</td><td class="prmType"><code>unsigned long</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">focusNode</td><td class="prmType"><code><a href="#dfn-node" class="internalDFN">Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">focusOffset</td><td class="prmType"><code>unsigned long</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>void</code></div></dd></dl></section>
+
+      <div class="note"><div class="note-title" aria-level="1" role="heading" id="h_note_14"><span>Note</span></div><p class="">See also <a href="https://mxr.mozilla.org/mozilla/source/content/base/public/nsISelection.idl">nsISelection.idl</a> from Gecko.
+        This spec doesn't have everything from there yet, in particular selectionLanguageChange() and containsNode() are missing.
+        They are missing because I couldn't work out how to define them in terms of Ranges.</p></div>
+
+      <div class="note"><div class="note-title" aria-level="1" role="heading" id="h_note_15"><span>Note</span></div>
+        <p>Originally, the Selection interface was a Netscape feature.
+          The original implementation was carried on into Gecko (Firefox), and the feature was later implemented independently by other browser engines.
+          The Netscape implementation always allowed multiple ranges in a single selection, for instance so the user could select a column of a table
+          However, multi-range selections proved to be an unpleasant corner case
+          that web developers didn't know about and even Gecko developers rarely handled correctly.
+          Other browser engines never implemented the feature, and clamped selections to a single range in various incompatible fashions.</p>
+
+        <p>This specification follows non-Gecko engines in restricting selections to at most one range,
+          but the API was still originally designed for selections with arbitrary numbers of ranges.
+          This explains oddities like the coexistence of <code>removeRange()</code> and <code>removeAllRanges()</code>,
+          and a <code>getRangeAt()</code> method that takes an integer argument that must always be zero.</p>
+      </div>
+
+      <p>All of the members of the <code>Selection</code> interface are defined
+        in terms of operations on the <code><a href="#dfn-range" class="internalDFN">range</a></code> object (if any) represented by the object.
+        These operations can raise exceptions, as defined for the <a href="http://www.w3.org/TR/dom/#range"><code>Range</code></a> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>]) interface;
+        this can therefore result in the members of the <a href="#idl-def-Selection"><code>Selection</code></a> interface raising exceptions as well,
+        in addition to any explicitly called out below.</p>
+    </section>
+
+    <section id="extensions-to-other-interfaces">
+      <!--OddPage--><h2 role="heading" id="h2_extensions-to-other-interfaces"><span class="secno">3. </span>Extensions to Other Interfaces</h2>
+
+      <p>This specification extends several interfaces to provide entry points to the
+      interfaces defined in this specification.</p>
+
+      <section id="extensions-to-document-interface">
+        <h3 role="heading" id="h3_extensions-to-document-interface"><span class="secno">3.1 </span>Extensions to <code>Document</code> interface</h3>
+        <pre class="idl"><span class="idlInterface" id="idl-def-Document">partial interface <span class="idlInterfaceID">Document</span> {
+<span class="idlMethod">    <span class="idlMethType"><a href="#idl-def-Selection" class="idlType"><code>Selection</code></a>?</span> <span class="idlMethName"><a href="#widl-Document-getSelection-Selection">getSelection</a></span> ();</span>
+};</span></pre><section id="methods-1"><h4 role="heading" id="h4_methods-1"><span class="secno">3.1.1 </span>Methods</h4><dl class="methods"><dt id="widl-Document-getSelection-Selection"><code>getSelection</code></dt><dd>
+            <p>The method must return the <a href="#dfn-selection" class="internalDFN">selection</a> associated with <a href="#dfn-context-object" class="internalDFN">context object</a>
+              if the <a href="#dfn-context-object" class="internalDFN">context object</a> has an associated <a href="#dfn-browsing-context" class="internalDFN">browsing context</a>,
+              and it must return <code>null</code> otherwise.</p>
+          <div><em>No parameters.</em></div><div><em>Return type: </em><code><a href="#idl-def-Selection" class="idlType"><code>Selection</code></a></code>, nullable</div></dd></dl></section>
+        <div class="note"><div class="note-title" aria-level="2" role="heading" id="h_note_16"><span>Note</span></div><p class="">
+          If we create a Document object with no browsing context
+          (say via <code>document.implementation.createHTMLDocument("") and call </code>getSelection() on it),
+          IE9 seems to return a different Selection object.
+          Firefox 12.0a1 and Opera Next 12.00 alpha return the same object as for the current window.
+          Chrome 17 dev returns null.
+          See <a href="https://lists.w3.org/Archives/Public/public-webapps/2012JanMar/0159.html">discussion</a>.
+          There's no meaningful selection associated with such a document, so we follow WebKit and require returning <code>null</code>.</p></div>
+      </section>
+
+      <section id="extensions-to-window-interface">
+        <h3 role="heading" id="h3_extensions-to-window-interface"><span class="secno">3.2 </span>Extensions to <code>Window</code> interface</h3>
+        <pre class="idl"><span class="idlInterface" id="idl-def-Window">partial interface <span class="idlInterfaceID">Window</span> {
+<span class="idlMethod">    <span class="idlMethType"><a href="#idl-def-Selection" class="idlType"><code>Selection</code></a>?</span> <span class="idlMethName"><a href="#widl-Window-getSelection-Selection">getSelection</a></span> ();</span>
+};</span></pre><section id="methods-2"><h4 role="heading" id="h4_methods-2"><span class="secno">3.2.1 </span>Methods</h4><dl class="methods"><dt id="widl-Window-getSelection-Selection"><code>getSelection</code></dt><dd>
+            <p>The method must invoke and return the result of <code>getSelection()</code> on the <a href="#dfn-context-object" class="internalDFN">context object</a>'s
+            <a href="http://www.w3.org/TR/html5/browsers.html#dom-document-0"><code>document</code></a> ([<cite><a class="bibref" href="#bib-HTML5">HTML5</a></cite>]) property.</p>
+          <div><em>No parameters.</em></div><div><em>Return type: </em><code><a href="#idl-def-Selection" class="idlType"><code>Selection</code></a></code>, nullable</div></dd></dl></section>
+      </section>
+  
+    </section>
+
+    <section id="user-interactions">
+      <!--OddPage--><h2 role="heading" id="h2_user-interactions"><span class="secno">4. </span>User Interactions</h2>
+
+      <p>The user agent should allow the user to change the <a href="#dfn-selection" class="internalDFN">selection</a> associated with the <dfn id="dfn-active-document">active document</dfn>
+        (<a href="http://www.w3.org/TR/html5/browsers.html#active-document">defined</a> in [<cite><a class="bibref" href="#bib-HTML5">HTML5</a></cite>]).
+        If the user makes any modification to a <a href="#dfn-selection" class="internalDFN">selection</a>, the user agent must create a new <a href="#dfn-range" class="internalDFN">range</a> with suitable
+        <a href="http://www.w3.org/TR/dom/#concept-range-start"><dfn id="range-start">start</dfn></a> and 
+        <a href="http://www.w3.org/TR/dom/#concept-range-end"><dfn id="range-end">end</dfn></a> of the <a href="#dfn-range" class="internalDFN">range</a> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>])
+        and associate the <a href="#dfn-selection" class="internalDFN">selection</a> with this new <a href="#dfn-range" class="internalDFN">range</a> (not modify the existing <a href="#dfn-range" class="internalDFN">range</a>),
+        and set update <a href="#dfn-selection" class="internalDFN">selection</a>'s <a href="#dfn-direction" class="internalDFN">direction</a> to <a href="#dfn-forwards" class="internalDFN">forwards</a> if the <a href="#range-start" class="internalDFN">start</a> is <a href="#dfn-before" class="internalDFN">before</a> or equal to the <a href="#range-end" class="internalDFN">end</a>,
+        <a href="#dfn-backwards" class="internalDFN">backwards</a> if if the <a href="#range-end" class="internalDFN">end</a> is <a href="#dfn-before" class="internalDFN">before</a> the <a href="#range-start" class="internalDFN">start</a>,
+        or <a href="#dfn-directionless" class="internalDFN">directionless</a> if the <a href="#range-start" class="internalDFN">start</a> and the <a href="#range-end" class="internalDFN">end</a> cannot be ordered due to the platform convention.</p>
+
+      <p>The user agent must not make a <a href="#dfn-selection" class="internalDFN">selection</a> <a href="#dfn-empty" class="internalDFN">empty</a> if it was not already <a href="#dfn-empty" class="internalDFN">empty</a>
+        in response to any user actions (e.g. clicking on a non-editable region).</p>
+
+      <div class="note"><div class="note-title" aria-level="1" role="heading" id="h_note_17"><span>Note</span></div><p class="">See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15470">bug 15470</a>.
+        IE9 and Opera Next 12.00 alpha allow the user to reset the range to null after the fact by clicking somewhere;
+        Firefox 12.0a1 and Chrome 17 dev do not.
+        I follow Gecko/WebKit, because it lessens the chance of getRangeAt(0) throwing.</p></div>
+
+      <section id="selectstart-event">
+        <h3 role="heading" id="h3_selectstart-event"><span class="secno">4.1 </span><code>selectstart</code> event</h3>
+
+        <p>When the user agent is about to associate a new range <var>newRange</var> to the <a href="#dfn-selection" class="internalDFN">selection</a> in response to a user initiated action,
+          the user agent must <dfn id="dfn-fire"><a href="http://www.w3.org/TR/dom/#concept-event-fire">fire</a></dfn> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>])
+          an event with the name <code>selectstart</code>, which bubbles and is cancelable,
+          at the <a href="#dfn-node" class="internalDFN">node</a> associated with the <a href="#dfn-boundary-point" class="internalDFN">boundary point</a> of <var>newRange</var>'s <a href="#range-start" class="internalDFN">start</a>
+          prior to changing the selection.</p>
+
+        <p>If the event is canceled, the user agent must not change the <a href="#dfn-selection" class="internalDFN">selection</a>.</p>
+
+        <p>The user agent must not <a href="#dfn-fire" class="internalDFN">fire</a> the event when the user agent sets the <a href="#dfn-selection" class="internalDFN">selection</a> <a href="#dfn-empty" class="internalDFN">empty</a>.</p>
+      </section>
+
+      <section id="selectionchange-event">
+        <h3 role="heading" id="h3_selectionchange-event"><span class="secno">4.2 </span><code>selectionchange</code> event</h3>
+
+        <p>When the <a href="#dfn-selection" class="internalDFN">selection</a> is changed either by the user or the content script,
+          the user agent must <dfn id="dfn-queue-a-task"><a href="http://www.w3.org/html/wg/drafts/html/master/webappapis.html#queue-a-task">queue a task</a></dfn> ([<cite><a class="bibref" href="#bib-HTML5">HTML5</a></cite>])
+          to <a href="#dfn-fire" class="internalDFN">fire</a> an event with the name <code>selectionchange</code>, which does not bubble and is not cancelable,
+          at the <a href="#dfn-document" class="internalDFN">document</a> associated with the <a href="#dfn-selection" class="internalDFN">selection</a>.</p>
+      </section>
+
+    </section>
+
+    <section class="appendix" id="acknowledgements">
+      <!--OddPage--><h2 role="heading" id="h2_acknowledgements"><span class="secno">A. </span>Acknowledgements</h2>
+      <p>Many thanks to</p>
+      <ul>
+        <li><p>Aryeh Gregor, who is the original author of this specification as well as <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing API specification</a>.</p></li>
+        <li><p>Contributors to the <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing API specification</a> - 
+          Ehsan Akhgari, Tab Atkins, Mathias Bynens, Tim Down, Markus Ernst, Daniel Glazman, Tali Gregor (née Fuss),
+          Stig Halvorsen, Jeff Harris, Ian Hickson, Cameron Heavon-Jones, Anne van Kesteren, Alfonso Martínez de Lizarrondo,
+          Glenn Maynard, Ms2ger, Robert O'Callahan, Julie Parent, Simon Pieters, Michael A. Puls II,
+          Rich Schwerdtfeger, Jonas Sicking, Henri Sivonen, Smylers, Hallvord R. M. Steen, Roland Steiner, Annie Sullivan,
+          timeless, Ojan Vafai, Brett Zamir, and Boris Zbarsky for their feedback, participation, or other helpful contributions</p></li>
+        <li>Robin Berjon for making our lives so much easier with his cool tool.</li>
+    </ul></section>
+
+  
+
+<div id="feedly-mini" title="feedly Mini tookit"></div><section id="references" class="appendix" typeof="bibo:Chapter" resource="#references" rel="bibo:Chapter"><!--OddPage--><h2 role="heading" id="h2_references"><span class="secno">B. </span>References</h2><section id="informative-references" typeof="bibo:Chapter" resource="#informative-references" rel="bibo:Chapter"><h3 role="heading" id="h3_informative-references"><span class="secno">B.1 </span>Informative references</h3><dl class="bibliography" about=""><dt id="bib-DOM4">[DOM4]</dt><dd rel="dcterms:references">Anne van Kesteren; Aryeh Gregor; Ms2ger; Alex Russell; Robin Berjon. <a href="http://www.w3.org/TR/dom/"><cite>W3C DOM4</cite></a>. 10 July 2014. W3C Last Call Working Draft. URL: <a href="http://www.w3.org/TR/dom/">http://www.w3.org/TR/dom/</a>
+</dd><dt id="bib-HTML5">[HTML5]</dt><dd rel="dcterms:references">Robin Berjon; Steve Faulkner; Travis Leithead; Erika Doyle Navara; Edward O'Connor; Silvia Pfeiffer. <a href="http://www.w3.org/TR/html5/"><cite>HTML5</cite></a>. 16 September 2014. W3C Proposed Recommendation. URL: <a href="http://www.w3.org/TR/html5/">http://www.w3.org/TR/html5/</a>
+</dd></dl></section></section></body></html>
