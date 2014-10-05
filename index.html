@@ -154,8 +154,6 @@
         <dfn>Editing hosts</dfn> (<a href="http://www.w3.org/TR/html5/editing.html#editing-host">defined</a> in [[HTML5]]) that are not
         inside a <a>document</a> cannot have a <a>selection</a></p>
 
-      <p class=issue>We need to define what it means to say editing hosts can't have selection.</p>
-
       <p>Each <a>selection</a> can be associated with a single <dfn>range</dfn> (<a href="http://www.w3.org/TR/dom/#range">defined</a> in [[DOM4]]).
         When there is no <a>range</a> associated with the <a>selection</a>, the </a>selection</a> is <dfn>empty</dfn>.
         The selection must be initially <a>empty</a>.</p>
@@ -175,10 +173,6 @@
         However, if the user changes the selection or a script calls <code>addRange()</code>,
         the selection must be associated with a new range object, as required elsewhere in this specification.</p>
 
-      <p class=issue>This paragraph is vague.
-        It needs to be replaced by detailed conformance requirements saying exactly what to do for particular keystrokes,
-        like we have for backspace/delete/etc.</p>
-
       <p>If the <a>selection</a>'s <a>range</a> is not null and is
         <a href="http://www.w3.org/TR/dom/#dom-range-collapsed"><dfn id="range-collapsed">collapsed</dfn></a> ([[DOM4]]),
         then the caret position must be at that <a>range</a>'s <a href="http://www.w3.org/TR/dom/#concept-range-bp"><dfn>boundary point</dfn></a>.
@@ -197,8 +191,6 @@
         If the first indicated <a>boundary point</a> is <a href="http://www.w3.org/TR/dom/#concept-range-bp-before"><dfn>before</dfn></a> ([[DOM4]]) the second,
         then the corresponding <a>selection</a> must initially be <a>forwards</a>.
         Otherwise, it must be <a>directionless</a>.</p>
-
-      <p class=issue>Should <code>addRange()</code> and <code>removeAllRanges()</code> reset direction?</p>
 
       <p><a>Selection</a>s also have an <dfn>anchor</dfn> and a <dfn>focus</dfn>.
         If the <a>selection</a>'s <a>range</a> is null, its <a>anchor</a> and <a>focus</a> are both null.
@@ -288,7 +280,6 @@
           <p>The method must make the <a>context object</a> <a>empty</a> by disassociating its <a>range</a>
             if the <a>context object</a>'s <a>range</a> is <var>range</var>.
             Otherwise, it must do nothing.</p>
-          <p class=issue>Should we check for object equality here or just equality of boundary points?</p>
         </dd>
 
         <dt>void removeAllRanges()</dt>
@@ -390,8 +381,8 @@
           <ol>
             <li>If <var>node</var>'s <a>root</a> is not the <a>document</a> associated with the <a>context object</a>, abort these steps.</li>
             <li>Let <var>newRange</var> be a new <a>range</a> and <var>nodeLength</var> be the <a>length</a> of <var>node</var>.</li>
-            <li>Set <var>newRange</var>'s <a href="range-start">start</a> to (<var>node</var>, <code>0</code>).</li>
-            <li>Set <var>newRange</var>'s <a href="range-end">end</a> to (<var>node</var>, <var>nodeLength</var>).</li>
+            <li>Set <var>newRange</var>'s <a href="#range-start">start</a> to (<var>node</var>, <code>0</code>).</li>
+            <li>Set <var>newRange</var>'s <a href="#range-end">end</a> to (<var>node</var>, <var>nodeLength</var>).</li>
             <li>Set the <a>context object</a>'s <a>range</a> to <var>newRange</var>.</li>
             <li>Set the <a>context object</a>'s <a>direction</a> to <var>forwards</var>.</li>
           </ol>
@@ -427,9 +418,6 @@
           <p class=note>This is the one method that actually mutates the range instead of replacing it.
             This matches IE9 and Firefox 12.0a1. (Chrome 17 dev and Opera Next 12.00 alpha can't be tested,
             because getRangeAt() returns a copy anyway.)</p>
-
-          <p class=issue>Should we replace the range rather than mutating it here?
-            This is currently the only Selection method that actually mutates an existing range in place.</p>
         </dd>
 
         <dt>boolean containsNode(Node node, boolean allowPartialContainment)</dt>
@@ -450,14 +438,11 @@
             the first <a>boundary point</a> in the <var>node</var>
             <strong>or</strong> <a href="#range-end">end</a> of its <a>range</a> is <a>after</a> or visually equivalent to
             the last <a>boundary point</a> in the <var>node</var>.</p>
-
-          <p class=issue>We need to define the visually equivalency.</p>
         </dd>
 
         <dt>stringifier DOMString ()</dt>
         <dd>
           See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=10583">W3C bug 10583</a>.
-          <p class=issue>Completely under-spec'ed.</p>
         </dd>
       </dl>
 

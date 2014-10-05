@@ -631,8 +631,6 @@ table.exceptions table {
         <dfn id="dfn-editing-hosts">Editing hosts</dfn> (<a href="http://www.w3.org/TR/html5/editing.html#editing-host">defined</a> in [<cite><a class="bibref" href="#bib-HTML5">HTML5</a></cite>]) that are not
         inside a <a href="#dfn-document" class="internalDFN">document</a> cannot have a <a href="#dfn-selection" class="internalDFN">selection</a></p>
 
-      <div class="issue"><div class="issue-title" aria-level="1" role="heading" id="h_issue_1"><span>Issue 1</span></div><p class="">We need to define what it means to say editing hosts can't have selection.</p></div>
-
       <p>Each <a href="#dfn-selection" class="internalDFN">selection</a> can be associated with a single <dfn id="dfn-range">range</dfn> (<a href="http://www.w3.org/TR/dom/#range">defined</a> in [<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>]).
         When there is no <a href="#dfn-range" class="internalDFN">range</a> associated with the <a href="#dfn-selection" class="internalDFN">selection</a>, the selection is <dfn id="dfn-empty">empty</dfn>.
         The selection must be initially <a href="#dfn-empty" class="internalDFN">empty</a>.</p>
@@ -652,10 +650,6 @@ table.exceptions table {
         However, if the user changes the selection or a script calls <code>addRange()</code>,
         the selection must be associated with a new range object, as required elsewhere in this specification.</p></div>
 
-      <div class="issue"><div class="issue-title" aria-level="1" role="heading" id="h_issue_2"><span>Issue 2</span></div><p class="">This paragraph is vague.
-        It needs to be replaced by detailed conformance requirements saying exactly what to do for particular keystrokes,
-        like we have for backspace/delete/etc.</p></div>
-
       <p>If the <a href="#dfn-selection" class="internalDFN">selection</a>'s <a href="#dfn-range" class="internalDFN">range</a> is not null and is
         <a href="http://www.w3.org/TR/dom/#dom-range-collapsed"><dfn id="range-collapsed">collapsed</dfn></a> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>]),
         then the caret position must be at that <a href="#dfn-range" class="internalDFN">range</a>'s <a href="http://www.w3.org/TR/dom/#concept-range-bp"><dfn id="dfn-boundary-point">boundary point</dfn></a>.
@@ -674,8 +668,6 @@ table.exceptions table {
         If the first indicated <a href="#dfn-boundary-point" class="internalDFN">boundary point</a> is <a href="http://www.w3.org/TR/dom/#concept-range-bp-before"><dfn id="dfn-before">before</dfn></a> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>]) the second,
         then the corresponding <a href="#dfn-selection" class="internalDFN">selection</a> must initially be <a href="#dfn-forwards" class="internalDFN">forwards</a>.
         Otherwise, it must be <a href="#dfn-directionless" class="internalDFN">directionless</a>.</p>
-
-      <div class="issue"><div class="issue-title" aria-level="1" role="heading" id="h_issue_3"><span>Issue 3</span></div><p class="">Should <code>addRange()</code> and <code>removeAllRanges()</code> reset direction?</p></div>
 
       <p><a href="#idl-def-Selection" class="idlType"><code>Selection</code></a>s also have an <dfn id="dfn-anchor">anchor</dfn> and a <dfn id="dfn-focus">focus</dfn>.
         If the <a href="#dfn-selection" class="internalDFN">selection</a>'s <a href="#dfn-range" class="internalDFN">range</a> is null, its <a href="#dfn-anchor" class="internalDFN">anchor</a> and <a href="#dfn-focus" class="internalDFN">focus</a> are both null.
@@ -724,7 +716,6 @@ table.exceptions table {
           and must return <code>1</code> otherwise.</p>
         </dd></dl></section><section id="methods"><h3 role="heading" id="h3_methods"><span class="secno">2.2 </span>Methods</h3><dl class="methods"><dt id="widl-Selection-DOMString-stringifier"><code>DOMString</code></dt><dd>
           See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=10583"><abbr title="World Wide Web Consortium">W3C</abbr> bug 10583</a>.
-          <div class="issue"><div class="issue-title" aria-level="2" role="heading" id="h_issue_4"><span>Issue 7</span></div><p class="">Completely under-spec'ed.</p></div>
         <div><em>No parameters.</em></div><div><em>Return type: </em><code>stringifier</code></div></dd><dt id="widl-Selection-addRange-void-Range-range"><code>addRange</code></dt><dd>
           <p>The method must set the <a href="#dfn-context-object" class="internalDFN">context object</a>'s range to <var>range</var> by a strong reference (not by making a copy)
             if the <dfn id="dfn-root"><a href="http://www.w3.org/TR/dom/#concept-tree-root">root</a></dfn> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>])
@@ -789,7 +780,6 @@ table.exceptions table {
             <strong>or</strong> <a href="#range-end">end</a> of its <a href="#dfn-range" class="internalDFN">range</a> is <a href="#dfn-after" class="internalDFN">after</a> or visually equivalent to
             the last <a href="#dfn-boundary-point" class="internalDFN">boundary point</a> in the <var>node</var>.</p>
 
-          <div class="issue"><div class="issue-title" aria-level="2" role="heading" id="h_issue_5"><span>Issue 6</span></div><p class="">We need to define the visually equivalency.</p></div>
         <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">node</td><td class="prmType"><code><a href="#dfn-node" class="internalDFN">Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">allowPartialContainment</td><td class="prmType"><code>boolean</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>boolean</code></div></dd><dt id="widl-Selection-deleteFromDocument-void"><code>deleteFromDocument</code></dt><dd>
           <p>The method must invoke <dfn id="dfn-deletecontents"><a href="http://dom.spec.whatwg.org/#dom-range-deletecontents"><code>deleteContents()</code></a></dfn> ([<cite><a class="bibref" href="#bib-DOM4">DOM4</a></cite>])
           on the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a> if the <a href="#dfn-context-object" class="internalDFN">context object</a> is not <a href="#dfn-empty" class="internalDFN">empty</a>.
@@ -799,8 +789,6 @@ table.exceptions table {
             This matches IE9 and Firefox 12.0a1. (Chrome 17 dev and Opera Next 12.00 alpha can't be tested,
             because getRangeAt() returns a copy anyway.)</p></div>
 
-          <div class="issue"><div class="issue-title" aria-level="2" role="heading" id="h_issue_6"><span>Issue 5</span></div><p class="">Should we replace the range rather than mutating it here?
-            This is currently the only Selection method that actually mutates an existing range in place.</p></div>
         <div><em>No parameters.</em></div><div><em>Return type: </em><code>void</code></div></dd><dt id="widl-Selection-extend-void-Node-node-unsigned-long-offset"><code>extend</code></dt><dd>
           <p>The method must follow these steps:</p>
           <ol>
@@ -849,14 +837,13 @@ table.exceptions table {
           <p>The method must make the <a href="#dfn-context-object" class="internalDFN">context object</a> <a href="#dfn-empty" class="internalDFN">empty</a> by disassociating its <a href="#dfn-range" class="internalDFN">range</a>
             if the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a> is <var>range</var>.
             Otherwise, it must do nothing.</p>
-          <div class="issue"><div class="issue-title" aria-level="2" role="heading" id="h_issue_7"><span>Issue 4</span></div><p class="">Should we check for object equality here or just equality of boundary points?</p></div>
         <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">range</td><td class="prmType"><code><a href="#dfn-range" class="internalDFN">Range</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>void</code></div></dd><dt id="widl-Selection-selectAllChildren-void-Node-node"><code>selectAllChildren</code></dt><dd>
           <p>The method must follow these steps:</p>
           <ol>
             <li>If <var>node</var>'s <a href="#dfn-root" class="internalDFN">root</a> is not the <a href="#dfn-document" class="internalDFN">document</a> associated with the <a href="#dfn-context-object" class="internalDFN">context object</a>, abort these steps.</li>
             <li>Let <var>newRange</var> be a new <a href="#dfn-range" class="internalDFN">range</a> and <var>nodeLength</var> be the <a href="#dfn-length" class="internalDFN">length</a> of <var>node</var>.</li>
-            <li>Set <var>newRange</var>'s <a href="range-start">start</a> to (<var>node</var>, <code>0</code>).</li>
-            <li>Set <var>newRange</var>'s <a href="range-end">end</a> to (<var>node</var>, <var>nodeLength</var>).</li>
+            <li>Set <var>newRange</var>'s <a href="#range-start">start</a> to (<var>node</var>, <code>0</code>).</li>
+            <li>Set <var>newRange</var>'s <a href="#range-end">end</a> to (<var>node</var>, <var>nodeLength</var>).</li>
             <li>Set the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-range" class="internalDFN">range</a> to <var>newRange</var>.</li>
             <li>Set the <a href="#dfn-context-object" class="internalDFN">context object</a>'s <a href="#dfn-direction" class="internalDFN">direction</a> to <var>forwards</var>.</li>
           </ol>
