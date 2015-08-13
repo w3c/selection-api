@@ -543,7 +543,8 @@
           the user agent must <dfn><a href="http://www.w3.org/TR/dom/#concept-event-fire">fire</a></dfn> ([[DOM4]])
           an event with the name <code>selectstart</code>, which bubbles and is cancelable</a>,
           at the <a>node</a> associated with the <a>boundary point</a> of <var>newRange</var>'s <a>start</a>
-          prior to changing the selection.</p>
+          prior to changing the selection if the <a>selection</a> was previously <a>empty</a>
+          or the previously associated range was <a>collapsed</a>.</p>
 
         <p>If the event is canceled, the user agent must not change the <a>selection</a>.</p>
 
