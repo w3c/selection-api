@@ -237,8 +237,15 @@
 
         <dt>readonly attribute unsigned long rangeCount</dt>
         <dd>
-          <p>The attribute must return <code>0</code> if the <a>context object</a>'s <a>range</a> is <a>empty</a>,
+          <p>The attribute must return <code>0</code> if the <a>context object</a> is <a>empty</a>,
           and must return <code>1</code> otherwise.</p>
+        </dd>
+
+        <dt>readonly attribute DOMString type</dt>
+        <dd>
+          <p>The attribute must return <code>"None"</code> if the <a>context object</a> is <a>empty</a>,
+          <code>"Caret"</code> if the <a>context object</a>'s <a>range</a> is <a>collapsed</a>,
+          and <code>"Range"</code> otherwise.</p>
         </dd>
 
         <dt>Range getRangeAt(unsigned long index)</dt>
