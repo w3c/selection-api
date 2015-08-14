@@ -309,7 +309,7 @@
         <dd>
           <p>The method must follow these steps:</p>
           <ol>
-            <li>The method must throw an <a><code>IndexSizeError</code></a> exception if <var>offset</var> is negative or longer than <var>node</var>'s
+            <li>The method must throw an <a><code>IndexSizeError</code></a> exception if <var>offset</var> is longer than <var>node</var>'s
               <dfn><a href="http://www.w3.org/TR/dom/#concept-node-length">length</a></dfn> ([[DOM4]]) and abort these steps.</li>
             <li>If <var>node</var>'s <a>root</a> is not the <a>document</a> associated with the <a>context object</a>, abort these steps.</li>
             <li>Otherwise, let <var>newRange</var> be a new <a>range</a>.</li>
@@ -379,8 +379,8 @@
         <dd>
           <p>The method must follow these steps:</p>
           <ol>
-            <li>If <var>anchorOffset</var> is negative or longer than <var>anchorNode</var>'s <a>length</a>
-              or if <var>focusOffset</var> is negative or longer than <var>focusNode</var>'s <a>length</a>,
+            <li>If <var>anchorOffset</var> is longer than <var>anchorNode</var>'s <a>length</a>
+              or if <var>focusOffset</var> is longer than <var>focusNode</var>'s <a>length</a>,
               throw an <a><code>IndexSizeError</code></a> exception and abort these steps.</li>
             <li>If the <a>root</a>s of <var>anchorNode</var> or <var>focusNode</var> are not the <a>document</a> associated with <a>context object</a>,
               abort these steps.</li>
