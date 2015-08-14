@@ -570,7 +570,8 @@
       <section>
         <h3><code>selectionchange</code> event</h3>
 
-        <p>When the <a>selection</a> is changed either by the user or the content script,
+        <p>When the <a>selection</a> is dissociated with its <a>range</a>, associated with a new <a>range</a>
+          or the associated <a>range</a>'s <a>boundary point</a> is mutated either by the user or the content script,
           the user agent must <dfn><a href="http://www.w3.org/html/wg/drafts/html/master/webappapis.html#queue-a-task">queue a task</a></dfn> ([[HTML5]])
           to <a>fire</a> an event with the name <code>selectionchange</code>, which does not bubble and is not cancelable</a>,
           at the <a>document</a> associated with the <a>selection</a>.</p>
