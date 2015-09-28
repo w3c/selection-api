@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" typeof="bibo:Document w3p:WD" prefix="bibo: http://purl.org/ontology/bibo/ w3p: http://www.w3.org/2001/02pd/rec54#">
+<head><meta property="dc:language" content="en" lang="">
+    <title>Selection API</title>
+    <meta charset="utf-8">
+    
+    
+  <style>/*****************************************************************
+ * ReSpec 3 CSS
+ * Robin Berjon - http://berjon.com/
+ *****************************************************************/
+
+/* --- INLINES --- */
+em.rfc2119 { 
+    text-transform:     lowercase;
+    font-variant:       small-caps;
+    font-style:         normal;
+    color:              #900;
+}
+
+h1 acronym, h2 acronym, h3 acronym, h4 acronym, h5 acronym, h6 acronym, a acronym,
+h1 abbr, h2 abbr, h3 abbr, h4 abbr, h5 abbr, h6 abbr, a abbr {
+    border: none;
+}
+
+dfn {
+    font-weight:    bold;
+}
+
+a.internalDFN {
+    color:  inherit;
+    border-bottom:  1px solid #99c;
+    text-decoration:    none;
+}
+
+a.externalDFN {
+    color:  inherit;
+    border-bottom:  1px dotted #ccc;
+    text-decoration:    none;
+}
+
+a.bibref {
+    text-decoration:    none;
+}
+
+cite .bibref {
+    font-style: normal;
+}
+
+code {
+    color:  #C83500;
+}
+
+/* --- TOC --- */
+.toc a, .tof a {
+    text-decoration:    none;
+}
+
+a .secno, a .figno {
+    color:  #000;
+}
+
+ul.tof, ol.tof {
+    list-style: none outside none;
+}
+
+.caption {
+    margin-top: 0.5em;
+    font-style:   italic;
+}
+
+/* --- TABLE --- */
+table.simple {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    border-bottom:  3px solid #005a9c;
+}
+
+.simple th {
+    background: #005a9c;
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+}
+
+.simple th[scope="row"] {
+    background: inherit;
+    color:  inherit;
+    border-top: 1px solid #ddd;
+}
+
+.simple td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+}
+
+.simple tr:nth-child(even) {
+    background: #f0f6ff;
+}
+
+/* --- DL --- */
+.section dd > p:first-child {
+    margin-top: 0;
+}
+
+.section dd > p:last-child {
+    margin-bottom: 0;
+}
+
+.section dd {
+    margin-bottom:  1em;
+}
+
+.section dl.attrs dd, .section dl.eldef dd {
+    margin-bottom:  0;
+}
+
+@media print {
+    .removeOnSave {
+        display: none;
+    }
+}
+</style><style>/* --- ISSUES/NOTES --- */
+div.issue-title, div.note-title , div.ednote-title, div.warning-title {
+    padding-right:  1em;
+    min-width: 7.5em;
+    color: #b9ab2d;
+}
+div.issue-title { color: #e05252; }
+div.note-title, div.ednote-title { color: #2b2; }
+div.warning-title { color: #f22; }
+div.issue-title span, div.note-title span, div.ednote-title span, div.warning-title span {
+    text-transform: uppercase;
+}
+div.note, div.issue, div.ednote, div.warning {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+.note > p:first-child, .ednote > p:first-child, .issue > p:first-child, .warning > p:first-child { margin-top: 0 }
+.issue, .note, .ednote, .warning {
+    padding: .5em;
+    border-left-width: .5em;
+    border-left-style: solid;
+}
+div.issue, div.note , div.ednote,  div.warning {
+    padding: 1em 1.2em 0.5em;
+    margin: 1em 0;
+    position: relative;
+    clear: both;
+}
+span.note, span.ednote, span.issue, span.warning { padding: .1em .5em .15em; }
+
+.issue {
+    border-color: #e05252;
+    background: #fbe9e9;
+}
+.note, .ednote {
+    border-color: #52e052;
+    background: #e9fbe9;
+}
+
+.warning {
+    border-color: #f11;
+    border-right-width: .2em;
+    border-top-width: .2em;
+    border-bottom-width: .2em;
+    border-style: solid;
+    background: #fbe9e9;
+}
+
+.warning-title:before{
+    content: "⚠"; /*U+26A0 WARNING SIGN*/
+    font-size: 3em;
+    float: left;
+    height: 100%;
+    padding-right: .3em;
+    vertical-align: top;
+    margin-top: -0.5em;
+}
+
+li.task-list-item {
+    list-style: none;
+}
+
+input.task-list-item-checkbox {
+    margin: 0 0.35em 0.25em -1.6em;
+    vertical-align: middle;
+}
+</style><style>/* --- WEB IDL --- */
+pre.idl {
+    border-top: 1px solid #90b8de;
+    border-bottom: 1px solid #90b8de;
+    padding:    1em;
+    line-height:    120%;
+}
+
+pre.idl::before {
+    content:    "WebIDL";
+    display:    block;
+    width:      150px;
+    background: #90b8de;
+    color:  #fff;
+    font-family:    sans-serif;
+    padding:    3px;
+    font-weight:    bold;
+    margin: -1em 0 1em -1em;
+}
+
+.idlType {
+    color:  #ff4500;
+    font-weight:    bold;
+    text-decoration:    none;
+}
+
+/*.idlModule*/
+/*.idlModuleID*/
+/*.idlInterface*/
+.idlInterfaceID, .idlDictionaryID, .idlCallbackID, .idlEnumID {
+    font-weight:    bold;
+    color:  #005a9c;
+}
+a.idlEnumItem {
+    color:  #000;
+    border-bottom:  1px dotted #ccc;
+    text-decoration: none;
+}
+
+.idlSuperclass {
+    font-style: italic;
+    color:  #005a9c;
+}
+
+/*.idlAttribute*/
+.idlAttrType, .idlFieldType, .idlMemberType {
+    color:  #005a9c;
+}
+.idlAttrName, .idlFieldName, .idlMemberName {
+    color:  #ff4500;
+}
+.idlAttrName a, .idlFieldName a, .idlMemberName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlMethod*/
+.idlMethType, .idlCallbackType {
+    color:  #005a9c;
+}
+.idlMethName {
+    color:  #ff4500;
+}
+.idlMethName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlCtor*/
+.idlCtorName {
+    color:  #ff4500;
+}
+.idlCtorName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlParam*/
+.idlParamType {
+    color:  #005a9c;
+}
+.idlParamName, .idlDefaultValue {
+    font-style: italic;
+}
+
+.extAttr {
+    color:  #666;
+}
+
+/*.idlSectionComment*/
+.idlSectionComment {
+    color: gray;
+}
+
+/*.idlIterable*/
+.idlIterableKeyType, .idlIterableValueType {
+    color:  #005a9c;
+}
+
+/*.idlMaplike*/
+.idlMaplikeKeyType, .idlMaplikeValueType {
+    color:  #005a9c;
+}
+
+/*.idlConst*/
+.idlConstType {
+    color:  #005a9c;
+}
+.idlConstName {
+    color:  #ff4500;
+}
+.idlConstName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlException*/
+.idlExceptionID {
+    font-weight:    bold;
+    color:  #c00;
+}
+
+.idlTypedefID, .idlTypedefType {
+    color:  #005a9c;
+}
+
+.idlRaises, .idlRaises a.idlType, .idlRaises a.idlType code, .excName a, .excName a code {
+    color:  #c00;
+    font-weight:    normal;
+}
+
+.excName a {
+    font-family:    monospace;
+}
+
+.idlRaises a.idlType, .excName a.idlType {
+    border-bottom:  1px dotted #c00;
+}
+
+.excGetSetTrue, .excGetSetFalse, .prmNullTrue, .prmNullFalse, .prmOptTrue, .prmOptFalse {
+    width:  45px;
+    text-align: center;
+}
+.excGetSetTrue, .prmNullTrue, .prmOptTrue { color:  #0c0; }
+.excGetSetFalse, .prmNullFalse, .prmOptFalse { color:  #c00; }
+
+.idlImplements a {
+    font-weight:    bold;
+}
+
+dl.attributes, dl.methods, dl.constants, dl.constructors, dl.fields, dl.dictionary-members {
+    margin-left:    2em;
+}
+
+.attributes dt, .methods dt, .constants dt, .constructors dt, .fields dt, .dictionary-members dt {
+    font-weight:    normal;
+}
+
+.attributes dt code, .methods dt code, .constants dt code, .constructors dt code, .fields dt code, .dictionary-members dt code {
+    font-weight:    bold;
+    color:  #000;
+    font-family:    monospace;
+}
+
+.attributes dt code, .fields dt code, .dictionary-members dt code {
+    background:  #ffffd2;
+}
+
+.attributes dt .idlAttrType code, .fields dt .idlFieldType code, .dictionary-members dt .idlMemberType code {
+    color:  #005a9c;
+    background:  transparent;
+    font-family:    inherit;
+    font-weight:    normal;
+    font-style: italic;
+}
+
+.methods dt code {
+    background:  #d9e6f8;
+}
+
+.constants dt code {
+    background:  #ddffd2;
+}
+
+.constructors dt code {
+    background:  #cfc;
+}
+
+.attributes dd, .methods dd, .constants dd, .constructors dd, .fields dd, .dictionary-members dd {
+    margin-bottom:  1em;
+}
+
+table.parameters, table.exceptions {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    margin: 0.5em 0;
+    width:  100%;
+}
+table.parameters { border-bottom:  1px solid #90b8de; }
+table.exceptions { border-bottom:  1px solid #deb890; }
+
+.parameters th, .exceptions th {
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+    font-weight:    normal;
+    text-shadow:    #666 1px 1px 0;
+}
+.parameters th { background: #90b8de; }
+.exceptions th { background: #deb890; }
+
+.parameters td, .exceptions td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.parameters tr:first-child td, .exceptions tr:first-child td {
+    border-top: none;
+}
+
+.parameters td.prmName, .exceptions td.excName, .exceptions td.excCodeName {
+    width:  100px;
+}
+
+.parameters td.prmType {
+    width:  120px;
+}
+
+table.exceptions table {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    width:  100%;
+}
+</style><link href="https://www.w3.org/StyleSheets/TR/W3C-WD" rel="stylesheet"><!--[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]--><script type="application/json" id="initialUserConfig">{
+  "specStatus": "ED",
+  "shortName": "selection-api",
+  "previousPublishDate": "2014-10-07",
+  "previousMaturity": "FPWD",
+  "processVersion": "2005",
+  "edDraftURI": "http://w3c.github.io/selection-api/",
+  "editors": [
+    {
+      "name": "Ryosuke Niwa",
+      "mailto": "rniwa@apple.com",
+      "company": "Apple Inc.",
+      "companyURL": "http://www.apple.com/"
+    }
+  ],
+  "wg": "Web Applications Working Group",
+  "wgURI": "http://www.w3.org/2008/webapps/",
+  "wgPublicList": "public-webapps",
+  "wgPatentURI": "http://www.w3.org/2004/01/pp-impl/42538/status",
+  "otherLinks": [
+    {
+      "key": "Participate",
+      "data": [
+        {
+          "value": "We are on GitHub.",
+          "href": "https://github.com/w3c/selection-api"
+        },
+        {
+          "value": "File a bug.",
+          "href": "https://github.com/w3c/selection-api/issues"
+        },
+        {
+          "value": "Commit history.",
+          "href": "https://github.com/w3c/selection-api/commits/gh-pages"
+        },
+        {
+          "value": "Mailing list.",
+          "href": "http://lists.w3.org/Archives/Public/public-webapps/"
+        }
+      ]
+    }
+  ]
+}</script></head>
+  <body id="respecDocument" role="document" class="h-entry"><div id="respecHeader" role="contentinfo" class="head">
+  <p>
+      
+        
+            <a href="http://www.w3.org/"><img src="https://www.w3.org/Icons/w3c_home" alt="W3C" height="48" width="72"></a>
+            
+            
+        
+      
+  </p>
+  <h1 class="title p-name" id="title" property="dcterms:title">Selection API</h1>
+  
+  <h2 id="w3c-working-draft-08-october-2015"><abbr title="World Wide Web Consortium">W3C</abbr> Working Draft <time property="dcterms:issued" class="dt-published" datetime="2015-10-08">08 October 2015</time></h2>
+  <dl>
+    
+      <dt>This version:</dt>
+      <dd><a class="u-url" href="http://www.w3.org/TR/2015/WD-selection-api-20151008/">http://www.w3.org/TR/2015/WD-selection-api-20151008/</a></dd>
+      <dt>Latest published version:</dt>
+      <dd><a href="http://www.w3.org/TR/selection-api/">http://www.w3.org/TR/selection-api/</a></dd>
+    
+    
+      <dt>Latest editor's draft:</dt>
+      <dd><a href="http://w3c.github.io/selection-api/">http://w3c.github.io/selection-api/</a></dd>
+    
+    
+    
+    
+    
+    
+      <dt>Previous version:</dt>
+      <dd><a rel="dcterms:replaces" href="http://www.w3.org/TR/2014/WD-selection-api-20141007/">http://www.w3.org/TR/2014/WD-selection-api-20141007/</a></dd>
+    
+    
+    <dt>Editor:</dt>
+    <dd class="p-author h-card vcard" property="bibo:editor" resource="_:editor0"><span property="rdf:first" typeof="foaf:Person"><span property="foaf:name" class="p-name fn">Ryosuke Niwa</span>, <a property="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://www.apple.com/">Apple Inc.</a>, <span class="ed_mailto"><a class="u-email email" property="foaf:mbox" href="mailto:rniwa@apple.com">rniwa@apple.com</a></span></span>
+<span property="rdf:rest" resource="rdf:nil"></span>
+</dd>
+
+    
+    
+      
+        
+          <dt>Participate:</dt>
+          
+             
+                
+                  <dd>
+                    <a href="https://github.com/w3c/selection-api">
+                      We are on GitHub.
+                    </a>
+                  </dd>
+                
+             
+                
+                  <dd>
+                    <a href="https://github.com/w3c/selection-api/issues">
+                      File a bug.
+                    </a>
+                  </dd>
+                
+             
+                
+                  <dd>
+                    <a href="https://github.com/w3c/selection-api/commits/gh-pages">
+                      Commit history.
+                    </a>
+                  </dd>
+                
+             
+                
+                  <dd>
+                    <a href="http://lists.w3.org/Archives/Public/public-webapps/">
+                      Mailing list.
+                    </a>
+                  </dd>
+                
+             
+          
+        
+      
+    
+  </dl>
+  
+  
+  
+  
+    
+      <p class="copyright">
+        <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> ©
+        2015
+        
+        <a href="http://www.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr></a><sup>®</sup>
+        (<a href="http://www.csail.mit.edu/"><abbr title="Massachusetts Institute of Technology">MIT</abbr></a>,
+        <a href="http://www.ercim.eu/"><abbr title="European Research Consortium for Informatics and Mathematics">ERCIM</abbr></a>,
+        <a href="http://www.keio.ac.jp/">Keio</a>, <a href="http://ev.buaa.edu.cn/">Beihang</a>). 
+        
+        <abbr title="World Wide Web Consortium">W3C</abbr> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>,
+        <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and
+        
+          <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a>
+        
+        rules apply.
+      </p>
+    
+  
+  <hr>
+</div>
+    <section property="dc:abstract" class="introductory" id="abstract"><h2 resource="#h-abstract" id="h-abstract"><span property="xhv:role" resource="xhv:heading">Abstract</span></h2>
+      <p>
+        This document is a preliminary draft of a specification for the Selection API and selection related functionality.
+        It replaces a couple of old sections of the <a href="http://www.w3.org/TR/html5/">HTML specification</a>,
+        the selection part of the old <a href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-Range-20001113/ranges.html">DOM Range specification</a>.
+      </p>
+      <p>
+	This document defines APIs for selection, which allows users and authors to select a portion of a document or specify a point of interest for copy, paste, and other editing operations.
+      </p>
+    </section><section id="sotd" class="introductory"><h2 resource="#h-sotd" id="h-sotd"><span property="xhv:role" resource="xhv:heading">Status of This Document</span></h2>
+  
+    
+      
+        <p>
+          <em>This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current <abbr title="World Wide Web Consortium">W3C</abbr> publications and the latest revision of this technical report can be found in the <a href="http://www.w3.org/TR/"><abbr title="World Wide Web Consortium">W3C</abbr> technical reports index</a> at http://www.w3.org/TR/.</em>
+        </p>
+        
+          
+          
+      <p>This document was published by the <a href="http://www.w3.org/2008/webapps/">Web Applications Working Group</a>,
+        any feedback or discussion of this specification should be posted to
+        <a href="mailto:public-webapps@w3.org">public-webapps mailing list</a>
+        with "[selection-api]" in the subject (<a href="http://lists.w3.org/Archives/Public/public-webapps/">archive</a>).
+      </p>
+
+      <p>
+        This specification is based on the <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing API specification</a>
+        edited by Aryeh Gregor and published by the <a href="https://www.w3.org/community/editing/"><abbr title="World Wide Web Consortium">W3C</abbr> Editing APIs Community Group</a>.
+        Copyright © 2011-2014 the Contributors to the <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing APIs Specification</a>,
+        published by the <a href="https://www.w3.org/community/editing/"><abbr title="World Wide Web Consortium">W3C</abbr> Editing APIs Community Group</a> under the
+        <a href="https://www.w3.org/community/about/agreements/cla/"><abbr title="World Wide Web Consortium">W3C</abbr> Community Contributor License Agreement (CLA)</a>.
+      </p>
+    
+          
+          <p>
+            This document was published by the <a href="http://www.w3.org/2008/webapps/">Web Applications Working Group</a> as a Working Draft.
+            
+              This document is intended to become a <abbr title="World Wide Web Consortium">W3C</abbr> Recommendation.
+            
+            
+              If you wish to make comments regarding this document, please send them to
+              <a href="mailto:public-webapps@w3.org">public-webapps@w3.org</a>
+              (<a href="mailto:public-webapps-request@w3.org?subject=subscribe">subscribe</a>,
+              <a href="http://lists.w3.org/Archives/Public/public-webapps/">archives</a>).
+            
+            
+            
+            
+            
+              
+              All comments are welcome.
+              
+            
+          </p>
+          
+          
+          
+            <p>
+              Publication as a Working Draft does not imply endorsement by the <abbr title="World Wide Web Consortium">W3C</abbr>
+              Membership. This is a draft document and may be updated, replaced or obsoleted by other
+              documents at any time. It is inappropriate to cite this document as other than work in
+              progress.
+            </p>
+          
+          
+          
+          <p>
+            
+              This document was produced by
+              
+              a group
+               operating under the
+              <a id="sotd_patent" property="w3p:patentRules" href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <abbr title="World Wide Web Consortium">W3C</abbr> Patent
+              Policy</a>.
+            
+            
+            
+              
+                <abbr title="World Wide Web Consortium">W3C</abbr> maintains a <a href="http://www.w3.org/2004/01/pp-impl/42538/status" rel="disclosure">public list of any patent
+                disclosures</a>
+              
+              made in connection with the deliverables of
+              
+              the group; that page also includes
+              
+              instructions for disclosing a patent. An individual who has actual knowledge of a patent
+              which the individual believes contains
+              <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential
+              Claim(s)</a> must disclose the information in accordance with
+              <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section
+              6 of the <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>.
+            
+            
+          </p>
+          
+            <p>This document is governed by the <a id="w3c_process_revision" href="http://www.w3.org/2015/Process-20150901/">1 September 2015 <abbr title="World Wide Web Consortium">W3C</abbr> Process Document</a>.
+            </p>
+          
+          
+        
+      
+    
+  
+</section><section id="toc"><h2 resource="#h-toc" id="h-toc" class="introductory"><span property="xhv:role" resource="xhv:heading">Table of Contents</span></h2><ul id="respecContents" role="directory" class="toc"><li class="tocline"><a class="tocxref" href="#background"><span class="secno">1. </span>Background</a></li><li class="tocline"><a class="tocxref" href="#definition"><span class="secno">2. </span>Definition</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#attributes"><span class="secno">2.1 </span>Attributes</a></li><li class="tocline"><a class="tocxref" href="#methods"><span class="secno">2.2 </span>Methods</a></li></ul></li><li class="tocline"><a class="tocxref" href="#extensions-to-other-interfaces"><span class="secno">3. </span>Extensions to Other Interfaces</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#extensions-to-document-interface"><span class="secno">3.1 </span>Extensions to <code>Document</code> interface</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#methods-1"><span class="secno">3.1.1 </span>Methods</a></li></ul></li><li class="tocline"><a class="tocxref" href="#extensions-to-window-interface"><span class="secno">3.2 </span>Extensions to <code>Window</code> interface</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#methods-2"><span class="secno">3.2.1 </span>Methods</a></li></ul></li></ul></li><li class="tocline"><a class="tocxref" href="#user-interactions"><span class="secno">4. </span>User Interactions</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#selectstart-event"><span class="secno">4.1 </span><code>selectstart</code> event</a></li><li class="tocline"><a class="tocxref" href="#selectionchange-event"><span class="secno">4.2 </span><code>selectionchange</code> event</a></li></ul></li><li class="tocline"><a class="tocxref" href="#acknowledgements"><span class="secno">A. </span>Acknowledgements</a></li><li class="tocline"><a class="tocxref" href="#references"><span class="secno">B. </span>References</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#informative-references"><span class="secno">B.1 </span>Informative references</a></li></ul></li></ul></section>
+    
+    
+
+    <section property="bibo:hasPart" resource="#background" typeof="bibo:Chapter" id="background" class="informative">
+      <!--OddPage--><h2 resource="#h-background" id="h-background"><span property="xhv:role" resource="xhv:heading"><span class="secno">1. </span>Background</span></h2><p><em>This section is non-normative.</em></p>
+
+      <p>IE9 and Firefox 6.0a2 allow arbitrary ranges in the selection, which follows what this spec originally said.
+        However, this leads to unpleasant corner cases that authors, implementers, and spec writers all have to deal with,
+        and they don't make any real sense.  Chrome 14 dev and Opera 11.11 aggressively normalize selections,
+        like not letting them lie inside empty elements and things like that, but this is also viewed as a bad idea,
+        because it takes flexibility away from authors.</p>
+
+      <p>So I changed the spec to a made-up compromise that allows some simplification but doesn't constrain authors much.
+        See <a href="http://lists.whatwg.org/pipermail/whatwg-whatwg.org/2011-June/032072.html">discussion</a>.
+        Basically it would throw exceptions in some places to try to stop the selection from containing a range that had
+        a boundary point other than an Element or Text node, or a boundary point that didn't descend from a Document.</p>
+
+      <p>But this meant getRangeAt() had to start returning a copy, not a reference.
+        Also, it would be prone to things failing weirdly in corner cases. Perhaps most significantly, all sorts of problems
+        might arise when DOM mutations transpire, like if a boundary point's node is removed from its parent and
+        the mutation rules would place the new boundary point inside a non-Text/Element node.
+        And finally, the previously-specified behavior had the advantage of matching two major implementations,
+        while the new behavior matched no one.  So I changed it back.</p>
+
+      <div class="note"><div id="h-note1" role="heading" aria-level="3" class="note-title"><span>Note</span></div><div class="">
+      <p>See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15470">bug 15470</a>. IE9, Firefox 12.0a1, Chrome 17 dev,
+        and Opera Next 12.00 alpha all make the range initially null.</p>
+      </div></div>
+    </section>
+
+    <section property="bibo:hasPart" resource="#definition" typeof="bibo:Chapter" id="definition">
+      <!--OddPage--><h2 resource="#h-definition" id="h-definition"><span property="xhv:role" resource="xhv:heading"><span class="secno">2. </span>Definition</span></h2>
+
+      <p>Every <dfn id="dfn-document" data-dfn-type="dfn"><a href="http://www.w3.org/TR/dom/#document">document</a></dfn> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>]) with
+        a <dfn id="dfn-browsing-context" data-dfn-type="dfn"><a href="http://www.w3.org/TR/html5/browsers.html#browsing-context">browsing context</a></dfn> ([<cite><a href="#bib-HTML5" class="bibref">HTML5</a></cite>])
+        has a unique <a href="#idl-def-Selection"><code>Selection</code></a> object associated with it.
+        <a class="idlType" href="#idl-def-Selection"><code>Selection</code></a> objects are known as <dfn id="dfn-selection" data-dfn-type="dfn">selection</dfn>s.</p>
+
+      <div class="note"><div id="h-note2" role="heading" aria-level="3" class="note-title"><span>Note</span></div><p class="">This is a requirement of the HTML spec.
+        IE9 and Opera Next 12.00 alpha seem to follow it, while Firefox 12.0a1 and Chrome 17 dev seem not to.
+        See <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=717339">Mozilla bug</a>,
+        <a href="https://bugs.webkit.org/show_bug.cgi?id=76114">WebKit bug</a>.</p></div>
+
+      <p>This one <a data-link-type="dfn" class="internalDFN" href="#dfn-selection">selection</a> must be shared by all the content of the <a data-link-type="dfn" class="internalDFN" href="#dfn-document">document</a>
+        (though not by nested <a data-link-type="dfn" class="internalDFN" href="#dfn-document">document</a>s), including any editing hosts in the document.
+        <dfn id="dfn-editing-hosts" data-dfn-type="dfn">Editing hosts</dfn> (<a href="http://www.w3.org/TR/html5/editing.html#editing-host">defined</a> in [<cite><a href="#bib-HTML5" class="bibref">HTML5</a></cite>]) that are not
+        inside a <a data-link-type="dfn" class="internalDFN" href="#dfn-document">document</a> cannot have a <a data-link-type="dfn" class="internalDFN" href="#dfn-selection">selection</a></p>
+
+      <p>Each <a data-link-type="dfn" class="internalDFN" href="#dfn-selection">selection</a> can be associated with a single <dfn id="dfn-range" data-dfn-type="dfn">range</dfn> (<a href="http://www.w3.org/TR/dom/#range">defined</a> in [<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>]).
+        When there is no <a data-link-type="dfn" class="internalDFN" href="#dfn-range">range</a> associated with the <a data-link-type="dfn" class="internalDFN" href="#dfn-selection">selection</a>, the selection is <dfn id="dfn-empty" data-dfn-type="dfn">empty</dfn>.
+        The selection must be initially <a data-link-type="dfn" class="internalDFN" href="#dfn-empty">empty</a>.</p>
+
+      <div class="note"><div id="h-note3" role="heading" aria-level="3" class="note-title"><span>Note</span></div><p class="">A <a data-link-type="dfn" class="internalDFN" href="#dfn-document">document</a>'s <a data-link-type="dfn" class="internalDFN" href="#dfn-selection">selection</a> is a singleton object associated with that <a data-link-type="dfn" class="internalDFN" href="#dfn-document">document</a>,
+        so it gets replaced with a new object when <code>Document.open()</code> is called.
+        See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15470">bug 15470</a>.
+        IE9 and Opera Next 12.00 alpha allow the user to reset the range to null after the fact by clicking somewhere;
+        Firefox 12.0a1 and Chrome 17 dev do not.
+        We follow Gecko/WebKit, because it lessens the chance of getRangeAt(0) throwing.</p></div>
+
+      <p>Once a <a data-link-type="dfn" class="internalDFN" href="#dfn-selection">selection</a> is associated with a given <a data-link-type="dfn" class="internalDFN" href="#dfn-range">range</a>,
+        it must continue to be associated with that same <a data-link-type="dfn" class="internalDFN" href="#dfn-range">range</a> until this specification requires otherwise.</p>
+
+      <div class="note"><div id="h-note4" role="heading" aria-level="3" class="note-title"><span>Note</span></div><p class="">For instance, if the DOM changes in a way that changes the range's boundary points,
+        or a script modifies the boundary points of the range, the same range object must continue to be associated with the selection.
+        However, if the user changes the selection or a script calls <code>addRange()</code>,
+        the selection must be associated with a new range object, as required elsewhere in this specification.</p></div>
+
+      <p>If the <a data-link-type="dfn" class="internalDFN" href="#dfn-selection">selection</a>'s <a data-link-type="dfn" class="internalDFN" href="#dfn-range">range</a> is not null and is
+        <a href="http://www.w3.org/TR/dom/#dom-range-collapsed"><dfn data-dfn-type="dfn" id="range-collapsed">collapsed</dfn></a> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>]),
+        then the caret position must be at that <a data-link-type="dfn" class="internalDFN" href="#dfn-range">range</a>'s <a href="http://www.w3.org/TR/dom/#concept-range-bp"><dfn id="dfn-boundary-point" data-dfn-type="dfn">boundary point</dfn></a>.
+        <a></a><dfn data-dfn-type="dfn" data-dfn-for=""></dfn>
+        When the <a>selection</a> is not empty, this specification does not define the caret position;
+        user agents should follow platform conventions in deciding whether the caret is at the start of the <a>selection</a>,
+        the end of the <a>selection</a>, or somewhere else.
+
+      </p><div class="note"><div id="h-note5" role="heading" aria-level="3" class="note-title"><span>Note</span></div><p class="">This short-changes Mac users. See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=13909">bug 13909</a>.
+
+      </p></div><p>Each <a>selection</a> has a <dfn id="dfn-direction" data-dfn-type="dfn">direction</dfn>, <dfn id="dfn-forwards" data-dfn-type="dfn">forwards</dfn>, <dfn id="dfn-backwards" data-dfn-type="dfn">backwards</dfn>, or <dfn id="dfn-directionless" data-dfn-type="dfn">directionless</dfn>.
+        If the user creates a <a>selection</a> by indicating first one <a>boundary point</a> of the <a>range</a>
+        and then the other (such as by clicking on one point and dragging to another),
+        and the first indicated <a>boundary point</a> is <a href="http://www.w3.org/TR/dom/#concept-range-bp-after"><dfn id="dfn-after" data-dfn-type="dfn">after</dfn></a> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>]) the second,
+        then the corresponding <a>selection</a> must initially be <a>backwards</a>.
+        If the first indicated <a>boundary point</a> is <a href="http://www.w3.org/TR/dom/#concept-range-bp-before"><dfn id="dfn-before" data-dfn-type="dfn">before</dfn></a> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>]) the second,
+        then the corresponding <a>selection</a> must initially be <a>forwards</a>.
+        Otherwise, it must be <a>directionless</a>.</p>
+
+      <p><a class="idlType" href="#idl-def-Selection"><code>Selection</code></a>s also have an <dfn id="dfn-anchor" data-dfn-type="dfn">anchor</dfn> and a <dfn id="dfn-focus" data-dfn-type="dfn">focus</dfn>.
+        If the <a>selection</a>'s <a>range</a> is null, its <a>anchor</a> and <a>focus</a> are both null.
+        If the <a>selection</a>'s <a>range</a> is not null and its <a>direction</a> is <a>forwards</a>, its <a>anchor</a> is the <a>range</a>'s
+        <a>start</a>, and its <a>focus</a> is the <a>end</a>.
+        Otherwise, its <a>focus</a> is the <a>start</a> and its <a>anchor</a> is the <a>end</a>.</p>
+
+      <pre class="idl"><span class="idlInterface" id="idl-def-Selection">interface <span class="idlInterfaceID">Selection</span> {
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a>Node</a>?</span>         <span class="idlAttrName"><a href="#widl-Selection-anchorNode">anchorNode</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a>unsigned long</a></span> <span class="idlAttrName"><a href="#widl-Selection-anchorOffset">anchorOffset</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a>Node</a>?</span>         <span class="idlAttrName"><a href="#widl-Selection-focusNode">focusNode</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a>unsigned long</a></span> <span class="idlAttrName"><a href="#widl-Selection-focusOffset">focusOffset</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a>boolean</a></span>       <span class="idlAttrName"><a href="#widl-Selection-isCollapsed">isCollapsed</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a>unsigned long</a></span> <span class="idlAttrName"><a href="#widl-Selection-rangeCount">rangeCount</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a>DOMString</a></span>     <span class="idlAttrName"><a href="#widl-Selection-type">type</a></span>;</span>
+<span class="idlMethod">    <span class="idlMethType"><a>Range</a></span>       <span class="idlMethName"><a href="#widl-Selection-getRangeAt-Range-unsigned-long-index">getRangeAt</a></span> (<span class="idlParam"><span class="idlParamType"><a>unsigned long</a></span> <span class="idlParamName">index</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType"><a>void</a></span>        <span class="idlMethName"><a href="#widl-Selection-addRange-void-Range-range">addRange</a></span> (<span class="idlParam"><span class="idlParamType"><a>Range</a></span> <span class="idlParamName">range</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType"><a>void</a></span>        <span class="idlMethName"><a href="#widl-Selection-removeRange-void-Range-range">removeRange</a></span> (<span class="idlParam"><span class="idlParamType"><a>Range</a></span> <span class="idlParamName">range</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType"><a>void</a></span>        <span class="idlMethName"><a href="#widl-Selection-removeAllRanges-void">removeAllRanges</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType"><a>void</a></span>        <span class="idlMethName"><a href="#widl-Selection-empty-void">empty</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType"><a>void</a></span>        <span class="idlMethName"><a href="#widl-Selection-collapse-void-Node-node-unsigned-long-offset">collapse</a></span> (<span class="idlParam"><span class="idlParamType"><a>Node</a></span> <span class="idlParamName">node</span></span>, <span class="idlParam"><span class="idlParamType"><a>unsigned long</a></span> <span class="idlParamName">offset</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType"><a>void</a></span>        <span class="idlMethName"><a href="#widl-Selection-setPosition-void-Node-node-unsigned-long-offset">setPosition</a></span> (<span class="idlParam"><span class="idlParamType"><a>Node</a></span> <span class="idlParamName">node</span></span>, <span class="idlParam"><span class="idlParamType"><a>unsigned long</a></span> <span class="idlParamName">offset</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType"><a>void</a></span>        <span class="idlMethName"><a href="#widl-Selection-collapseToStart-void">collapseToStart</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType"><a>void</a></span>        <span class="idlMethName"><a href="#widl-Selection-collapseToEnd-void">collapseToEnd</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType"><a>void</a></span>        <span class="idlMethName"><a href="#widl-Selection-extend-void-Node-node-unsigned-long-offset">extend</a></span> (<span class="idlParam"><span class="idlParamType"><a>Node</a></span> <span class="idlParamName">node</span></span>, <span class="idlParam"><span class="idlParamType"><a>unsigned long</a></span> <span class="idlParamName">offset</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType"><a>void</a></span>        <span class="idlMethName"><a href="#widl-Selection-setBaseAndExtent-void-Node-anchorNode-unsigned-long-anchorOffset-Node-focusNode-unsigned-long-focusOffset">setBaseAndExtent</a></span> (<span class="idlParam"><span class="idlParamType"><a>Node</a></span> <span class="idlParamName">anchorNode</span></span>, <span class="idlParam"><span class="idlParamType"><a>unsigned long</a></span> <span class="idlParamName">anchorOffset</span></span>, <span class="idlParam"><span class="idlParamType"><a>Node</a></span> <span class="idlParamName">focusNode</span></span>, <span class="idlParam"><span class="idlParamType"><a>unsigned long</a></span> <span class="idlParamName">focusOffset</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType"><a>void</a></span>        <span class="idlMethName"><a href="#widl-Selection-selectAllChildren-void-Node-node">selectAllChildren</a></span> (<span class="idlParam"><span class="idlParamType"><a>Node</a></span> <span class="idlParamName">node</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType"><a>void</a></span>        <span class="idlMethName"><a href="#widl-Selection-deleteFromDocument-void">deleteFromDocument</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType"><a>boolean</a></span>     <span class="idlMethName"><a href="#widl-Selection-containsNode-boolean-Node-node-boolean-allowPartialContainment">containsNode</a></span> (<span class="idlParam"><span class="idlParamType"><a>Node</a></span> <span class="idlParamName">node</span></span>, <span class="idlParam"><span class="idlParamType"><a>boolean</a></span> <span class="idlParamName">allowPartialContainment</span></span>);</span>
+<span class="idlMethod">    <span class="idlMethType"><a>stringifier</a></span> <span class="idlMethName"><a href="#widl-Selection-DOMString-stringifier">DOMString</a></span> ();</span>
+};</span></pre><section property="bibo:hasPart" resource="#attributes" typeof="bibo:Chapter" id="attributes"><h3 resource="#h-attributes" id="h-attributes"><span property="xhv:role" resource="xhv:heading"><span class="secno">2.1 </span>Attributes</span></h3><dl class="attributes"><dt id="widl-Selection-anchorNode"><code>anchorNode</code> of type <span class="idlAttrType"><a>Node</a></span>, readonly   , nullable</dt><dd>
+          <p>The attribute must return the <a>anchor</a> <dfn id="dfn-node" data-dfn-type="dfn"><a href="http://www.w3.org/TR/dom/#concept-node">node</a></dfn> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>])
+          of the <dfn id="dfn-context-object" data-dfn-type="dfn"><a href="http://www.w3.org/TR/dom/#context-object">context object</a></dfn> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>]),
+          or <code>null</code> if the <a>anchor</a> is null.</p>
+        </dd><dt id="widl-Selection-anchorOffset"><code>anchorOffset</code> of type <span class="idlAttrType"><a>unsigned long</a></span>, readonly   </dt><dd>
+          <p>The attribute must return the <a>anchor</a> <dfn id="dfn-offset" data-dfn-type="dfn"><a href="http://www.w3.org/TR/dom/#concept-range-bp-offset">offset</a></dfn> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>])
+          of the <a>context object</a>, or <code>0</code> if the <a>anchor</a> is null.</p>
+        </dd><dt id="widl-Selection-focusNode"><code>focusNode</code> of type <span class="idlAttrType"><a>Node</a></span>, readonly   , nullable</dt><dd>
+          <p>The attribute must return the <a>focus</a> <a>node</a> of the <a>context object</a>,
+          or <code>null</code> if the <a>anchor</a> is null.</p>
+        </dd><dt id="widl-Selection-focusOffset"><code>focusOffset</code> of type <span class="idlAttrType"><a>unsigned long</a></span>, readonly   </dt><dd>
+          <p>The attribute must return the <a>focus</a> <a>offset</a> of the <a>context object</a>,
+          or <code>0</code> if the <a>focus</a> is null.</p>
+        </dd><dt id="widl-Selection-isCollapsed"><code>isCollapsed</code> of type <span class="idlAttrType"><a>boolean</a></span>, readonly   </dt><dd>
+          <p>The attribute must return true if and only if the <span>anchor</span> and <span>focus</span> are the same (including if both are null).
+          Otherwise it must return false.</p>
+        </dd><dt id="widl-Selection-rangeCount"><code>rangeCount</code> of type <span class="idlAttrType"><a>unsigned long</a></span>, readonly   </dt><dd>
+          <p>The attribute must return <code>0</code> if the <a>context object</a> is <a>empty</a>,
+          and must return <code>1</code> otherwise.</p>
+        </dd><dt id="widl-Selection-type"><code>type</code> of type <span class="idlAttrType"><a>DOMString</a></span>, readonly   </dt><dd>
+          <p>The attribute must return <code>"None"</code> if the <a>context object</a> is <a>empty</a>,
+          <code>"Caret"</code> if the <a>context object</a>'s <a>range</a> is <a>collapsed</a>,
+          and <code>"Range"</code> otherwise.</p>
+        </dd></dl></section><section property="bibo:hasPart" resource="#methods" typeof="bibo:Chapter" id="methods"><h3 resource="#h-methods" id="h-methods"><span property="xhv:role" resource="xhv:heading"><span class="secno">2.2 </span>Methods</span></h3><dl class="methods"><dt id="widl-Selection-DOMString-stringifier"><code>DOMString</code></dt><dd>
+          See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=10583"><abbr title="World Wide Web Consortium">W3C</abbr> bug 10583</a>.
+        <div><em>No parameters.</em></div><div><em>Return type: </em><code><a>stringifier</a></code></div></dd><dt id="widl-Selection-addRange-void-Range-range"><code>addRange</code></dt><dd>
+          <p>The method must set the <a>context object</a>'s range to <var>range</var> by a strong reference (not by making a copy)
+            if the <dfn id="dfn-root" data-dfn-type="dfn"><a href="http://www.w3.org/TR/dom/#concept-tree-root">root</a></dfn> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>])
+            of the <var>range</var>'s boundary points are the <a>document</a> associated with <a>context object</a>.
+            Otherwise, this method must do nothing.</p>
+  
+          <div class="note"><div id="h-note6" role="heading" aria-level="4" class="note-title"><span>Note</span></div><p class="">Since <a>range</a> is added by reference, subsequent calls to <code>getRangeAt(0)</code> returns the same object,
+            and any changes that a script makes to <a>range</a> after it is added must be reflected in the <a>selection</a>,
+            until something else removes or replaces the <a>context object</a>'s <a>range</a>.
+            In particular, the <a>selection</a> will contain <var>b</var> as opposed to <var>a</var> after running the following code:
+            <code>var r = document.createRange(); r.selectNode(a); getSelection().addRange(r); r.selectNode(b);</code></p></div>
+
+          <div class="note"><div id="h-note7" role="heading" aria-level="4" class="note-title"><span>Note</span></div><div class="">
+          <p>IE9 and Firefox 4.0 store a reference, as described here.
+            Chrome 12 dev and Opera 11.10 appear to store a copy, so changes don't affect the selection.</p>
+
+          <p>Chrome 15 dev seems to ignore addRange() if there's already a range.
+            IE9 replaces the existing range.
+            Firefox 9.0a2, of course, just gives you a multi-range selection.
+            IE is likely to behave closest to Firefox, and is also more useful than silent failure, so the spec goes with that.</p>
+          </div></div>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">range</td><td class="prmType"><code><a>Range</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code><a>void</a></code></div></dd><dt id="widl-Selection-collapse-void-Node-node-unsigned-long-offset"><code>collapse</code></dt><dd>
+          <p>The method must follow these steps:</p>
+          <ol>
+            <li>The method must throw an <a><code>IndexSizeError</code></a> exception if <var>offset</var> is longer than <var>node</var>'s
+              <dfn id="dfn-length" data-dfn-type="dfn"><a href="http://www.w3.org/TR/dom/#concept-node-length">length</a></dfn> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>]) and abort these steps.</li>
+            <li>If <var>node</var>'s <a>root</a> is not the <a>document</a> associated with the <a>context object</a>, abort these steps.</li>
+            <li>Otherwise, let <var>newRange</var> be a new <a>range</a>.</li>
+            <li><dfn data-dfn-type="dfn" id="range-set"><a href="http://www.w3.org/TR/dom/#concept-range-bp-set">Set</a></dfn> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>])
+              the <a href="#range-start">start</a> and the <a href="#range-end">end</a> of <var>newRange</var> to (<var>node</var>, <var>offset</var>).</li>
+            <li>Set the <a>context object</a>'s <a>range</a> to <var>newRange</var>.</li>
+          </ol>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">node</td><td class="prmType"><code><a>Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">offset</td><td class="prmType"><code><a>unsigned long</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code><a>void</a></code></div></dd><dt id="widl-Selection-collapseToEnd-void"><code>collapseToEnd</code></dt><dd>
+          <p>The method must throw <a><code>InvalidStateError</code></a> exception if the <a>context object</a> is <a>empty</a>.
+          Otherwise, it must create a new <a>range</a>, <a href="#range-set">set</a> both its <a href="#range-start">start</a> and <a href="#range-end">end</a>
+          to the <a href="#range-end">end</a> of the <a>context object</a>'s <a>range</a>,
+          and then set the <a>context object</a>'s <a>range</a> to the newly-created <a>range</a>.</p>
+        <div><em>No parameters.</em></div><div><em>Return type: </em><code><a>void</a></code></div></dd><dt id="widl-Selection-collapseToStart-void"><code>collapseToStart</code></dt><dd>
+          <p>The method must throw <dfn id="dfn-invalidstateerror" data-dfn-type="dfn"><a href="http://www.w3.org/TR/dom/#invalidstateerror"><code>InvalidStateError</code></a></dfn> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>]) exception
+          if the <a>context object</a> is <a>empty</a>.
+          Otherwise, it must create a new <a>range</a>, <a href="#range-set">set</a> both its <a href="#range-start">start</a> and <a href="#range-end">end</a>
+          to the <a href="#range-start">start</a> of the <a>context object</a>'s <a>range</a>,
+          and then set the <a>context object</a>'s <a>range</a> to the newly-created <a>range</a>.</p>
+
+          <div class="note"><div id="h-note8" role="heading" aria-level="4" class="note-title"><span>Note</span></div><p class="">For collapseToStart/End, IE9 mutates the existing range, while Firefox 9.0a2 and Chrome 15 dev replace it with a new one.
+            The spec follows the majority and replaces it with a new one, leaving the old Range object unchanged.</p></div>
+        <div><em>No parameters.</em></div><div><em>Return type: </em><code><a>void</a></code></div></dd><dt id="widl-Selection-containsNode-boolean-Node-node-boolean-allowPartialContainment"><code>containsNode</code></dt><dd>
+          <p>The method must return <a><code>false</code></a> if the <a>context object</a> is <a>empty</a>
+            or if <var>node</var>'s <a>root</a> is not the document associated with the <a>context object</a>.</p>
+
+          <p>Otherwise, if <var>allowPartialContainment</var> is <code>false</code>,
+          the method must return <code>true</code> if and only if
+          <a href="#range-start">start</a> of its <a>range</a> is <a>before</a> or visually equivalent to
+            the first <a>boundary point</a> in the <var>node</var>
+            <strong>and</strong> <a href="#range-end">end</a> of its <a>range</a> is <a>after</a> or visually equivalent to
+            the last <a>boundary point</a> in the <var>node</var>.</p>
+
+          <p>If <var>allowPartialContainment</var> is <code>true</code>,
+          the method must return <code>true</code> if and only if
+          <a href="#range-start">start</a> of its <a>range</a> is <a>before</a> or visually equivalent to
+            the first <a>boundary point</a> in the <var>node</var>
+            <strong>or</strong> <a href="#range-end">end</a> of its <a>range</a> is <a>after</a> or visually equivalent to
+            the last <a>boundary point</a> in the <var>node</var>.</p>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">node</td><td class="prmType"><code><a>Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">allowPartialContainment</td><td class="prmType"><code><a>boolean</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code><a>boolean</a></code></div></dd><dt id="widl-Selection-deleteFromDocument-void"><code>deleteFromDocument</code></dt><dd>
+          <p>The method must invoke <dfn id="dfn-deletecontents" data-dfn-type="dfn"><a href="http://dom.spec.whatwg.org/#dom-range-deletecontents"><code>deleteContents()</code></a></dfn> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>])
+          on the <a>context object</a>'s <a>range</a> if the <a>context object</a> is not <a>empty</a>.
+          Otherwise the method must do nothing.</p>
+  
+          <div class="note"><div id="h-note9" role="heading" aria-level="4" class="note-title"><span>Note</span></div><p class="">This is the one method that actually mutates the range instead of replacing it.
+            This matches IE9 and Firefox 12.0a1. (Chrome 17 dev and Opera Next 12.00 alpha can't be tested,
+            because getRangeAt() returns a copy anyway.)</p></div>
+        <div><em>No parameters.</em></div><div><em>Return type: </em><code><a>void</a></code></div></dd><dt id="widl-Selection-empty-void"><code>empty</code></dt><dd>
+            <p>The method must be an alias, and behave identically, to <code>removeAllRanges()</code>.</p>
+        <div><em>No parameters.</em></div><div><em>Return type: </em><code><a>void</a></code></div></dd><dt id="widl-Selection-extend-void-Node-node-unsigned-long-offset"><code>extend</code></dt><dd>
+          <p>The method must follow these steps:</p>
+          <ol>
+            <li>If <var>node</var>'s <a>root</a> is not the <a>document</a> associated with the <a>context object</a>, abort these steps.</li>
+            <li>If the <a>context object</a> is <a>empty</a>, throw an <a><code>InvalidStateError</code></a> exception and abort these steps.</li>
+            <li>Let <var>oldAnchor</var> and <var>oldFocus</var> be the <a>context object</a>'s <a>anchor</a> and <a>focus</a>,
+              and let <var>newFocus</var> be the <a>boundary point</a> (<var>node</var>, <var>offset</var>).</li>
+            <li>Let <var>newRange</var> be a new <a>range</a>.</li>
+            <li>If <var>node</var>'s <a>root</a> is not the same as
+              the <a>context object</a>'s <a>range</a>'s <a>root</a>, <a href="#range-set">set</a> <var>newRange</var>'s
+              <a href="#range-start">start</a> and <a href="#range-end">end</a> to <var>newFocus</var>.</li>
+            <li>Otherwise, if <var>oldAnchor</var> is <a>before</a> or equal to <var>newFocus</var>,
+              <a href="#range-set">set</a> <var>newRange</var>'s <a href="#range-start">start</a> to <var>oldAnchor</var>,
+              then <a href="#range-set">set</a> its <a href="#range-end">end</a> to <var>newFocus</var>.</li>
+            <li>Otherwise, <a href="#range-set">set</a> <var>newRange</var>'s <a href="#range-start">start</a> to <var>newFocus</var>,
+              then <a href="#range-set">set</a> its <a href="#range-end">end</a> to <var>oldAnchor</var>.</li>
+            <li>Set the <a>context object</a>'s <a>range</a> to <a>newRange</a>.</li>
+            <li>If <var>newFocus</var> is <a>before</a> <var>oldAnchor</var>, set the <a>context object</a>'s <a>direction</a> to <a>backwards</a>.
+              Otherwise, set it to <a>forwards</a>.</li>
+          </ol>
+          <div class="note"><div id="h-note10" role="heading" aria-level="4" class="note-title"><span>Note</span></div><p class="">Reverse-engineered circa January 2011.
+            IE doesn't support it, so I'm relying on Firefox (implemented extend() sometime before 2000) and WebKit (implemented extend() in 2007).
+            I'm mostly ignoring Opera, because gsnedders tells me its implementation isn't compatible.
+
+            Firefox 12.0a1 seems to mutate the existing range.
+            IE9 doesn't support extend(), and it's impossible to tell whether Chrome 17 dev or Opera Next 12.00 alpha mutate or replace,
+            because getRangeAt() returns a copy anyway.
+            Nevertheless, I go against Gecko here, to be consistent with collapse().</p></div>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">node</td><td class="prmType"><code><a>Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">offset</td><td class="prmType"><code><a>unsigned long</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code><a>void</a></code></div></dd><dt id="widl-Selection-getRangeAt-Range-unsigned-long-index"><code>getRangeAt</code></dt><dd>
+          <p>The method must throw an <dfn id="dfn-indexsizeerror" data-dfn-type="dfn"><a href="http://www.w3.org/TR/dom/#indexsizeerror"><code>IndexSizeError</code></a></dfn> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>]) exception
+          if <var>index</var> is not <code>0</code>, or if the <a>context object</a> is <a>empty</a>.
+          Otherwise, it must return a reference to (not a copy of) the <a>context object</a>'s <a>range</a>.</p>
+
+          <div class="note"><div id="h-note11" role="heading" aria-level="4" class="note-title"><span>Note</span></div><p class="">Thus subsequent calls of this method returns the same <a>range</a> object
+            if nothing has removed the <a>context object</a>'s range in the meantime.
+            In particular, <code>getSelection().getRangeAt(0) === getSelection().getRangeAt(0)</code> evaluates to <code>true</code>
+            if the <a>selection</a> is not <a>empty</a>.</p></div>
+
+          <div class="note"><div id="h-note12" role="heading" aria-level="4" class="note-title"><span>Note</span></div><p class="">IE9 and Firefox 4.0 return the same object every time, as the spec says.
+            Chrome 12 dev and Opera 11.10 return a different object every time.</p></div>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">index</td><td class="prmType"><code><a>unsigned long</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code><a>Range</a></code></div></dd><dt id="widl-Selection-removeAllRanges-void"><code>removeAllRanges</code></dt><dd>
+          <p>The method must make the <a>context object</a> <a>empty</a> by disassociating its <a>range</a>
+            if the <a>context object</a> has an associated <a>range</a>.</p>
+        <div><em>No parameters.</em></div><div><em>Return type: </em><code><a>void</a></code></div></dd><dt id="widl-Selection-removeRange-void-Range-range"><code>removeRange</code></dt><dd>
+          <p>The method must make the <a>context object</a> <a>empty</a> by disassociating its <a>range</a>
+            if the <a>context object</a>'s <a>range</a> is <var>range</var>.
+            Otherwise, it must do nothing.</p>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">range</td><td class="prmType"><code><a>Range</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code><a>void</a></code></div></dd><dt id="widl-Selection-selectAllChildren-void-Node-node"><code>selectAllChildren</code></dt><dd>
+          <p>The method must follow these steps:</p>
+          <ol>
+            <li>If <var>node</var>'s <a>root</a> is not the <a>document</a> associated with the <a>context object</a>, abort these steps.</li>
+            <li>Let <var>newRange</var> be a new <a>range</a> and <var>nodeLength</var> be the <a>length</a> of <var>node</var>.</li>
+            <li>Set <var>newRange</var>'s <a href="#range-start">start</a> to (<var>node</var>, <code>0</code>).</li>
+            <li>Set <var>newRange</var>'s <a href="#range-end">end</a> to (<var>node</var>, <var>nodeLength</var>).</li>
+            <li>Set the <a>context object</a>'s <a>range</a> to <var>newRange</var>.</li>
+            <li>Set the <a>context object</a>'s <a>direction</a> to <var>forwards</var>.</li>
+          </ol>
+  
+          <div class="note"><div id="h-note13" role="heading" aria-level="4" class="note-title"><span>Note</span></div><div class="">
+          <p>Based mostly on Firefox 9.0a2.  It has a bug that I didn't reproduce, namely
+          that if you pass a Document as the argument, the end offset becomes 1 instead
+          of the number of children it has.  It also throws a RangeException instead of
+          DOMException, because its implementation predated their merging.
+
+          </p><p>IE9 behaves similarly but with glitches.  It throws "Unspecified error." if
+          the node is detached or display:none, and apparently in some random other cases
+          too.  It throws "Invalid argument." for detached comments (only!).  Finally, if
+          you pass it a comment, it seems to select the whole comment, unlike with text
+          nodes.
+
+          </p><p>Chrome 16 dev behaves as you'd expect given its Selection implementation.
+          It refuses to select anything that's not visible, so it's almost always wrong.
+          Opera 11.50 just does nothing in all my tests, as usual.
+
+          </p><p>The new range replaces any existing one, doesn't mutate it.
+          This matches IE9 and Firefox 12.0a1.  (Chrome 17 dev and Opera Next 12.00
+          alpha can't be tested, because getRangeAt() returns a copy anyway.)
+          </p></div></div>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">node</td><td class="prmType"><code><a>Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code><a>void</a></code></div></dd><dt id="widl-Selection-setBaseAndExtent-void-Node-anchorNode-unsigned-long-anchorOffset-Node-focusNode-unsigned-long-focusOffset"><code>setBaseAndExtent</code></dt><dd>
+          <p>The method must follow these steps:</p>
+          <ol>
+            <li>If <var>anchorOffset</var> is longer than <var>anchorNode</var>'s <a>length</a>
+              or if <var>focusOffset</var> is longer than <var>focusNode</var>'s <a>length</a>,
+              throw an <a><code>IndexSizeError</code></a> exception and abort these steps.</li>
+            <li>If the <a>root</a>s of <var>anchorNode</var> or <var>focusNode</var> are not the <a>document</a> associated with <a>context object</a>,
+              abort these steps.</li>
+            <li>Let <var>anchor</var> be the <a>boundary point</a> (<var>anchorNode</var>, <var>anchorOffset</var>)
+              and let <var>focus</var> be the <a>boundary point</a> (<var>focusNode</var>, <var>focusOffset</var>).</li>
+            <li>Let <var>newRange</var> be a new <a>range</a>.</li>
+            <li>If <var>anchor</var> is <a>before</a> <var>focus</var>,
+              <a href="#range-set">set</a> the <var>newRange</var>'s <a href="#range-start">start</a> to <var>anchor</var>
+              and its <a href="#range-end">end</a> to <var>focus</var>.
+              Otherwise, <a href="#range-set">set</a> them to <var>focus</var> and <var>anchor</var> respectively.</li>
+            <li>Set the <a>context object</a>'s <a>range</a> to <a>newRange</a>.</li>
+            <li>If <var>focus</var> is <a>before</a> <var>anchor</var>, set <a>context object</a>'s <a>direction</a> to <a>backwards</a>.
+              Otherwise, set it to <a>forwards</a></li>
+        </ol><table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">anchorNode</td><td class="prmType"><code><a>Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">anchorOffset</td><td class="prmType"><code><a>unsigned long</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">focusNode</td><td class="prmType"><code><a>Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">focusOffset</td><td class="prmType"><code><a>unsigned long</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code><a>void</a></code></div></dd><dt id="widl-Selection-setPosition-void-Node-node-unsigned-long-offset"><code>setPosition</code></dt><dd>
+            <p>The method must be an alias, and behave identically, to <code>collapse()</code>.</p>
+        <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">node</td><td class="prmType"><code><a>Node</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr><tr><td class="prmName">offset</td><td class="prmType"><code><a>unsigned long</a></code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptFalse"><span role="img" aria-label="False">✘</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code><a>void</a></code></div></dd></dl></section>
+
+      <div class="note"><div id="h-note14" role="heading" aria-level="3" class="note-title"><span>Note</span></div><p class="">See also <a href="https://mxr.mozilla.org/mozilla/source/content/base/public/nsISelection.idl">nsISelection.idl</a> from Gecko.
+        This spec doesn't have everything from there yet, in particular selectionLanguageChange() and containsNode() are missing.
+        They are missing because I couldn't work out how to define them in terms of Ranges.</p></div>
+
+      <div class="note"><div id="h-note15" role="heading" aria-level="3" class="note-title"><span>Note</span></div><section property="bibo:hasPart" resource="" typeof="bibo:Chapter" class="">
+        <p>Originally, the Selection interface was a Netscape feature.
+          The original implementation was carried on into Gecko (Firefox), and the feature was later implemented independently by other browser engines.
+          The Netscape implementation always allowed multiple ranges in a single selection, for instance so the user could select a column of a table
+          However, multi-range selections proved to be an unpleasant corner case
+          that web developers didn't know about and even Gecko developers rarely handled correctly.
+          Other browser engines never implemented the feature, and clamped selections to a single range in various incompatible fashions.</p>
+
+        <p>This specification follows non-Gecko engines in restricting selections to at most one range,
+          but the API was still originally designed for selections with arbitrary numbers of ranges.
+          This explains oddities like the coexistence of <code>removeRange()</code> and <code>removeAllRanges()</code>,
+          and a <code>getRangeAt()</code> method that takes an integer argument that must always be zero.</p>
+      </section></div>
+
+      <p>All of the members of the <code>Selection</code> interface are defined
+        in terms of operations on the <code><a>range</a></code> object (if any) represented by the object.
+        These operations can raise exceptions, as defined for the <a href="http://www.w3.org/TR/dom/#range"><code>Range</code></a> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>]) interface;
+        this can therefore result in the members of the <a href="#idl-def-Selection"><code>Selection</code></a> interface raising exceptions as well,
+        in addition to any explicitly called out below.</p>
+    </section>
+
+    <section property="bibo:hasPart" resource="#extensions-to-other-interfaces" typeof="bibo:Chapter" id="extensions-to-other-interfaces">
+      <!--OddPage--><h2 resource="#h-extensions-to-other-interfaces" id="h-extensions-to-other-interfaces"><span property="xhv:role" resource="xhv:heading"><span class="secno">3. </span>Extensions to Other Interfaces</span></h2>
+
+      <p>This specification extends several interfaces to provide entry points to the
+      interfaces defined in this specification.</p>
+
+      <section property="bibo:hasPart" resource="#extensions-to-document-interface" typeof="bibo:Chapter" id="extensions-to-document-interface">
+        <h3 resource="#h-extensions-to-document-interface" id="h-extensions-to-document-interface"><span property="xhv:role" resource="xhv:heading"><span class="secno">3.1 </span>Extensions to <code>Document</code> interface</span></h3>
+        <pre class="idl"><span class="idlInterface" id="idl-def-Document">partial interface <span class="idlInterfaceID">Document</span> {
+<span class="idlMethod">    <span class="idlMethType"><a class="idlType" href="#idl-def-Selection"><code>Selection</code></a>?</span> <span class="idlMethName"><a href="#widl-Document-getSelection-Selection">getSelection</a></span> ();</span>
+};</span></pre><section property="bibo:hasPart" resource="#methods-1" typeof="bibo:Chapter" id="methods-1"><h4 resource="#h-methods-1" id="h-methods-1"><span property="xhv:role" resource="xhv:heading"><span class="secno">3.1.1 </span>Methods</span></h4><dl class="methods"><dt id="widl-Document-getSelection-Selection"><code>getSelection</code></dt><dd>
+            <p>The method must return the <a>selection</a> associated with <a>context object</a>
+              if the <a>context object</a> has an associated <a>browsing context</a>,
+              and it must return <code>null</code> otherwise.</p>
+          <div><em>No parameters.</em></div><div><em>Return type: </em><code><a class="idlType" href="#idl-def-Selection"><code>Selection</code></a></code>, nullable</div></dd></dl></section>
+        <div class="note"><div id="h-note16" role="heading" aria-level="4" class="note-title"><span>Note</span></div><p class="">
+          If we create a Document object with no browsing context
+          (say via <code>document.implementation.createHTMLDocument("") and call </code>getSelection() on it),
+          IE9 seems to return a different Selection object.
+          Firefox 12.0a1 and Opera Next 12.00 alpha return the same object as for the current window.
+          Chrome 17 dev returns null.
+          See <a href="https://lists.w3.org/Archives/Public/public-webapps/2012JanMar/0159.html">discussion</a>.
+          There's no meaningful selection associated with such a document, so we follow WebKit and require returning <code>null</code>.</p></div>
+      </section>
+
+      <section property="bibo:hasPart" resource="#extensions-to-window-interface" typeof="bibo:Chapter" id="extensions-to-window-interface">
+        <h3 resource="#h-extensions-to-window-interface" id="h-extensions-to-window-interface"><span property="xhv:role" resource="xhv:heading"><span class="secno">3.2 </span>Extensions to <code>Window</code> interface</span></h3>
+        <pre class="idl"><span class="idlInterface" id="idl-def-Window">partial interface <span class="idlInterfaceID">Window</span> {
+<span class="idlMethod">    <span class="idlMethType"><a class="idlType" href="#idl-def-Selection"><code>Selection</code></a>?</span> <span class="idlMethName"><a href="#widl-Window-getSelection-Selection">getSelection</a></span> ();</span>
+};</span></pre><section property="bibo:hasPart" resource="#methods-2" typeof="bibo:Chapter" id="methods-2"><h4 resource="#h-methods-2" id="h-methods-2"><span property="xhv:role" resource="xhv:heading"><span class="secno">3.2.1 </span>Methods</span></h4><dl class="methods"><dt id="widl-Window-getSelection-Selection"><code>getSelection</code></dt><dd>
+            <p>The method must invoke and return the result of <a><code>getSelection()</code></a> on the <a>context object</a>'s
+            <a href="http://www.w3.org/TR/html5/browsers.html#dom-document-0"><code>document</code></a> ([<cite><a href="#bib-HTML5" class="bibref">HTML5</a></cite>]) property.</p>
+          <div><em>No parameters.</em></div><div><em>Return type: </em><code><a class="idlType" href="#idl-def-Selection"><code>Selection</code></a></code>, nullable</div></dd></dl></section>
+      </section>
+  
+    </section>
+
+    <section property="bibo:hasPart" resource="#user-interactions" typeof="bibo:Chapter" id="user-interactions">
+      <!--OddPage--><h2 resource="#h-user-interactions" id="h-user-interactions"><span property="xhv:role" resource="xhv:heading"><span class="secno">4. </span>User Interactions</span></h2>
+
+      <p>The user agent should allow the user to change the <a>selection</a> associated with the <dfn id="dfn-active-document" data-dfn-type="dfn">active document</dfn>
+        (<a href="http://www.w3.org/TR/html5/browsers.html#active-document">defined</a> in [<cite><a href="#bib-HTML5" class="bibref">HTML5</a></cite>]).
+        If the user makes any modification to a <a>selection</a>, the user agent must create a new <a>range</a> with suitable
+        <a href="http://www.w3.org/TR/dom/#concept-range-start"><dfn data-dfn-type="dfn" id="range-start">start</dfn></a> and 
+        <a href="http://www.w3.org/TR/dom/#concept-range-end"><dfn data-dfn-type="dfn" id="range-end">end</dfn></a> of the <a>range</a> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>])
+        and associate the <a>selection</a> with this new <a>range</a> (not modify the existing <a>range</a>),
+        and set update <a>selection</a>'s <a>direction</a> to <a>forwards</a> if the <a>start</a> is <a>before</a> or equal to the <a>end</a>,
+        <a>backwards</a> if if the <a>end</a> is <a>before</a> the <a>start</a>,
+        or <a>directionless</a> if the <a>start</a> and the <a>end</a> cannot be ordered due to the platform convention.</p>
+
+      <p>The user agent must not make a <a>selection</a> <a>empty</a> if it was not already <a>empty</a>
+        in response to any user actions (e.g. clicking on a non-editable region).</p>
+
+      <div class="note"><div id="h-note17" role="heading" aria-level="3" class="note-title"><span>Note</span></div><p class="">See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15470">bug 15470</a>.
+        IE9 and Opera Next 12.00 alpha allow the user to reset the range to null after the fact by clicking somewhere;
+        Firefox 12.0a1 and Chrome 17 dev do not.
+        I follow Gecko/WebKit, because it lessens the chance of getRangeAt(0) throwing.</p></div>
+
+      <section property="bibo:hasPart" resource="#selectstart-event" typeof="bibo:Chapter" id="selectstart-event">
+        <h3 resource="#h-selectstart-event" id="h-selectstart-event"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.1 </span><code>selectstart</code> event</span></h3>
+
+        <p>When the user agent is about to associate a new range <var>newRange</var> to the <a>selection</a> in response to a user initiated action,
+          the user agent must <dfn id="dfn-fire" data-dfn-type="dfn"><a href="http://www.w3.org/TR/dom/#concept-event-fire">fire</a></dfn> ([<cite><a href="#bib-DOM4" class="bibref">DOM4</a></cite>])
+          an event with the name <code>selectstart</code>, which bubbles and is cancelable,
+          at the <a>node</a> associated with the <a>boundary point</a> of <var>newRange</var>'s <a>start</a>
+          prior to changing the selection if the <a>selection</a> was previously <a>empty</a>
+          or the previously associated range was <a>collapsed</a>.</p>
+
+        <p>If the event is canceled, the user agent must not change the <a>selection</a>.</p>
+
+        <p>The user agent must not <a>fire</a> the event when the user agent sets the <a>selection</a> <a>empty</a>.</p>
+      </section>
+
+      <section property="bibo:hasPart" resource="#selectionchange-event" typeof="bibo:Chapter" id="selectionchange-event">
+        <h3 resource="#h-selectionchange-event" id="h-selectionchange-event"><span property="xhv:role" resource="xhv:heading"><span class="secno">4.2 </span><code>selectionchange</code> event</span></h3>
+
+        <p>When the <a>selection</a> is dissociated with its <a>range</a>, associated with a new <a>range</a>
+          or the associated <a>range</a>'s <a>boundary point</a> is mutated either by the user or the content script,
+          the user agent must <dfn id="dfn-queue-a-task" data-dfn-type="dfn"><a href="http://www.w3.org/html/wg/drafts/html/master/webappapis.html#queue-a-task">queue a task</a></dfn> ([<cite><a href="#bib-HTML5" class="bibref">HTML5</a></cite>])
+          to <a>fire</a> an event with the name <code>selectionchange</code>, which does not bubble and is not cancelable,
+          at the <a>document</a> associated with the <a>selection</a>.</p>
+      </section>
+
+    </section>
+
+    <section property="bibo:hasPart" resource="#acknowledgements" typeof="bibo:Chapter" id="acknowledgements" class="appendix">
+      <!--OddPage--><h2 resource="#h-acknowledgements" id="h-acknowledgements"><span property="xhv:role" resource="xhv:heading"><span class="secno">A. </span>Acknowledgements</span></h2>
+      <p>Many thanks to</p>
+      <ul>
+        <li><p>Aryeh Gregor, who is the original author of this specification as well as <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing API specification</a>.</p></li>
+        <li><p>Contributors to the <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing API specification</a> - 
+          Ehsan Akhgari, Tab Atkins, Mathias Bynens, Tim Down, Markus Ernst, Daniel Glazman, Tali Gregor (née Fuss),
+          Stig Halvorsen, Jeff Harris, Ian Hickson, Cameron Heavon-Jones, Anne van Kesteren, Alfonso Martínez de Lizarrondo,
+          Glenn Maynard, Ms2ger, Robert O'Callahan, Julie Parent, Simon Pieters, Michael A. Puls II,
+          Rich Schwerdtfeger, Jonas Sicking, Henri Sivonen, Smylers, Hallvord R. M. Steen, Roland Steiner, Annie Sullivan,
+          timeless, Ojan Vafai, Brett Zamir, and Boris Zbarsky for their feedback, participation, or other helpful contributions</p></li>
+        <li>Robin Berjon for making our lives so much easier with his cool tool.</li>
+    </ul></section>
+
+  
+
+<section property="bibo:hasPart" resource="#references" typeof="bibo:Chapter" id="references" class="appendix"><!--OddPage--><h2 resource="#h-references" id="h-references"><span property="xhv:role" resource="xhv:heading"><span class="secno">B. </span>References</span></h2><section property="bibo:hasPart" resource="#informative-references" typeof="bibo:Chapter" id="informative-references"><h3 resource="#h-informative-references" id="h-informative-references"><span property="xhv:role" resource="xhv:heading"><span class="secno">B.1 </span>Informative references</span></h3><dl resource="" class="bibliography"><dt id="bib-DOM4">[DOM4]</dt><dd>Anne van Kesteren; Aryeh Gregor; Ms2ger; Alex Russell; Robin Berjon. <a property="dc:references" href="http://www.w3.org/TR/dom/"><cite>W3C DOM4</cite></a>. 18 June 2015. W3C Last Call Working Draft. URL: <a property="dc:references" href="http://www.w3.org/TR/dom/">http://www.w3.org/TR/dom/</a>
+</dd><dt id="bib-HTML5">[HTML5]</dt><dd>Ian Hickson; Robin Berjon; Steve Faulkner; Travis Leithead; Erika Doyle Navara; Edward O'Connor; Silvia Pfeiffer. <a property="dc:references" href="http://www.w3.org/TR/html5/"><cite>HTML5</cite></a>. 28 October 2014. W3C Recommendation. URL: <a property="dc:references" href="http://www.w3.org/TR/html5/">http://www.w3.org/TR/html5/</a>
+</dd></dl></section></section></body></html>
