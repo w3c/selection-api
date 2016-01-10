@@ -297,10 +297,11 @@
             <p>The method must be an alias, and behave identically, to <code>removeAllRanges()</code>.</p>
         </dd>
 
-        <dt>void collapse(Node node, unsigned long offset)</dt>
+        <dt>void collapse(Node? node, unsigned long offset)</dt>
         <dd>
           <p>The method must follow these steps:</p>
           <ol>
+            <li>If <var>node</var> is null, this method must behave identically as <code>removeAllRanges()</code> and abort these steps.</li>
             <li>The method must throw an <a><code>IndexSizeError</code></a> exception if <var>offset</var> is longer than <var>node</var>'s
               <dfn><a href="http://www.w3.org/TR/dom/#concept-node-length">length</a></dfn> ([[DOM4]]) and abort these steps.</li>
             <li>If <var>node</var>'s <a>root</a> is not the <a>document</a> associated with the <a>context object</a>, abort these steps.</li>
@@ -311,7 +312,7 @@
           </ol>
         </dd>
 
-        <dt>void setPosition(Node node, unsigned long offset)</dt>
+        <dt>void setPosition(Node? node, unsigned long offset)</dt>
         <dd>
             <p>The method must be an alias, and behave identically, to <code>collapse()</code>.</p>
         </dd>
