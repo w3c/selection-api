@@ -297,7 +297,7 @@
             <p>The method must be an alias, and behave identically, to <code>removeAllRanges()</code>.</p>
         </dd>
 
-        <dt>void collapse(Node? node, unsigned long offset)</dt>
+        <dt>void collapse(Node? node, optional unsigned long offset = 0)</dt>
         <dd>
           <p>The method must follow these steps:</p>
           <ol>
@@ -312,7 +312,7 @@
           </ol>
         </dd>
 
-        <dt>void setPosition(Node? node, unsigned long offset)</dt>
+        <dt>void setPosition(Node? node, optional unsigned long offset = 0)</dt>
         <dd>
             <p>The method must be an alias, and behave identically, to <code>collapse()</code>.</p>
         </dd>
@@ -337,7 +337,7 @@
           and then set the <a>context object</a>'s <a>range</a> to the newly-created <a>range</a>.</p>
         </dd>
 
-        <dt>void extend(Node node, unsigned long offset)</dt>
+        <dt>void extend(Node node, optional unsigned long offset = 0)</dt>
         <dd>
           <p>The method must follow these steps:</p>
           <ol>
@@ -434,7 +434,7 @@
             because getRangeAt() returns a copy anyway.)</p>
         </dd>
 
-        <dt>boolean containsNode(Node node, boolean allowPartialContainment)</dt>
+        <dt>boolean containsNode(Node node, optional boolean allowPartialContainment = false)</dt>
         <dd>
           <p>The method must return <a><code>false</code></a> if the <a>context object</a> is <a>empty</a>
             or if <var>node</var>'s <a>root</a> is not the document associated with the <a>context object</a>.</p>
