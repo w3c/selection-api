@@ -152,8 +152,7 @@
 
       <p>Every <dfn><a href="http://www.w3.org/TR/dom/#document">document</a></dfn> ([[!DOM4]]) with
         a <dfn><a href="http://www.w3.org/TR/html5/browsers.html#browsing-context">browsing context</a></dfn> ([[!HTML5]])
-        has a unique <a href="#idl-def-Selection"><code>Selection</code></a> object associated with it.
-        <a>Selection</a> objects are known as <dfn>selection</dfn>s.</p>
+        has a unique <dfn>selection</dfn> associated with it.</p>
 
       <p class=note>This is a requirement of the HTML spec.
         IE9 and Opera Next 12.00 alpha seem to follow it, while Firefox 12.0a1 and Chrome 17 dev seem not to.
@@ -202,11 +201,20 @@
         then the corresponding <a>selection</a> must initially be <a>forwards</a>.
         Otherwise, it must be <a>directionless</a>.</p>
 
-      <p><a>Selection</a>s also have an <dfn>anchor</dfn> and a <dfn>focus</dfn>.
+      <p>Each <a>selection</a>s also have an <dfn>anchor</dfn> and a <dfn>focus</dfn>.
         If the <a>selection</a>'s <a>range</a> is null, its <a>anchor</a> and <a>focus</a> are both null.
         If the <a>selection</a>'s <a>range</a> is not null and its <a>direction</a> is <a>forwards</a>, its <a>anchor</a> is the <a>range</a>'s
         <a>start</a>, and its <a>focus</a> is the <a>end</a>.
         Otherwise, its <a>focus</a> is the <a>start</a> and its <a>anchor</a> is the <a>end</a>.</p>
+    </section>
+
+    <section>
+      <h2><code>Selection</code> interface</h2>
+
+      <p>
+        <a href="#idl-def-Selection"><code>Selection</code></a> interface provides a way to interact with the <a>selection</a>
+        associated with each document.
+      </p>
 
       <dl title="interface Selection" class="idl">
         <dt>readonly attribute Node? anchorNode</dt>
