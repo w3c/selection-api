@@ -208,60 +208,84 @@
         Otherwise, its <a>focus</a> is the <a>start</a> and its <a>anchor</a> is the <a>end</a>.</p>
     </section>
 
-    <section>
-      <h2><code>Selection</code> interface</h2>
-
-      <p>
-        <a href="#idl-def-Selection"><code>Selection</code></a> interface provides a way to interact with the <a>selection</a>
+    <section data-dfn-for="Selection">
+      <h2><dfn>Selection</dfn> interface</h2>
+      <p><a>Selection</a> interface provides a way to interact with the <a>selection</a>
         associated with each document.
       </p>
-
-      <dl title="interface Selection" class="idl">
-        <dt>readonly attribute Node? anchorNode</dt>
+      <pre class="idl">
+        interface Selection {
+          readonly attribute Node? anchorNode;
+          readonly attribute unsigned long anchorOffset;
+          readonly attribute Node? focusNode;
+          readonly attribute unsigned long focusOffset;
+          readonly attribute boolean isCollapsed;
+          readonly attribute unsigned long rangeCount;
+          readonly attribute DOMString type;
+          Range getRangeAt(unsigned long index);
+          void addRange(Range range);
+          void removeRange(Range range);
+          void removeAllRanges();
+          void empty();
+          void collapse(Node? node, optional unsigned long offset = 0);
+          void setPosition(Node? node, optional unsigned long offset = 0);
+          void collapseToStart();
+          void collapseToEnd();
+          void extend(Node node, optional unsigned long offset = 0);
+          void setBaseAndExtent(Node anchorNode, unsigned long anchorOffset, Node focusNode, unsigned long focusOffset);
+          void selectAllChildren(Node node);
+          [CEReactions]
+          void deleteFromDocument();
+          boolean containsNode(Node node, optional boolean allowPartialContainment = false);
+          stringifier DOMString();
+        };
+      </pre>
+      <dl>
+        <dt><dfn>anchorNode</dfn></dt>
         <dd>
           <p>The attribute must return the <a>anchor</a> <dfn><a href="http://www.w3.org/TR/dom/#concept-node">node</a></dfn> ([[!DOM4]])
           of the <dfn><a href="http://www.w3.org/TR/dom/#context-object">context object</a></dfn> ([[!DOM4]]),
           or <code>null</code> if the <a>anchor</a> is null.</p>
         </dd>
 
-        <dt>readonly attribute unsigned long anchorOffset</dt>
+        <dt><dfn>anchorOffset</dfn></dt>
         <dd>
           <p>The attribute must return the <a>anchor</a> <dfn><a href="http://www.w3.org/TR/dom/#concept-range-bp-offset">offset</a></dfn> ([[!DOM4]])
           of the <a>context object</a>, or <code>0</code> if the <a>anchor</a> is null.</p>
         </dd>
 
-        <dt>readonly attribute Node? focusNode</dt>
+        <dt><dfn>focusNode</dfn></dt>
         <dd>
           <p>The attribute must return the <a>focus</a> <a>node</a> of the <a>context object</a>,
           or <code>null</code> if the <a>anchor</a> is null.</p>
         </dd>
 
-        <dt>readonly attribute unsigned long focusOffset</dt>
+        <dt><dfn>focusOffset</dfn></dt>
         <dd>
           <p>The attribute must return the <a>focus</a> <a>offset</a> of the <a>context object</a>,
           or <code>0</code> if the <a>focus</a> is null.</p>
         </dd>
 
-        <dt>readonly attribute boolean isCollapsed</dt>
+        <dt><dfn>isCollapsed</dfn></dt>
         <dd>
           <p>The attribute must return true if and only if the <span>anchor</span> and <span>focus</span> are the same (including if both are null).
           Otherwise it must return false.</p>
         </dd>
 
-        <dt>readonly attribute unsigned long rangeCount</dt>
+        <dt><dfn>rangeCount</dfn></dt>
         <dd>
           <p>The attribute must return <code>0</code> if the <a>context object</a> is <a>empty</a>,
           and must return <code>1</code> otherwise.</p>
         </dd>
 
-        <dt>readonly attribute DOMString type</dt>
+        <dt><dfn>type</dfn></dt>
         <dd>
           <p>The attribute must return <code>"None"</code> if the <a>context object</a> is <a>empty</a>,
           <code>"Caret"</code> if the <a>context object</a>'s <a>range</a> is <a>collapsed</a>,
           and <code>"Range"</code> otherwise.</p>
         </dd>
 
-        <dt>Range getRangeAt(unsigned long index)</dt>
+        <dt><dfn>getRangeAt</dfn></dt>
         <dd>
           <p>The method must throw an <dfn><a href="http://www.w3.org/TR/dom/#indexsizeerror"><code>IndexSizeError</code></a></dfn> ([[!DOM4]]) exception
           if <var>index</var> is not <code>0</code>, or if the <a>context object</a> is <a>empty</a>.
@@ -276,7 +300,7 @@
             Chrome 12 dev and Opera 11.10 return a different object every time.</p>
         </dd>
   
-        <dt>void addRange(Range range)</dt>
+        <dt><dfn>addRange</dfn></dt>
         <dd>
           <p>The method must set the <a>context object</a>'s range to <var>range</var> by a strong reference (not by making a copy)
             if the <dfn><a href="http://www.w3.org/TR/dom/#concept-tree-root">root</a></dfn> ([[!DOM4]])
@@ -300,30 +324,30 @@
           </div>
         </dd>
   
-        <dt>void removeRange(Range range)</dt>
+        <dt><dfn>removeRange</dfn></dt>
         <dd>
           <p>The method must make the <a>context object</a> <a>empty</a> by disassociating its <a>range</a>
             if the <a>context object</a>'s <a>range</a> is <var>range</var>.
             Otherwise, it must do nothing.</p>
         </dd>
 
-        <dt>void removeAllRanges()</dt>
+        <dt><dfn>removeAllRanges</dfn></dt>
         <dd>
           <p>The method must make the <a>context object</a> <a>empty</a> by disassociating its <a>range</a>
             if the <a>context object</a> has an associated <a>range</a>.</p>
         </dd>
 
-        <dt>void empty()</dt>
+        <dt><dfn>empty</dfn></dt>
         <dd>
             <p>The method must be an alias, and behave identically, to <code>removeAllRanges()</code>.</p>
         </dd>
 
-        <dt>void collapse(Node? node, optional unsigned long offset = 0)</dt>
+        <dt><dfn>collapse</dfn></dt>
         <dd>
           <p>The method must follow these steps:</p>
           <ol>
             <li>If <var>node</var> is null, this method must behave identically as <code>removeAllRanges()</code> and abort these steps.</li>
-            <li>The method must throw an <a><code>IndexSizeError</code></a> exception if <var>offset</var> is longer than <var>node</var>'s
+            <li>The method must throw an <a>IndexSizeError</a> exception if <var>offset</var> is longer than <var>node</var>'s
               <dfn><a href="http://www.w3.org/TR/dom/#concept-node-length">length</a></dfn> ([[!DOM4]]) and abort these steps.</li>
             <li>If <var>node</var>'s <a>root</a> is not the <a>document</a> associated with the <a>context object</a>, abort these steps.</li>
             <li>Otherwise, let <var>newRange</var> be a new <a>range</a>.</li>
@@ -333,12 +357,12 @@
           </ol>
         </dd>
 
-        <dt>void setPosition(Node? node, optional unsigned long offset = 0)</dt>
+        <dt><dfn>setPosition</dfn></dt>
         <dd>
             <p>The method must be an alias, and behave identically, to <code>collapse()</code>.</p>
         </dd>
 
-        <dt>void collapseToStart()</dt>
+        <dt><dfn>collapseToStart</dfn></dt>
         <dd>
           <p>The method must throw <dfn><a href="http://www.w3.org/TR/dom/#invalidstateerror"><code>InvalidStateError</code></a></dfn> ([[!DOM4]]) exception
           if the <a>context object</a> is <a>empty</a>.
@@ -350,20 +374,20 @@
             The spec follows the majority and replaces it with a new one, leaving the old Range object unchanged.</p>
         </dd>
 
-        <dt>void collapseToEnd()</dt>
+        <dt><dfn>collapseToEnd</dfn></dt>
         <dd>
-          <p>The method must throw <a><code>InvalidStateError</code></a> exception if the <a>context object</a> is <a>empty</a>.
+          <p>The method must throw <a>InvalidStateError</a> exception if the <a>context object</a> is <a>empty</a>.
           Otherwise, it must create a new <a>range</a>, <a href="#range-set">set</a> both its <a href="#range-start">start</a> and <a href="#range-end">end</a>
           to the <a href="#range-end">end</a> of the <a>context object</a>'s <a>range</a>,
           and then set the <a>context object</a>'s <a>range</a> to the newly-created <a>range</a>.</p>
         </dd>
 
-        <dt>void extend(Node node, optional unsigned long offset = 0)</dt>
+        <dt><dfn>extend</dfn></dt>
         <dd>
           <p>The method must follow these steps:</p>
           <ol>
             <li>If <var>node</var>'s <a>root</a> is not the <a>document</a> associated with the <a>context object</a>, abort these steps.</li>
-            <li>If the <a>context object</a> is <a>empty</a>, throw an <a><code>InvalidStateError</code></a> exception and abort these steps.</li>
+            <li>If the <a>context object</a> is <a>empty</a>, throw an <a>InvalidStateError</a> exception and abort these steps.</li>
             <li>Let <var>oldAnchor</var> and <var>oldFocus</var> be the <a>context object</a>'s <a>anchor</a> and <a>focus</a>,
               and let <var>newFocus</var> be the <a>boundary point</a> (<var>node</var>, <var>offset</var>).</li>
             <li>Let <var>newRange</var> be a new <a>range</a>.</li>
@@ -375,7 +399,7 @@
               then <a href="#range-set">set</a> its <a href="#range-end">end</a> to <var>newFocus</var>.</li>
             <li>Otherwise, <a href="#range-set">set</a> <var>newRange</var>'s <a href="#range-start">start</a> to <var>newFocus</var>,
               then <a href="#range-set">set</a> its <a href="#range-end">end</a> to <var>oldAnchor</var>.</li>
-            <li>Set the <a>context object</a>'s <a>range</a> to <a>newRange</a>.</li>
+            <li>Set the <a>context object</a>'s <a>range</a> to <var>newRange</var>.</li>
             <li>If <var>newFocus</var> is <a>before</a> <var>oldAnchor</var>, set the <a>context object</a>'s <a>direction</a> to <a>backwards</a>.
               Otherwise, set it to <a>forwards</a>.</li>
           </ol>
@@ -389,13 +413,13 @@
             Nevertheless, I go against Gecko here, to be consistent with collapse().</p>
         </dd>
 
-        <dt>void setBaseAndExtent(Node anchorNode, unsigned long anchorOffset, Node focusNode, unsigned long focusOffset)</dt>
+        <dt><dfn>setBaseAndExtent</dfn></dt>
         <dd>
           <p>The method must follow these steps:</p>
           <ol>
             <li>If <var>anchorOffset</var> is longer than <var>anchorNode</var>'s <a>length</a>
               or if <var>focusOffset</var> is longer than <var>focusNode</var>'s <a>length</a>,
-              throw an <a><code>IndexSizeError</code></a> exception and abort these steps.</li>
+              throw an <a>IndexSizeError</a> exception and abort these steps.</li>
             <li>If the <a>root</a>s of <var>anchorNode</var> or <var>focusNode</var> are not the <a>document</a> associated with <a>context object</a>,
               abort these steps.</li>
             <li>Let <var>anchor</var> be the <a>boundary point</a> (<var>anchorNode</var>, <var>anchorOffset</var>)
@@ -405,12 +429,12 @@
               <a href="#range-set">set</a> the <var>newRange</var>'s <a href="#range-start">start</a> to <var>anchor</var>
               and its <a href="#range-end">end</a> to <var>focus</var>.
               Otherwise, <a href="#range-set">set</a> them to <var>focus</var> and <var>anchor</var> respectively.</li>
-            <li>Set the <a>context object</a>'s <a>range</a> to <a>newRange</a>.</li>
+            <li>Set the <a>context object</a>'s <a>range</a> to <var>newRange</var>.</li>
             <li>If <var>focus</var> is <a>before</a> <var>anchor</var>, set <a>context object</a>'s <a>direction</a> to <a>backwards</a>.
               Otherwise, set it to <a>forwards</a></li>
         </dd>
 
-        <dt>void selectAllChildren(Node node)</dt>
+        <dt><dfn>selectAllChildren</dfn></dt>
         <dd>
           <p>The method must follow these steps:</p>
           <ol>
@@ -444,7 +468,7 @@
           </div>
         </dd>
 
-        <dt>[CEReactions] void deleteFromDocument()</dt>
+        <dt><dfn>deleteFromDocument</dfn></dt>
         <dd>
           <p>The method must invoke <dfn><a href="http://dom.spec.whatwg.org/#dom-range-deletecontents"><code>deleteContents()</code></a></dfn> ([[!DOM4]])
           on the <a>context object</a>'s <a>range</a> if the <a>context object</a> is not <a>empty</a>.
@@ -455,9 +479,9 @@
             because getRangeAt() returns a copy anyway.)</p>
         </dd>
 
-        <dt>boolean containsNode(Node node, optional boolean allowPartialContainment = false)</dt>
+        <dt><dfn>containsNode</dfn></dt>
         <dd>
-          <p>The method must return <a><code>false</code></a> if the <a>context object</a> is <a>empty</a>
+          <p>The method must return <code>false</code> if the <a>context object</a> is <a>empty</a>
             or if <var>node</var>'s <a>root</a> is not the document associated with the <a>context object</a>.</p>
 
           <p>Otherwise, if <var>allowPartialContainment</var> is <code>false</code>,
@@ -475,7 +499,7 @@
             the last <a>boundary point</a> in the <var>node</var>.</p>
         </dd>
 
-        <dt>stringifier DOMString ()</dt>
+        <dt>stringifier</dt>
         <dd>
           See <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=10583">W3C bug 10583</a>.
         </dd>
@@ -502,7 +526,7 @@
       <p>All of the members of the <code>Selection</code> interface are defined
         in terms of operations on the <code><a>range</a></code> object (if any) represented by the object.
         These operations can raise exceptions, as defined for the <a href="http://www.w3.org/TR/dom/#range"><code>Range</code></a> ([[!DOM4]]) interface;
-        this can therefore result in the members of the <a href="#idl-def-Selection"><code>Selection</code></a> interface raising exceptions as well,
+        this can therefore result in the members of the <a>Selection</a> interface raising exceptions as well,
         in addition to any explicitly called out below.</p>
     </section>
 
@@ -512,19 +536,24 @@
       <p>This specification extends several interfaces to provide entry points to the
       interfaces defined in this specification.</p>
 
-      <section>
+      <section data-dfn-for="Document">
         <h3>Extensions to <code>Document</code> interface</h3>
-        <dl title="partial interface Document" class="idl">
-          <dt>Selection? getSelection()</dt>
+        <pre class="idl">
+          partial interface Document {
+            Selection ? getSelection();
+          };
+        </pre>
+        <dl>
+          <dt><dfn>getSelection</dfn></dt>
           <dd>
             <p>The method must return the <a>selection</a> associated with <a>context object</a>
               if the <a>context object</a> has an associated <a>browsing context</a>,
               and it must return <code>null</code> otherwise.</p>
           </dd>
         </dl>
-        <p class=note>
+        <p class=note data-link-for="Document">
           If we create a Document object with no browsing context
-          (say via <code>document.implementation.createHTMLDocument("")</cpde> and call </code>getSelection()</code> on it),
+          (say via <code>document.implementation.createHTMLDocument("")</code> and call <a>getSelection</a> on it),
           IE9 seems to return a different Selection object.
           Firefox 12.0a1 and Opera Next 12.00 alpha return the same object as for the current window.
           Chrome 17 dev returns null.
@@ -532,32 +561,43 @@
           There's no meaningful selection associated with such a document, so we follow WebKit and require returning <code>null</code>.</p>
       </section>
 
-      <section>
+      <section data-dfn-for="Window">
         <h3>Extensions to <code>Window</code> interface</h3>
-        <dl title="partial interface Window" class="idl">
-          <dt>Selection? getSelection()</dt>
+        <pre class="idl">
+          partial interface Window {
+            Selection? getSelection();
+          };
+        </pre>
+        <dl>
+          <dt><dfn>getSelection</dfn></dt>
           <dd>
-            <p>The method must invoke and return the result of <a><code>getSelection()</code></a> on the <a>context object</a>'s
+            <p data-link-for="Window">The method must invoke and return the result of <a>getSelection</a> on the <a>context object</a>'s
             <a href="http://www.w3.org/TR/html5/browsers.html#dom-document-0"><code>document</code></a> ([[!HTML5]]) property.</p>
           </dd>
         </dl>
       </section>
 
-      <section>
+      <section data-dfn-for="GlobalEventHandlers">
         <h3>Extensions to <code>GlobalEventHandlers</code></h3>
-        <dl title="partial interface GlobalEventHandlers" class="idl">
-          <dt>attribute EventHandler onselectstart</dt>
+        <pre class="idl">
+          partial interface GlobalEventHandlers {
+            attribute EventHandler onselectstart;
+            attribute EventHandler onselectionchange;
+          };
+        </pre>
+        <dl>
+          <dt><dfn>onselectstart</dfn></dt>
           <dd>
             <p>The attribute must be an <a href="https://html.spec.whatwg.org/#event-handler-idl-attributess">event handler IDL attribute</a>
-            for the <a><code>selectstart</code></a> event supported by
+            for the <a>selectstart</a> event supported by
             all <a href="https://html.spec.whatwg.org/#html-elements">HTML elements</a>,
             <a href="https://html.spec.whatwg.org/#the-document-object">Document</a> objects,
             and <a href="https://html.spec.whatwg.org/#the-window-object">Window</a> objects.</p>
           </dd>
-          <dt>attribute EventHandler onselectionchange</dt>
+          <dt><dfn>onselectionchange</dfn></dt>
           <dd>
             <p>The attribute must be an <a href="https://html.spec.whatwg.org/#event-handler-idl-attributess">event handler IDL attribute</a>
-            for the <a><code>selectionchange</code></a> event supported by
+            for the <a>selectionchange</a> event supported by
             all <a href="https://html.spec.whatwg.org/#html-elements">HTML elements</a>,
             <a href="https://html.spec.whatwg.org/#the-document-object">Document</a> objects,
             and <a href="https://html.spec.whatwg.org/#the-window-object">Window</a> objects.</p>
@@ -589,7 +629,7 @@
         I follow Gecko/WebKit, because it lessens the chance of getRangeAt(0) throwing.</p>
 
       <section>
-        <h3><code>selectstart</code> event</h3>
+        <h3><code><dfn>selectstart</dfn></code> event</h3>
 
         <p>When the user agent is about to associate a new range <var>newRange</var> to the <a>selection</a> in response to a user initiated action,
           the user agent must <dfn><a href="http://www.w3.org/TR/dom/#concept-event-fire">fire</a></dfn> ([[!DOM4]])
@@ -604,7 +644,7 @@
       </section>
 
       <section>
-        <h3><code>selectionchange</code> event</h3>
+        <h3><code><dfn>selectionchange</dfn></code> event</h3>
 
         <p>When the <a>selection</a> is dissociated with its <a>range</a>, associated with a new <a>range</a>
           or the associated <a>range</a>'s <a>boundary point</a> is mutated either by the user or the content script,
