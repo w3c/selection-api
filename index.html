@@ -307,9 +307,9 @@
             <li>If the <dfn><a href="http://www.w3.org/TR/dom/#concept-tree-root">root</a></dfn> ([[!DOM4]])
                 of the <var>range</var>'s boundary points are not the <a>document</a> associated with <a>context object</a>,
                 abort these steps.</li>
-            <li>if <code>rangeCount</code> is <code>0</code>, set the <a>context object</a>'s range to <var>range</var>
-                by a strong reference (not by making a copy).</li>
-            <li>Otherwise, it must do nothing on exisiting <a>range</a>.</li>
+            <li>If <code>rangeCount</code> is not <code>0</code>, abort these steps.</li>
+            <li>Set the <a>context object</a>'s range to <var>range</var> by a strong reference
+                (not by making a copy).</li>
           </ol>
 
           <p class=note>Since <a>range</a> is added by reference, subsequent calls to <code>getRangeAt(0)</code> returns the same object,
@@ -320,13 +320,13 @@
 
           <div class=note>
           <p>At Step 2,
-            Chrome 58 and Firefox 51 store a reference, as described here.
-            Edge 25 store a copy.
-            Firefox 51 changes its selection if the <a>range</a> is modified. </p>
-          <p>At Step 3,
             Chrome 58 and Edge 25 do nothing.
             Firefox 51 gives you a multi-range selection.
             At least they keep the exisiting <a>range</a>.</p>
+          <p>At Step 3,
+            Chrome 58 and Firefox 51 store a reference, as described here.
+            Edge 25 stores a copy.
+            Firefox 51 changes its selection if the <a>range</a> is modified. </p>
           </div>
         </dd>
   
