@@ -356,12 +356,16 @@
           <p>The method must follow these steps:</p>
           <ol>
             <li>If <var>node</var> is null, this method must behave identically as <code>removeAllRanges()</code> and abort these steps.</li>
-            <li>The method must throw an <a>IndexSizeError</a> exception if <var>offset</var> is longer than <var>node</var>'s
-              <dfn><a href="http://www.w3.org/TR/dom/#concept-node-length">length</a></dfn> ([[!DOM4]]) and abort these steps.</li>
-            <li>If <var>node</var>'s <a>root</a> is not the <a>document</a> associated with the <a>context object</a>, abort these steps.</li>
-            <li>Otherwise, let <var>newRange</var> be a new <a>range</a>.</li>
+            <li>Let <var>newRange</var> be a new <a>range</a>.</li>
             <li><dfn id="range-set"><a href="http://www.w3.org/TR/dom/#concept-range-bp-set">Set</a></dfn> ([[!DOM4]])
               the <a href="#range-start">start</a> and the <a href="#range-end">end</a> of <var>newRange</var> to (<var>node</var>, <var>offset</var>).</li>
+            <li>
+              <p>If <var>node</var>'s <a>root</a> is not the <a>document</a>
+              associated with the <a>context object</a>, abort these steps.
+
+              <p class=note>We do this after creating the range so that the
+              proper exceptions are thrown.
+            </li>
             <li>Set the <a>context object</a>'s <a>range</a> to <var>newRange</var>.</li>
           </ol>
         </dd>
@@ -447,10 +451,20 @@
         <dd>
           <p>The method must follow these steps:</p>
           <ol>
-            <li>If <var>node</var>'s <a>root</a> is not the <a>document</a> associated with the <a>context object</a>, abort these steps.</li>
             <li>Let <var>newRange</var> be a new <a>range</a> and <var>nodeLength</var> be the <a>length</a> of <var>node</var>.</li>
-            <li>Set <var>newRange</var>'s <a href="#range-start">start</a> to (<var>node</var>, <code>0</code>).</li>
-            <li>Set <var>newRange</var>'s <a href="#range-end">end</a> to (<var>node</var>, <var>nodeLength</var>).</li>
+            <li><a href="#range-set">Set</a> <var>newRange</var>'s
+            <a href="#range-start">start</a> to (<var>node</var>,
+            <code>0</code>).</li>
+            <li><a href="#range-set">Set</a> <var>newRange</var>'s
+            <a href="#range-end">end</a> to (<var>node</var>,
+            <var>nodeLength</var>).</li>
+            <li>
+              <p>If <var>node</var>'s <a>root</a> is not the <a>document</a>
+              associated with the <a>context object</a>, abort these steps.
+
+              <p class=note>We do this after creating the range so that the
+              proper exceptions are thrown.
+            </li>
             <li>Set the <a>context object</a>'s <a>range</a> to <var>newRange</var>.</li>
             <li>Set the <a>context object</a>'s <a>direction</a> to <var>forwards</var>.</li>
           </ol>
