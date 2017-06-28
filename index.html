@@ -29,7 +29,7 @@
           processVersion: "2015",
 
           // if there a publicly available Editor's Draft, this is the link
-          edDraftURI:           "http://w3c.github.io/selection-api/",
+          edDraftURI:           "https://w3c.github.io/selection-api/",
 
           // if this is a LCWD, uncomment and set the end of its review period
           // lcEnd: "2009-08-05",
@@ -76,7 +76,7 @@
                       href: 'https://github.com/w3c/selection-api/commits/gh-pages'
                   }, {
                       value: 'Mailing list.',
-                      href: 'http://lists.w3.org/Archives/Public/public-webapps/'
+                      href: 'https://lists.w3.org/Archives/Public/public-webapps/'
               }]
           }],
           
@@ -99,7 +99,7 @@
       <p>Any feedback or discussion of this specification should be sent to the
         <a href="mailto:public-webapps@w3.org">public-webapps mailing list</a>
         with "[selection-api]" as the Subject header prefix
-        (<a href="http://lists.w3.org/Archives/Public/public-webapps/">archive</a>).
+        (<a href="https://lists.w3.org/Archives/Public/public-webapps/">archive</a>).
       </p>
 
       <p>
@@ -118,7 +118,7 @@
         because it takes flexibility away from authors.</p>
 
       <p>So I changed the spec to a made-up compromise that allows some simplification but doesn't constrain authors much.
-        See <a href="http://lists.whatwg.org/pipermail/whatwg-whatwg.org/2011-June/032072.html">discussion</a>.
+        See <a href="https://lists.w3.org/Archives/Public/public-whatwg-archive/2011Jun/0193.html">discussion</a>.
         Basically it would throw exceptions in some places to try to stop the selection from containing a range that had
         a boundary point other than an Element or Text node, or a boundary point that didn't descend from a Document.</p>
 
@@ -152,8 +152,8 @@
     <section>
       <h2>Definition</h2>
 
-      <p>Every <dfn><a href="http://www.w3.org/TR/dom/#document">document</a></dfn> ([[!DOM4]]) with
-        a <dfn><a href="http://www.w3.org/TR/html5/browsers.html#browsing-context">browsing context</a></dfn> ([[!HTML5]])
+      <p>Every <dfn><a href="https://www.w3.org/TR/dom/#document">document</a></dfn> ([[!DOM4]]) with
+        a <dfn><a href="https://www.w3.org/TR/html5/browsers.html#browsing-context">browsing context</a></dfn> ([[!HTML5]])
         has a unique <dfn>selection</dfn> associated with it.</p>
 
       <p class=note>This is a requirement of the HTML spec.
@@ -163,10 +163,10 @@
 
       <p>This one <a>selection</a> must be shared by all the content of the <a>document</a>
         (though not by nested <a>document</a>s), including any editing hosts in the document.
-        <dfn>Editing hosts</dfn> (<a href="http://www.w3.org/TR/html5/editing.html#editing-host">defined</a> in [[!HTML5]]) that are not
+        <dfn>Editing hosts</dfn> (<a href="https://www.w3.org/TR/html5/editing.html#editing-host">defined</a> in [[!HTML5]]) that are not
         inside a <a>document</a> cannot have a <a>selection</a></p>
 
-      <p>Each <a>selection</a> can be associated with a single <dfn>range</dfn> (<a href="http://www.w3.org/TR/dom/#range">defined</a> in [[!DOM4]]).
+      <p>Each <a>selection</a> can be associated with a single <dfn>range</dfn> (<a href="https://www.w3.org/TR/dom/#range">defined</a> in [[!DOM4]]).
         When there is no <a>range</a> associated with the <a>selection</a>, the </a>selection</a> is <dfn>empty</dfn>.
         The selection must be initially <a>empty</a>.</p>
 
@@ -186,8 +186,8 @@
         the selection must be associated with a new range object, as required elsewhere in this specification.</p>
 
       <p>If the <a>selection</a>'s <a>range</a> is not null and is
-        <a href="http://www.w3.org/TR/dom/#dom-range-collapsed"><dfn id="range-collapsed">collapsed</dfn></a> ([[!DOM4]]),
-        then the caret position must be at that <a>range</a>'s <a href="http://www.w3.org/TR/dom/#concept-range-bp"><dfn>boundary point</dfn></a>.
+        <a href="https://www.w3.org/TR/dom/#dom-range-collapsed"><dfn id="range-collapsed">collapsed</dfn></a> ([[!DOM4]]),
+        then the caret position must be at that <a>range</a>'s <a href="https://www.w3.org/TR/dom/#concept-range-bp"><dfn>boundary point</dfn></a>.
         When the <a>selection</a> is not empty, this specification does not define the caret position;
         user agents should follow platform conventions in deciding whether the caret is at the start of the <a>selection</a>,
         the end of the <a>selection</a>, or somewhere else.
@@ -197,9 +197,9 @@
       <p>Each <a>selection</a> has a <dfn>direction</dfn>, <dfn>forwards</dfn>, <dfn>backwards</dfn>, or <dfn>directionless</dfn>.
         If the user creates a <a>selection</a> by indicating first one <a>boundary point</a> of the <a>range</a>
         and then the other (such as by clicking on one point and dragging to another),
-        and the first indicated <a>boundary point</a> is <a href="http://www.w3.org/TR/dom/#concept-range-bp-after"><dfn>after</dfn></a> ([[!DOM4]]) the second,
+        and the first indicated <a>boundary point</a> is <a href="https://www.w3.org/TR/dom/#concept-range-bp-after"><dfn>after</dfn></a> ([[!DOM4]]) the second,
         then the corresponding <a>selection</a> must initially be <a>backwards</a>.
-        If the first indicated <a>boundary point</a> is <a href="http://www.w3.org/TR/dom/#concept-range-bp-before"><dfn>before</dfn></a> ([[!DOM4]]) the second,
+        If the first indicated <a>boundary point</a> is <a href="https://www.w3.org/TR/dom/#concept-range-bp-before"><dfn>before</dfn></a> ([[!DOM4]]) the second,
         then the corresponding <a>selection</a> must initially be <a>forwards</a>.
         Otherwise, it must be <a>directionless</a>.</p>
 
@@ -245,14 +245,14 @@
       <dl>
         <dt><dfn>anchorNode</dfn></dt>
         <dd>
-          <p>The attribute must return the <a>anchor</a> <dfn><a href="http://www.w3.org/TR/dom/#concept-node">node</a></dfn> ([[!DOM4]])
-          of the <dfn><a href="http://www.w3.org/TR/dom/#context-object">context object</a></dfn> ([[!DOM4]]),
+          <p>The attribute must return the <a>anchor</a> <dfn><a href="https://www.w3.org/TR/dom/#concept-node">node</a></dfn> ([[!DOM4]])
+          of the <dfn><a href="https://www.w3.org/TR/dom/#context-object">context object</a></dfn> ([[!DOM4]]),
           or <code>null</code> if the <a>anchor</a> is null.</p>
         </dd>
 
         <dt><dfn>anchorOffset</dfn></dt>
         <dd>
-          <p>The attribute must return the <a>anchor</a> <dfn><a href="http://www.w3.org/TR/dom/#concept-range-bp-offset">offset</a></dfn> ([[!DOM4]])
+          <p>The attribute must return the <a>anchor</a> <dfn><a href="https://www.w3.org/TR/dom/#concept-range-bp-offset">offset</a></dfn> ([[!DOM4]])
           of the <a>context object</a>, or <code>0</code> if the <a>anchor</a> is null.</p>
         </dd>
 
@@ -289,7 +289,7 @@
 
         <dt><dfn>getRangeAt</dfn></dt>
         <dd>
-          <p>The method must throw an <dfn><a href="http://www.w3.org/TR/dom/#indexsizeerror"><code>IndexSizeError</code></a></dfn> ([[!DOM4]]) exception
+          <p>The method must throw an <dfn><a href="https://www.w3.org/TR/dom/#indexsizeerror"><code>IndexSizeError</code></a></dfn> ([[!DOM4]]) exception
           if <var>index</var> is not <code>0</code>, or if the <a>context object</a> is <a>empty</a>.
           Otherwise, it must return a reference to (not a copy of) the <a>context object</a>'s <a>range</a>.</p>
 
@@ -306,7 +306,7 @@
         <dd>
           <p>The method must follow these steps:</p>
           <ol>
-            <li>If the <dfn><a href="http://www.w3.org/TR/dom/#concept-tree-root">root</a></dfn> ([[!DOM4]])
+            <li>If the <dfn><a href="https://www.w3.org/TR/dom/#concept-tree-root">root</a></dfn> ([[!DOM4]])
                 of the <var>range</var>'s boundary points are not the <a>document</a> associated with <a>context object</a>,
                 abort these steps.</li>
             <li>If <code>rangeCount</code> is not <code>0</code>, abort these steps.</li>
@@ -357,10 +357,10 @@
           <ol>
             <li>If <var>node</var> is null, this method must behave identically as <code>removeAllRanges()</code> and abort these steps.</li>
             <li>The method must throw an <a>IndexSizeError</a> exception if <var>offset</var> is longer than <var>node</var>'s
-              <dfn><a href="http://www.w3.org/TR/dom/#concept-node-length">length</a></dfn> ([[!DOM4]]) and abort these steps.</li>
+              <dfn><a href="https://www.w3.org/TR/dom/#concept-node-length">length</a></dfn> ([[!DOM4]]) and abort these steps.</li>
             <li>If <var>node</var>'s <a>root</a> is not the <a>document</a> associated with the <a>context object</a>, abort these steps.</li>
             <li>Otherwise, let <var>newRange</var> be a new <a>range</a>.</li>
-            <li><dfn id="range-set"><a href="http://www.w3.org/TR/dom/#concept-range-bp-set">Set</a></dfn> ([[!DOM4]])
+            <li><dfn id="range-set"><a href="https://www.w3.org/TR/dom/#concept-range-bp-set">Set</a></dfn> ([[!DOM4]])
               the <a href="#range-start">start</a> and the <a href="#range-end">end</a> of <var>newRange</var> to (<var>node</var>, <var>offset</var>).</li>
             <li>Set the <a>context object</a>'s <a>range</a> to <var>newRange</var>.</li>
           </ol>
@@ -373,7 +373,7 @@
 
         <dt><dfn>collapseToStart</dfn></dt>
         <dd>
-          <p>The method must throw <dfn><a href="http://www.w3.org/TR/dom/#invalidstateerror"><code>InvalidStateError</code></a></dfn> ([[!DOM4]]) exception
+          <p>The method must throw <dfn><a href="https://www.w3.org/TR/dom/#invalidstateerror"><code>InvalidStateError</code></a></dfn> ([[!DOM4]]) exception
           if the <a>context object</a> is <a>empty</a>.
           Otherwise, it must create a new <a>range</a>, <a href="#range-set">set</a> both its <a href="#range-start">start</a> and <a href="#range-end">end</a>
           to the <a href="#range-start">start</a> of the <a>context object</a>'s <a>range</a>,
@@ -479,7 +479,7 @@
 
         <dt><dfn>deleteFromDocument</dfn></dt>
         <dd>
-          <p>The method must invoke <dfn><a href="http://dom.spec.whatwg.org/#dom-range-deletecontents"><code>deleteContents()</code></a></dfn> ([[!DOM4]])
+          <p>The method must invoke <dfn><a href="https://dom.spec.whatwg.org/#dom-range-deletecontents"><code>deleteContents()</code></a></dfn> ([[!DOM4]])
           on the <a>context object</a>'s <a>range</a> if the <a>context object</a> is not <a>empty</a>.
           Otherwise the method must do nothing.</p>
   
@@ -534,7 +534,7 @@
 
       <p>All of the members of the <code>Selection</code> interface are defined
         in terms of operations on the <code><a>range</a></code> object (if any) represented by the object.
-        These operations can raise exceptions, as defined for the <a href="http://www.w3.org/TR/dom/#range"><code>Range</code></a> ([[!DOM4]]) interface;
+        These operations can raise exceptions, as defined for the <a href="https://www.w3.org/TR/dom/#range"><code>Range</code></a> ([[!DOM4]]) interface;
         this can therefore result in the members of the <a>Selection</a> interface raising exceptions as well,
         in addition to any explicitly called out below.</p>
     </section>
@@ -581,7 +581,7 @@
           <dt><dfn>getSelection</dfn></dt>
           <dd>
             <p data-link-for="Window">The method must invoke and return the result of <a>getSelection</a> on the <a>context object</a>'s
-            <a href="http://www.w3.org/TR/html5/browsers.html#dom-document-0"><code>document</code></a> ([[!HTML5]]) property.</p>
+            <a href="https://www.w3.org/TR/html5/browsers.html#dom-document-0"><code>document</code></a> ([[!HTML5]]) property.</p>
           </dd>
         </dl>
       </section>
@@ -620,10 +620,10 @@
       <h2>User Interactions</h2>
 
       <p>The user agent should allow the user to change the <a>selection</a> associated with the <dfn>active document</dfn>
-        (<a href="http://www.w3.org/TR/html5/browsers.html#active-document">defined</a> in [[!HTML5]]).
+        (<a href="https://www.w3.org/TR/html5/browsers.html#active-document">defined</a> in [[!HTML5]]).
         If the user makes any modification to a <a>selection</a>, the user agent must create a new <a>range</a> with suitable
-        <a href="http://www.w3.org/TR/dom/#concept-range-start"><dfn id="range-start">start</dfn></a> and 
-        <a href="http://www.w3.org/TR/dom/#concept-range-end"><dfn id="range-end">end</dfn></a> of the <a>range</a> ([[!DOM4]])
+        <a href="https://www.w3.org/TR/dom/#concept-range-start"><dfn id="range-start">start</dfn></a> and 
+        <a href="https://www.w3.org/TR/dom/#concept-range-end"><dfn id="range-end">end</dfn></a> of the <a>range</a> ([[!DOM4]])
         and associate the <a>selection</a> with this new <a>range</a> (not modify the existing <a>range</a>),
         and set update <a>selection</a>'s <a>direction</a> to <a>forwards</a> if the <a>start</a> is <a>before</a> or equal to the <a>end</a>,
         <a>backwards</a> if if the <a>end</a> is <a>before</a> the <a>start</a>,
@@ -641,7 +641,7 @@
         <h3><code><dfn>selectstart</dfn></code> event</h3>
 
         <p>When the user agent is about to associate a new range <var>newRange</var> to the <a>selection</a> in response to a user initiated action,
-          the user agent must <dfn><a href="http://www.w3.org/TR/dom/#concept-event-fire">fire</a></dfn> ([[!DOM4]])
+          the user agent must <dfn><a href="https://www.w3.org/TR/dom/#concept-event-fire">fire</a></dfn> ([[!DOM4]])
           an event with the name <code>selectstart</code>, which bubbles and is cancelable</a>,
           at the <a>node</a> associated with the <a>boundary point</a> of <var>newRange</var>'s <a>start</a>
           prior to changing the selection if the <a>selection</a> was previously <a>empty</a>
@@ -657,7 +657,7 @@
 
         <p>When the <a>selection</a> is dissociated with its <a>range</a>, associated with a new <a>range</a>
           or the associated <a>range</a>'s <a>boundary point</a> is mutated either by the user or the content script,
-          the user agent must <dfn><a href="http://www.w3.org/html/wg/drafts/html/master/webappapis.html#queue-a-task">queue a task</a></dfn>
+          the user agent must <dfn><a href="https://www.w3.org/html/wg/drafts/html/master/webappapis.html#queue-a-task">queue a task</a></dfn>
           to <a>fire</a> an event with the name <code>selectionchange</code>, which does not bubble and is not cancelable</a>,
           at the <a>document</a> associated with the <a>selection</a>.</p>
       </section>
