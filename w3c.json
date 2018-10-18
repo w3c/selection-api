@@ -1,5 +1,10 @@
- {
-    "group":      ["83482"]
-,   "contacts":   ["siusin"]
-,   "shortName":  "selection-api"
+{
+  "group": [
+    "83482"
+  ],
+  "contacts": [
+    "siusin"
+  ],
+  "shortName": "selection-api",
+  "repo-type": "rec-track"
 }
