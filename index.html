@@ -37,7 +37,7 @@
 	This document defines APIs for selection, which allows users and authors to select a portion of a document or specify a point of interest for copy, paste, and other editing operations.
       </p>
     </section>
-    
+
     <section id='sotd'>
       <p>Any feedback or discussion of this specification should be sent to the
         <a href="mailto:public-webapps@w3.org">public-webapps mailing list</a>
@@ -110,7 +110,7 @@
         inside a <a>document</a> cannot have a <a>selection</a></p>
 
       <p>Each <a>selection</a> can be associated with a single <dfn data-cite="!DOM#range">range</dfn>.
-        When there is no <a>range</a> associated with the <a>selection</a>, the </a>selection</a> is <dfn>empty</dfn>.
+        When there is no <a>range</a> associated with the <a>selection</a>, the selection is <dfn>empty</dfn>.
         The selection must be initially <a>empty</a>.</p>
 
       <p class=note>A <a>document</a>'s <a>selection</a> is a singleton object associated with that <a>document</a>,
@@ -244,7 +244,7 @@
           <p class=note>IE9 and Firefox 4.0 return the same object every time, as the spec says.
             Chrome 12 dev and Opera 11.10 return a different object every time.</p>
         </dd>
-  
+
         <dt><dfn>addRange</dfn></dt>
         <dd>
           <p>The method must follow these steps:</p>
@@ -274,7 +274,7 @@
             Firefox 51 changes its selection if the <a>range</a> is modified. </p>
           </div>
         </dd>
-  
+
         <dt><dfn>removeRange</dfn></dt>
         <dd>
           <p>The method must make the <a>context object</a> <a>empty</a> by disassociating its <a>range</a>
@@ -384,6 +384,7 @@
             <li>Set the <a>context object</a>'s <a>range</a> to <var>newRange</var>.</li>
             <li>If <var>focus</var> is <a>before</a> <var>anchor</var>, set <a>context object</a>'s <a>direction</a> to <a>backwards</a>.
               Otherwise, set it to <a>forwards</a></li>
+          </ol>
         </dd>
 
         <dt><dfn>selectAllChildren</dfn></dt>
@@ -397,7 +398,7 @@
             <li>Set the <a>context object</a>'s <a>range</a> to <var>newRange</var>.</li>
             <li>Set the <a>context object</a>'s <a>direction</a> to <var>forwards</var>.</li>
           </ol>
-  
+
           <div class=note>
           <p>Based mostly on Firefox 9.0a2.  It has a bug that I didn't reproduce, namely
           that if you pass a Document as the argument, the end offset becomes 1 instead
@@ -422,10 +423,10 @@
 
         <dt><dfn>deleteFromDocument</dfn></dt>
         <dd>
-          <p>The method must invoke <dfn><a href="https://dom.spec.whatwg.org/#dom-range-deletecontents"><code>deleteContents()</code></a></dfn> ([[!DOM]])
+          <p>The method must invoke <dfn><a data-cite="DOM#dom-range-deletecontents"><code>deleteContents()</code></a></dfn> ([[DOM]])
           on the <a>context object</a>'s <a>range</a> if the <a>context object</a> is not <a>empty</a>.
           Otherwise the method must do nothing.</p>
-  
+
           <p class=note>This is the one method that actually mutates the range instead of replacing it.
             This matches IE9 and Firefox 12.0a1. (Chrome 17 dev and Opera Next 12.00 alpha can't be tested,
             because getRangeAt() returns a copy anyway.)</p>
@@ -526,7 +527,8 @@
         <dl>
           <dt><dfn>getSelection()</dfn></dt>
           <dd>
-            <p data-link-for="Window">The method must invoke and return the result of <a>getSelection</a> on the <a>context object</a>'s
+            <p data-link-for="Window">The method must invoke and return the result of
+            <a href="#dom-document-getselection">getSelection</a> on the <a>context object</a>'s
             <a href="https://www.w3.org/TR/html5/browsers.html#dom-document-0"><code>document</code></a> ([[!HTML]]) property.</p>
           </dd>
         </dl>
@@ -571,7 +573,7 @@
       <p>The user agent should allow the user to change the <a>selection</a> associated with the <dfn>active document</dfn>
         (<a href="https://www.w3.org/TR/html5/browsers.html#active-document">defined</a> in [[!HTML]]).
         If the user makes any modification to a <a>selection</a>, the user agent must create a new <a>range</a> with suitable
-        <a href="https://www.w3.org/TR/dom/#concept-range-start"><dfn id="range-start">start</dfn></a> and 
+        <a href="https://www.w3.org/TR/dom/#concept-range-start"><dfn id="range-start">start</dfn></a> and
         <a href="https://www.w3.org/TR/dom/#concept-range-end"><dfn id="range-end">end</dfn></a> of the <a>range</a> ([[!DOM]])
         and associate the <a>selection</a> with this new <a>range</a> (not modify the existing <a>range</a>),
         and set update <a>selection</a>'s <a>direction</a> to <a>forwards</a> if the <a>start</a> is <a>before</a> or equal to the <a>end</a>,
@@ -591,9 +593,9 @@
 
         <p>When the user agent is about to associate a new range <var>newRange</var> to the <a>selection</a> in response to a user initiated action,
           the user agent must <dfn><a href="https://www.w3.org/TR/dom/#concept-event-fire">fire</a></dfn> ([[!DOM]])
-          an event with the name <code>selectstart</code>, which bubbles and is cancelable</a>,
-          at the <a>node</a> associated with the <a>boundary point</a> of <var>newRange</var>'s <a>start</a>
-          prior to changing the selection if the <a>selection</a> was previously <a>empty</a>
+          an event with the name <code>selectstart</code>, which <a data-cite="DOM#dom-event-bubbles">bubbles</a> and is
+          <a data-cite="DOM#dom-event-cancelable">cancelable</a>, at the <a>node</a> associated with the <a>boundary point</a> of <var>newRange</var>'s
+          <a>start</a> prior to changing the selection if the <a>selection</a> was previously <a>empty</a>
           or the previously associated range was <a>collapsed</a>.</p>
 
         <p>If the event is canceled, the user agent must not change the <a>selection</a>.</p>
@@ -607,8 +609,8 @@
         <p>When the <a>selection</a> is dissociated with its <a>range</a>, associated with a new <a>range</a>
           or the associated <a>range</a>'s <a>boundary point</a> is mutated either by the user or the content script,
           the user agent must <dfn><a href="https://www.w3.org/html/wg/drafts/html/master/webappapis.html#queue-a-task">queue a task</a></dfn>
-          to <a>fire</a> an event with the name <code>selectionchange</code>, which does not bubble and is not cancelable</a>,
-          at the <a>document</a> associated with the <a>selection</a>.</p>
+          to <a>fire</a> an event with the name <code>selectionchange</code>, which does not <a data-cite="DOM#dom-event-bubbles">bubble</a> and is not
+          <a data-cite="DOM#dom-event-cancelable">cancelable</a>, at the <a>document</a> associated with the <a>selection</a>.</p>
       </section>
 
     </section>
@@ -617,14 +619,15 @@
       <h2>Acknowledgements</h2>
       <p>Many thanks to</p>
       <ul>
-        <li><p>Aryeh Gregor, who is the original author of this specification as well as <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing API specification</a>.</p></li>
-        <li><p>Contributors to the <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing API specification</a> - 
+        <li>Aryeh Gregor, who is the original author of this specification as well as <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing API specification</a></li>
+        <li>Contributors to the <a href="https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing API specification</a> -
           Ehsan Akhgari, Tab Atkins, Mathias Bynens, Tim Down, Markus Ernst, Daniel Glazman, Tali Gregor (née Fuss),
           Stig Halvorsen, Jeff Harris, Ian Hickson, Cameron Heavon-Jones, Anne van Kesteren, Alfonso Martínez de Lizarrondo,
           Glenn Maynard, Ms2ger, Robert O'Callahan, Julie Parent, Simon Pieters, Michael A. Puls II,
           Rich Schwerdtfeger, Jonas Sicking, Henri Sivonen, Smylers, Hallvord R. M. Steen, Roland Steiner, Annie Sullivan,
-          timeless, Ojan Vafai, Brett Zamir, and Boris Zbarsky for their feedback, participation, or other helpful contributions</p></li>
+          timeless, Ojan Vafai, Brett Zamir, and Boris Zbarsky for their feedback, participation, or other helpful contributions</li>
         <li>Robin Berjon for making our lives so much easier with his cool tool.</li>
+      </ul>
     </section>
 
   </body>
