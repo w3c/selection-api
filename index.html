@@ -659,15 +659,9 @@
         </dt>
         <dd>
           <p>
-<<<<<<< HEAD
             The method must invoke <dfn><a data-cite=
             "DOM#dom-range-deletecontents"><code>deleteContents()</code></a></dfn>
             ([[DOM]]) on the <a>context object</a>'s <a>range</a> if the
-=======
-            The method must invoke <dfn><a href=
-            "https://dom.spec.whatwg.org/#dom-range-deletecontents"><code>deleteContents()</code></a></dfn>
-            ([[!DOM]]) on the <a>context object</a>'s <a>range</a> if the
->>>>>>> chore: enable autopublish
             <a>context object</a> is not <a>empty</a>. Otherwise the method
             must do nothing.
           </p>
@@ -818,14 +812,9 @@
           </dt>
           <dd>
             <p data-link-for="Window">
-<<<<<<< HEAD
               The method must invoke and return the result of <a href=
               "#dom-document-getselection">getSelection</a> on the <a>context
               object</a>'s <a href=
-=======
-              The method must invoke and return the result of
-              <a>getSelection</a> on the <a>context object</a>'s <a href=
->>>>>>> chore: enable autopublish
               "https://www.w3.org/TR/html5/browsers.html#dom-document-0"><code>document</code></a>
               ([[!HTML]]) property.
             </p>
@@ -929,19 +918,12 @@
           initiated action, the user agent must <dfn><a href=
           "https://www.w3.org/TR/dom/#concept-event-fire">fire</a></dfn>
           ([[!DOM]]) an event with the name <code>selectstart</code>, which
-<<<<<<< HEAD
           <a data-cite="DOM#dom-event-bubbles">bubbles</a> and is <a data-cite=
           "DOM#dom-event-cancelable">cancelable</a>, at the <a>node</a>
           associated with the <a>boundary point</a> of <var>newRange</var>'s
           <a>start</a> prior to changing the selection if the <a>selection</a>
           was previously <a>empty</a> or the previously associated range was
           <a>collapsed</a>.
-=======
-          bubbles and is cancelable, at the <a>node</a> associated with the
-          <a>boundary point</a> of <var>newRange</var>'s <a>start</a> prior to
-          changing the selection if the <a>selection</a> was previously
-          <a>empty</a> or the previously associated range was <a>collapsed</a>.
->>>>>>> chore: enable autopublish
         </p>
         <p>
           If the event is canceled, the user agent must not change the
@@ -963,16 +945,10 @@
           script, the user agent must <dfn><a href=
           "https://www.w3.org/html/wg/drafts/html/master/webappapis.html#queue-a-task">
           queue a task</a></dfn> to <a>fire</a> an event with the name
-<<<<<<< HEAD
           <code>selectionchange</code>, which does not <a data-cite=
           "DOM#dom-event-bubbles">bubble</a> and is not <a data-cite=
           "DOM#dom-event-cancelable">cancelable</a>, at the <a>document</a>
           associated with the <a>selection</a>.
-=======
-          <code>selectionchange</code>, which does not bubble and is not
-          cancelable, at the <a>document</a> associated with the
-          <a>selection</a>.
->>>>>>> chore: enable autopublish
         </p>
       </section>
     </section>
@@ -984,7 +960,6 @@
         Many thanks to
       </p>
       <ul>
-<<<<<<< HEAD
         <li>Aryeh Gregor, who is the original author of this specification as
         well as <a href=
         "https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing
@@ -1001,30 +976,6 @@
         Steen, Roland Steiner, Annie Sullivan, timeless, Ojan Vafai, Brett
         Zamir, and Boris Zbarsky for their feedback, participation, or other
         helpful contributions
-=======
-        <li>
-          <p>
-            Aryeh Gregor, who is the original author of this specification as
-            well as <a href=
-            "https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML
-            Editing API specification</a>.
-          </p>
-        </li>
-        <li>
-          <p>
-            Contributors to the <a href=
-            "https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML
-            Editing API specification</a> - Ehsan Akhgari, Tab Atkins, Mathias
-            Bynens, Tim Down, Markus Ernst, Daniel Glazman, Tali Gregor (née
-            Fuss), Stig Halvorsen, Jeff Harris, Ian Hickson, Cameron
-            Heavon-Jones, Anne van Kesteren, Alfonso Martínez de Lizarrondo,
-            Glenn Maynard, Ms2ger, Robert O'Callahan, Julie Parent, Simon
-            Pieters, Michael A. Puls II, Rich Schwerdtfeger, Jonas Sicking,
-            Henri Sivonen, Smylers, Hallvord R. M. Steen, Roland Steiner, Annie
-            Sullivan, timeless, Ojan Vafai, Brett Zamir, and Boris Zbarsky for
-            their feedback, participation, or other helpful contributions
-          </p>
->>>>>>> chore: enable autopublish
         </li>
         <li>Robin Berjon for making our lives so much easier with his cool
         tool.
