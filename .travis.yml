@@ -1,15 +1,27 @@
+dist: trusty
 language: node_js
-sudo: false
+node_js:
+  - lts/*
 branches:
   only:
-  - gh-pages
+    - gh-pages
+cache:
+  directories:
+    - node_modules
 env:
   global:
   - URL="http://w3c.github.io/selection-api/W3CTRMANIFEST"
   - DECISION="https://lists.w3.org/Archives/Public/public-webapps/2014JulSep/0627.html"
   - secure: "lKRt+pehDA4qR89jTE+QzUHlfxmwShuNZRkkrHLjNbUc0MpzKJcxW1MWZb65dFEEgDA9hKcu8NV79fbhBF/jWD7XgSiZw0n3lHrNr/8jrufCr8owVDH+LBAqGQJYMnM7GaSwMTgBNWF2+r40Oj7x5BXeNEQmc1YDZaWeixyLuzA="
+
+install:
+ - npm install respec-validator
+
 script:
-- echo "ok"
-after_success:
-- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && curl "https://labs.w3.org/echidna/api/request" --data "url=$URL" --data "decision=$DECISION"
-  --data "token=$TOKEN"'
+ - npx respec-validator --gh-user=$GH_USER --gh-token=$GH_TOKEN index.html
+
+ after_success:
+- CC="mcaceres@mozilla.com"
+- echo "If it fails, check https://lists.w3.org/Archives/Public/public-tr-notifications/"
+- curl "https://labs.w3.org/echidna/api/request" --data "url=$URL" --data "decision=$DECISION"
+  --data "token=$TOKEN" --data "cc=$CC"
