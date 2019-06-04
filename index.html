@@ -143,10 +143,10 @@
         object, as required elsewhere in this specification.
       </p>
       <p>
-        If the <a>selection</a>'s <a>range</a> is not null and is <a data-cite=
-        "dom#range-collapsed">collapsed</a>, then the caret position must be at
-        that <a>range</a>'s <a>boundary point</a>. When the <a>selection</a> is
-        not empty, this specification does not define the caret position; user
+        If the <a>selection</a>'s <a>range</a> is not null and is
+        <a>collapsed</a>, then the caret position must be at that
+        <a>range</a>'s <a>boundary point</a>. When the <a>selection</a> is not
+        empty, this specification does not define the caret position; user
         agents should follow platform conventions in deciding whether the caret
         is at the start of the <a>selection</a>, the end of the
         <a>selection</a>, or somewhere else.
@@ -277,11 +277,9 @@
         </dt>
         <dd>
           <p>
-            The attribute must return <code>"None"</code> if the <a>context
-            object</a> is <a>empty</a>, <code>"Caret"</code> if the <a>context
-            object</a>'s <a>range</a> is <a data-cite=
-            "dom#range-collapsed">collapsed</a>, and <code>"Range"</code>
-            otherwise.
+            The attribute must return `"None"` if the <a>context object</a> is
+            <a>empty</a>, `"Caret"` if the <a>context object</a>'s <a>range</a>
+            is <a>collapsed</a>, and `"Range"` otherwise.
           </p>
         </dd>
         <dt>
@@ -850,8 +848,7 @@
           the <a>node</a> associated with the <a>boundary point</a> of
           <var>newRange</var>'s <a>start</a> prior to changing the selection if
           the <a>selection</a> was previously <a>empty</a> or the previously
-          associated range was <a data-cite=
-          "dom#range-collapsed">collapsed</a>.
+          associated range was <a>collapsed</a>.
         </p>
         <p>
           If the event is canceled, the user agent must not change the
