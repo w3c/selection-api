@@ -22,10 +22,10 @@
         ],
         wg: "Web Applications Working Group",
         wgURI: "https://www.w3.org/2019/webapps/",
-        wgPublicList: "public-webapps",
         wgPatentURI: "https://www.w3.org/2004/01/pp-impl/114929/status",
         testSuiteURI: "https://github.com/web-platform-tests/wpt/tree/master/selection",
-        github: "https://github.com/w3c/selection-api",
+        github: "w3c/selection-api",
+        xref: "web-platform",
       };
     </script>
   </head>
@@ -47,15 +47,7 @@
     </section>
     <section id='sotd'>
       <p>
-        Any feedback or discussion of this specification should be sent to the
-        <a href="mailto:public-webapps@w3.org">public-webapps mailing list</a>
-        with "[selection-api]" as the Subject header prefix (<a href=
-        "https://lists.w3.org/Archives/Public/public-webapps/">archive</a>).
-      </p>
-      <p>
-        This specification is based on the <a href=
-        "https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html">HTML Editing
-        API specification</a> edited by Aryeh Gregor.
+        This is work in progress.
       </p>
     </section>
     <section class="informative">
@@ -76,9 +68,9 @@
         simplification but doesn't constrain authors much. See <a href=
         "https://lists.w3.org/Archives/Public/public-whatwg-archive/2011Jun/0193.html">
         discussion</a>. Basically it would throw exceptions in some places to
-        try to stop the selection from containing a range that had a boundary
-        point other than an Element or Text node, or a boundary point that
-        didn't descend from a Document.
+        try to stop the selection from containing a range that had a
+        <a>boundary point</a> other than an Element or Text node, or a boundary
+        point that didn't descend from a Document.
       </p>
       <p>
         But this meant getRangeAt() had to start returning a copy, not a
@@ -100,30 +92,13 @@
         </p>
       </div>
     </section>
-    <section id='conformance'>
-      <p>
-        This specification defines conformance criteria that apply to a single
-        product: the <dfn id="ua">user agent</dfn> that implements the
-        interfaces that it contains.
-      </p>
-      <p>
-        Implementations that use ECMAScript to implement the APIs defined in
-        this specification must implement them in a manner consistent with the
-        ECMAScript Bindings defined in the Web IDL specification [[!WEBIDL-1]],
-        as this specification uses that specification and terminology.
-      </p>
-    </section>
     <section>
       <h2>
         Definition
       </h2>
       <p>
-        Every <dfn><a href=
-        "https://www.w3.org/TR/dom/#document">document</a></dfn> ([[!DOM]])
-        with a <dfn><a href=
-        "https://www.w3.org/TR/html5/browsers.html#browsing-context">browsing
-        context</a></dfn> ([[!HTML]]) has a unique <dfn>selection</dfn>
-        associated with it.
+        Every <a>document</a> with a [=Document/browsing context=] has a unique
+        <dfn>selection</dfn> associated with it.
       </p>
       <p class="note">
         This is a requirement of the HTML spec. IE9 and Opera Next 12.00 alpha
@@ -134,16 +109,15 @@
       </p>
       <p>
         This one <a>selection</a> must be shared by all the content of the
-        <a>document</a> (though not by nested <a>document</a>s), including any
-        editing hosts in the document. <dfn data-cite=
-        "!HTML#editing-host">Editing hosts</dfn> that are not inside a
-        <a>document</a> cannot have a <a>selection</a>
+        <a>document</a> (though not by nested <a>documents</a>), including any
+        editing hosts in the document. <dfn>Editing hosts</dfn> that are not
+        inside a <a>document</a> cannot have a <a>selection</a>
       </p>
       <p>
-        Each <a>selection</a> can be associated with a single <dfn data-cite=
-        "!DOM#range">range</dfn>. When there is no <a>range</a> associated with
-        the <a>selection</a>, the selection is <dfn>empty</dfn>. The selection
-        must be initially <a>empty</a>.
+        Each <a>selection</a> can be associated with a single <a>range</a>.
+        When there is no <a>range</a> associated with the <a>selection</a>, the
+        selection is <dfn>empty</dfn>. The selection must be initially
+        <a>empty</a>.
       </p>
       <p class="note">
         A <a>document</a>'s <a>selection</a> is a singleton object associated
@@ -160,24 +134,22 @@
         must continue to be associated with that same <a>range</a> until this
         specification requires otherwise.
       </p>
-      <p class="note">
+      <p class="note" data-link-for="Selection">
         For instance, if the DOM changes in a way that changes the range's
         boundary points, or a script modifies the boundary points of the range,
         the same range object must continue to be associated with the
         selection. However, if the user changes the selection or a script calls
-        <code>addRange()</code>, the selection must be associated with a new
-        range object, as required elsewhere in this specification.
+        {{addRange()}}, the selection must be associated with a new range
+        object, as required elsewhere in this specification.
       </p>
       <p>
-        If the <a>selection</a>'s <a>range</a> is not null and is
-        <dfn data-cite="!DOM#dom-range-collapsed">collapsed</dfn>, then the
-        caret position must be at that <a>range</a>'s <a href=
-        "https://www.w3.org/TR/dom/#concept-range-bp"><dfn>boundary
-        point</dfn></a>. When the <a>selection</a> is not empty, this
-        specification does not define the caret position; user agents should
-        follow platform conventions in deciding whether the caret is at the
-        start of the <a>selection</a>, the end of the <a>selection</a>, or
-        somewhere else.
+        If the <a>selection</a>'s <a>range</a> is not null and is <a data-cite=
+        "dom#range-collapsed">collapsed</a>, then the caret position must be at
+        that <a>range</a>'s <a>boundary point</a>. When the <a>selection</a> is
+        not empty, this specification does not define the caret position; user
+        agents should follow platform conventions in deciding whether the caret
+        is at the start of the <a>selection</a>, the end of the
+        <a>selection</a>, or somewhere else.
       </p>
       <p class="note">
         This short-changes Mac users. See <a href=
@@ -189,15 +161,11 @@
         a <a>selection</a> by indicating first one <a>boundary point</a> of the
         <a>range</a> and then the other (such as by clicking on one point and
         dragging to another), and the first indicated <a>boundary point</a> is
-        <a href=
-        "https://www.w3.org/TR/dom/#concept-range-bp-after"><dfn>after</dfn></a>
-        ([[!DOM]]) the second, then the corresponding <a>selection</a> must
+        <a>after</a> the second, then the corresponding <a>selection</a> must
         initially be <a>backwards</a>. If the first indicated <a>boundary
-        point</a> is <a href=
-        "https://www.w3.org/TR/dom/#concept-range-bp-before"><dfn>before</dfn></a>
-        ([[!DOM]]) the second, then the corresponding <a>selection</a> must
-        initially be <a>forwards</a>. Otherwise, it must be
-        <a>directionless</a>.
+        point</a> is <a>before</a> the second, then the corresponding
+        <a>selection</a> must initially be <a>forwards</a>. Otherwise, it must
+        be <a>directionless</a>.
       </p>
       <p>
         Each <a>selection</a>s also have an <dfn>anchor</dfn> and a
@@ -251,12 +219,8 @@
         </dt>
         <dd>
           <p>
-            The attribute must return the <a>anchor</a> <dfn><a href=
-            "https://www.w3.org/TR/dom/#concept-node">node</a></dfn> ([[!DOM]])
-            of the <dfn><a href=
-            "https://www.w3.org/TR/dom/#context-object">context
-            object</a></dfn> ([[!DOM]]), or <code>null</code> if the
-            <a>anchor</a> is null.
+            The attribute must return the <a>anchor</a> <a>node</a> of the
+            <a>context object</a>, or `null` if the <a>anchor</a> is null.
           </p>
         </dd>
         <dt>
@@ -264,10 +228,9 @@
         </dt>
         <dd>
           <p>
-            The attribute must return the <a>anchor</a> <dfn><a href=
-            "https://www.w3.org/TR/dom/#concept-range-bp-offset">offset</a></dfn>
-            ([[!DOM]]) of the <a>context object</a>, or <code>0</code> if the
-            <a>anchor</a> is null.
+            The attribute must return the <a>anchor</a> <a>offset</a> of the
+            <a>context object</a>, or <code>0</code> if the <a>anchor</a> is
+            null.
           </p>
         </dd>
         <dt>
@@ -276,8 +239,7 @@
         <dd>
           <p>
             The attribute must return the <a>focus</a> <a>node</a> of the
-            <a>context object</a>, or <code>null</code> if the <a>anchor</a> is
-            null.
+            <a>context object</a>, or `null` if the <a>anchor</a> is null.
           </p>
         </dd>
         <dt>
@@ -317,21 +279,20 @@
           <p>
             The attribute must return <code>"None"</code> if the <a>context
             object</a> is <a>empty</a>, <code>"Caret"</code> if the <a>context
-            object</a>'s <a>range</a> is <a>collapsed</a>, and
-            <code>"Range"</code> otherwise.
+            object</a>'s <a>range</a> is <a data-cite=
+            "dom#range-collapsed">collapsed</a>, and <code>"Range"</code>
+            otherwise.
           </p>
         </dd>
         <dt>
-          <dfn>getRangeAt</dfn>
+          <dfn>getRangeAt()</dfn> method
         </dt>
         <dd>
           <p>
-            The method must throw an <dfn><a href=
-            "https://www.w3.org/TR/dom/#indexsizeerror"><code>IndexSizeError</code></a></dfn>
-            ([[!DOM]]) exception if <var>index</var> is not <code>0</code>, or
-            if the <a>context object</a> is <a>empty</a>. Otherwise, it must
-            return a reference to (not a copy of) the <a>context object</a>'s
-            <a>range</a>.
+            The method must throw an {{IndexSizeError}} exception if
+            <var>index</var> is not <code>0</code>, or if the <a>context
+            object</a> is <a>empty</a>. Otherwise, it must return a reference
+            to (not a copy of) the <a>context object</a>'s <a>range</a>.
           </p>
           <p class="note">
             Thus subsequent calls of this method returns the same <a>range</a>
@@ -347,18 +308,16 @@
           </p>
         </dd>
         <dt>
-          <dfn>addRange</dfn>
+          <dfn>addRange()</dfn> method
         </dt>
         <dd>
           <p>
             The method must follow these steps:
           </p>
           <ol>
-            <li>If the <dfn><a href=
-            "https://www.w3.org/TR/dom/#concept-tree-root">root</a></dfn>
-            ([[!DOM]]) of the <var>range</var>'s boundary points are not the
-            <a>document</a> associated with <a>context object</a>, abort these
-            steps.
+            <li>If the [=tree/root=] of the <var>range</var>'s boundary points
+            are not the <a>document</a> associated with <a>context object</a>,
+            abort these steps.
             </li>
             <li>If <code>rangeCount</code> is not <code>0</code>, abort these
             steps.
@@ -392,19 +351,18 @@
           </div>
         </dd>
         <dt>
-          <dfn>removeRange</dfn>
+          <dfn>removeRange()</dfn> method
         </dt>
         <dd>
           <p>
             The method must make the <a>context object</a> <a>empty</a> by
             disassociating its <a>range</a> if the <a>context object</a>'s
             <a>range</a> is <var>range</var>. Otherwise, it must throw a
-            <a href=
-            "https://heycam.github.io/webidl/#notfounderror">NotFoundError</a>.
+            {{NotFoundError}}.
           </p>
         </dd>
         <dt>
-          <dfn>removeAllRanges</dfn>
+          <dfn>removeAllRanges()</dfn> method
         </dt>
         <dd>
           <p>
@@ -423,7 +381,7 @@
           </p>
         </dd>
         <dt>
-          <dfn>collapse</dfn>
+          <dfn>collapse()</dfn> method
         </dt>
         <dd>
           <p>
@@ -433,12 +391,11 @@
             <li>If <var>node</var> is null, this method must behave identically
             as <code>removeAllRanges()</code> and abort these steps.
             </li>
-            <li>The method must throw an <a>IndexSizeError</a> exception if
-            <var>offset</var> is longer than <var>node</var>'s <dfn><a href=
-            "https://www.w3.org/TR/dom/#concept-node-length">length</a></dfn>
-            ([[!DOM]]) and abort these steps.
+            <li>The method must throw an {{IndexSizeError}} exception if <var>
+              offset</var> is longer than <var>node</var>'s <a data-cite=
+              "DOM">length</a> and abort these steps.
             </li>
-            <li>If <var>node</var>'s <a>root</a> is not the <a>document</a>
+            <li>If <var>node</var>'s [=tree/root=] is not the <a>document</a>
             associated with the <a>context object</a>, abort these steps.
             </li>
             <li>Otherwise, let <var>newRange</var> be a new <a>range</a>.
@@ -446,9 +403,8 @@
             <li>
               <dfn id="range-set"><a href=
               "https://www.w3.org/TR/dom/#concept-range-bp-set">Set</a></dfn>
-              ([[!DOM]]) the <a href="#range-start">start</a> and the <a href=
-              "#range-end">end</a> of <var>newRange</var> to (<var>node</var>,
-              <var>offset</var>).
+              the <a>start</a> and the <a>end</a> of <var>newRange</var> to
+              (<var>node</var>, <var>offset</var>).
             </li>
             <li>Set the <a>context object</a>'s <a>range</a> to
             <var>newRange</var>.
@@ -456,7 +412,7 @@
           </ol>
         </dd>
         <dt>
-          <dfn>setPosition</dfn>
+          <dfn>setPosition()</dfn> method
         </dt>
         <dd>
           <p>
@@ -465,19 +421,16 @@
           </p>
         </dd>
         <dt>
-          <dfn>collapseToStart</dfn>
+          <dfn>collapseToStart()</dfn> method
         </dt>
         <dd>
           <p>
-            The method must throw <dfn><a href=
-            "https://www.w3.org/TR/dom/#invalidstateerror"><code>InvalidStateError</code></a></dfn>
-            ([[!DOM]]) exception if the <a>context object</a> is <a>empty</a>.
-            Otherwise, it must create a new <a>range</a>, <a href=
-            "#range-set">set</a> both its <a href="#range-start">start</a> and
-            <a href="#range-end">end</a> to the <a href=
-            "#range-start">start</a> of the <a>context object</a>'s
-            <a>range</a>, and then set the <a>context object</a>'s <a>range</a>
-            to the newly-created <a>range</a>.
+            The method must throw {{InvalidStateError}} exception if the
+            <a>context object</a> is <a>empty</a>. Otherwise, it must create a
+            new <a>range</a>, <a href="#range-set">set</a> both its
+            <a>start</a> and <a>end</a> to the <a>start</a> of the <a>context
+            object</a>'s <a>range</a>, and then set the <a>context object</a>'s
+            <a>range</a> to the newly-created <a>range</a>.
           </p>
           <p class="note">
             For collapseToStart/End, IE9 mutates the existing range, while
@@ -487,32 +440,31 @@
           </p>
         </dd>
         <dt>
-          <dfn>collapseToEnd</dfn>
+          <dfn>collapseToEnd()</dfn> method
         </dt>
         <dd>
           <p>
-            The method must throw <a>InvalidStateError</a> exception if the
+            The method must throw {{InvalidStateError}} exception if the
             <a>context object</a> is <a>empty</a>. Otherwise, it must create a
-            new <a>range</a>, <a href="#range-set">set</a> both its <a href=
-            "#range-start">start</a> and <a href="#range-end">end</a> to the
-            <a href="#range-end">end</a> of the <a>context object</a>'s
-            <a>range</a>, and then set the <a>context object</a>'s <a>range</a>
-            to the newly-created <a>range</a>.
+            new <a>range</a>, <a href="#range-set">set</a> both its
+            <a>start</a> and <a>end</a> to the <a>end</a> of the <a>context
+            object</a>'s <a>range</a>, and then set the <a>context object</a>'s
+            <a>range</a> to the newly-created <a>range</a>.
           </p>
         </dd>
         <dt>
-          <dfn>extend</dfn>
+          <dfn>extend()</dfn> method
         </dt>
         <dd>
           <p>
             The method must follow these steps:
           </p>
           <ol>
-            <li>If <var>node</var>'s <a>root</a> is not the <a>document</a>
+            <li>If <var>node</var>'s [=tree/root=] is not the <a>document</a>
             associated with the <a>context object</a>, abort these steps.
             </li>
             <li>If the <a>context object</a> is <a>empty</a>, throw an
-            <a>InvalidStateError</a> exception and abort these steps.
+            {{InvalidStateError}} exception and abort these steps.
             </li>
             <li>Let <var>oldAnchor</var> and <var>oldFocus</var> be the
             <a>context object</a>'s <a>anchor</a> and <a>focus</a>, and let
@@ -521,22 +473,19 @@
             </li>
             <li>Let <var>newRange</var> be a new <a>range</a>.
             </li>
-            <li>If <var>node</var>'s <a>root</a> is not the same as the
-            <a>context object</a>'s <a>range</a>'s <a>root</a>, <a href=
-            "#range-set">set</a> <var>newRange</var>'s <a href="#range-start">
-              start</a> and <a href="#range-end">end</a> to
-              <var>newFocus</var>.
+            <li>If <var>node</var>'s [=tree/root=] is not the same as the
+            <a>context object</a>'s <a>range</a>'s [=tree/root=], <a href=
+            "#range-set">set</a> <var>newRange</var>'s <a>start</a> and
+            <a>end</a> to <var>newFocus</var>.
             </li>
             <li>Otherwise, if <var>oldAnchor</var> is <a>before</a> or equal to
             <var>newFocus</var>, <a href="#range-set">set</a>
-            <var>newRange</var>'s <a href="#range-start">start</a> to
-            <var>oldAnchor</var>, then <a href="#range-set">set</a> its
-              <a href="#range-end">end</a> to <var>newFocus</var>.
+            <var>newRange</var>'s <a>start</a> to <var>oldAnchor</var>, then
+            <a href="#range-set">set</a> its <a>end</a> to <var>newFocus</var>.
             </li>
             <li>Otherwise, <a href="#range-set">set</a> <var>newRange</var>'s
-            <a href="#range-start">start</a> to <var>newFocus</var>, then
-            <a href="#range-set">set</a> its <a href="#range-end">end</a> to
-            <var>oldAnchor</var>.
+            <a>start</a> to <var>newFocus</var>, then <a href=
+            "#range-set">set</a> its <a>end</a> to <var>oldAnchor</var>.
             </li>
             <li>Set the <a>context object</a>'s <a>range</a> to
             <var>newRange</var>.
@@ -559,7 +508,7 @@
           </p>
         </dd>
         <dt>
-          <dfn>setBaseAndExtent</dfn>
+          <dfn>setBaseAndExtent()</dfn> method
         </dt>
         <dd>
           <p>
@@ -567,11 +516,12 @@
           </p>
           <ol>
             <li>If <var>anchorOffset</var> is longer than
-            <var>anchorNode</var>'s <a>length</a> or if <var>focusOffset</var>
-            is longer than <var>focusNode</var>'s <a>length</a>, throw an
-            <a>IndexSizeError</a> exception and abort these steps.
+            <var>anchorNode</var>'s <a data-cite="DOM">length</a> or if
+            <var>focusOffset</var> is longer than <var>focusNode</var>'s
+            <a data-cite="DOM">length</a>, throw an {{IndexSizeError}}
+            exception and abort these steps.
             </li>
-            <li>If the <a>root</a>s of <var>anchorNode</var> or
+            <li>If the [=tree/root=]s of <var>anchorNode</var> or
             <var>focusNode</var> are not the <a>document</a> associated with
             <a>context object</a>, abort these steps.
             </li>
@@ -583,11 +533,10 @@
             <li>Let <var>newRange</var> be a new <a>range</a>.
             </li>
             <li>If <var>anchor</var> is <a>before</a> <var>focus</var>,
-              <a href="#range-set">set</a> the <var>newRange</var>'s <a href=
-              "#range-start">start</a> to <var>anchor</var> and its <a href=
-              "#range-end">end</a> to <var>focus</var>. Otherwise, <a href=
-              "#range-set">set</a> them to <var>focus</var> and
-              <var>anchor</var> respectively.
+              <a href="#range-set">set</a> the <var>newRange</var>'s
+              <a>start</a> to <var>anchor</var> and its <a>end</a> to
+              <var>focus</var>. Otherwise, <a href="#range-set">set</a> them to
+              <var>focus</var> and <var>anchor</var> respectively.
             </li>
             <li>Set the <a>context object</a>'s <a>range</a> to
             <var>newRange</var>.
@@ -599,24 +548,25 @@
           </ol>
         </dd>
         <dt>
-          <dfn>selectAllChildren</dfn>
+          <dfn>selectAllChildren()</dfn> method
         </dt>
         <dd>
           <p>
             The method must follow these steps:
           </p>
           <ol>
-            <li>If <var>node</var>'s <a>root</a> is not the <a>document</a>
+            <li>If <var>node</var>'s [=tree/root=] is not the <a>document</a>
             associated with the <a>context object</a>, abort these steps.
             </li>
             <li>Let <var>newRange</var> be a new <a>range</a> and
-            <var>nodeLength</var> be the <a>length</a> of <var>node</var>.
+            <var>nodeLength</var> be the <a data-cite="DOM">length</a> of <var>
+              node</var>.
             </li>
-            <li>Set <var>newRange</var>'s <a href="#range-start">start</a> to
-            (<var>node</var>, <code>0</code>).
+            <li>Set <var>newRange</var>'s <a>start</a> to (<var>node</var>,
+            <code>0</code>).
             </li>
-            <li>Set <var>newRange</var>'s <a href="#range-end">end</a> to
-            (<var>node</var>, <var>nodeLength</var>).
+            <li>Set <var>newRange</var>'s <a>end</a> to (<var>node</var>, <var>
+              nodeLength</var>).
             </li>
             <li>Set the <a>context object</a>'s <a>range</a> to
             <var>newRange</var>.
@@ -655,15 +605,13 @@
           </div>
         </dd>
         <dt>
-          <dfn>deleteFromDocument</dfn>
+          <dfn>deleteFromDocument()</dfn> method
         </dt>
         <dd>
           <p>
-            The method must invoke <dfn><a data-cite=
-            "DOM#dom-range-deletecontents"><code>deleteContents()</code></a></dfn>
-            ([[DOM]]) on the <a>context object</a>'s <a>range</a> if the
-            <a>context object</a> is not <a>empty</a>. Otherwise the method
-            must do nothing.
+            The method must invoke {{deleteContents()}} on the <a>context
+            object</a>'s <a>range</a> if the <a>context object</a> is not
+            <a>empty</a>. Otherwise the method must do nothing.
           </p>
           <p class="note">
             This is the one method that actually mutates the range instead of
@@ -673,32 +621,31 @@
           </p>
         </dd>
         <dt>
-          <dfn>containsNode</dfn>
+          <dfn>containsNode()</dfn> method
         </dt>
         <dd>
           <p>
             The method must return <code>false</code> if the <a>context
-            object</a> is <a>empty</a> or if <var>node</var>'s <a>root</a> is
+            object</a> is <a>empty</a> or if <var>node</var>'s [=tree/root=] is
             not the document associated with the <a>context object</a>.
           </p>
           <p>
             Otherwise, if <var>allowPartialContainment</var> is
             <code>false</code>, the method must return <code>true</code> if and
-            only if <a href="#range-start">start</a> of its <a>range</a> is
-            <a>before</a> or visually equivalent to the first <a>boundary
-            point</a> in the <var>node</var> <strong>and</strong> <a href=
-            "#range-end">end</a> of its <a>range</a> is <a>after</a> or
-            visually equivalent to the last <a>boundary point</a> in the
-            <var>node</var>.
+            only if <a>start</a> of its <a>range</a> is <a>before</a> or
+            visually equivalent to the first <a>boundary point</a> in the
+            <var>node</var> <strong>and</strong> <a>end</a> of its <a>range</a>
+            is <a>after</a> or visually equivalent to the last <a>boundary
+            point</a> in the <var>node</var>.
           </p>
           <p>
             If <var>allowPartialContainment</var> is <code>true</code>, the
-            method must return <code>true</code> if and only if <a href=
-            "#range-start">start</a> of its <a>range</a> is <a>before</a> or
-            visually equivalent to the first <a>boundary point</a> in the
-            <var>node</var> <strong>or</strong> <a href="#range-end">end</a> of
-            its <a>range</a> is <a>after</a> or visually equivalent to the last
-            <a>boundary point</a> in the <var>node</var>.
+            method must return <code>true</code> if and only if <a>start</a> of
+            its <a>range</a> is <a>before</a> or visually equivalent to the
+            first <a>boundary point</a> in the <var>node</var>
+            <strong>or</strong> <a>end</a> of its <a>range</a> is <a>after</a>
+            or visually equivalent to the last <a>boundary point</a> in the
+            <var>node</var>.
           </p>
         </dd>
         <dt>
@@ -741,14 +688,12 @@
         </p>
       </div>
       <p>
-        All of the members of the <code>Selection</code> interface are defined
-        in terms of operations on the <code><a>range</a></code> object (if any)
+        All of the members of the {{Selection}} interface are defined in terms
+        of operations on the <code><a>range</a></code> object (if any)
         represented by the object. These operations can raise exceptions, as
-        defined for the <a href=
-        "https://www.w3.org/TR/dom/#range"><code>Range</code></a> ([[!DOM]])
-        interface; this can therefore result in the members of the
-        <a>Selection</a> interface raising exceptions as well, in addition to
-        any explicitly called out below.
+        defined for the {{Range}} interface; this can therefore result in the
+        members of the <a>Selection</a> interface raising exceptions as well,
+        in addition to any explicitly called out below.
       </p>
     </section>
     <section>
@@ -763,43 +708,48 @@
         <h3>
           Extensions to <code>Document</code> interface
         </h3>
-        <pre class="idl">
+        <p>
+          The <code><dfn data-cite="dom#document">Document</dfn></code>
+          interface is defined in [[HTML]].
+        </p>
+        <pre class="idl" data-cite="HTML">
           partial interface Document {
-            Selection ? getSelection();
+            Selection? getSelection();
           };
         </pre>
         <dl>
           <dt>
-            <dfn>getSelection()</dfn>
+            <dfn>getSelection()</dfn> method
           </dt>
           <dd>
             <p>
               The method must return the <a>selection</a> associated with
               <a>context object</a> if the <a>context object</a> has an
-              associated <a>browsing context</a>, and it must return
-              <code>null</code> otherwise.
+              associated [=Document/browsing context=], and it must return
+              `null` otherwise.
             </p>
           </dd>
         </dl>
         <p class="note" data-link-for="Document">
           If we create a Document object with no browsing context (say via
-          <code>document.implementation.createHTMLDocument("")</code> and call
-          <a>getSelection</a> on it), IE9 seems to return a different Selection
+          `document.implementation.createHTMLDocument("")` and call
+          {{getSelection()}} on it), IE9 seems to return a different Selection
           object. Firefox 12.0a1 and Opera Next 12.00 alpha return the same
           object as for the current window. Chrome 17 dev returns null. See
           <a href=
           "https://lists.w3.org/Archives/Public/public-webapps/2012JanMar/0159.html">
           discussion</a>. There's no meaningful selection associated with such
-          a document, so we follow WebKit and require returning
-          <code>null</code>.
+          a document, so we follow WebKit and require returning `null`.
         </p>
       </section>
-      <section data-dfn-for="Window">
+      <section data-dfn-for="Window" data-link-for="Window">
         <h3>
-          Extensions to <code>Window</code> interface
+          Extensions to `Window` interface
         </h3>
         <p>
-          The <code><dfn>Window</dfn></code> interface is defined in [[!HTML]].
+          The <code><dfn data-cite=
+          "html/window-object.html#window">Window</dfn></code> interface is
+          defined in [[HTML]].
         </p>
         <pre class="idl">
           partial interface Window {
@@ -808,26 +758,25 @@
         </pre>
         <dl>
           <dt>
-            <dfn>getSelection()</dfn>
+            <dfn>getSelection()</dfn> method
           </dt>
           <dd>
-            <p data-link-for="Window">
-              The method must invoke and return the result of <a href=
-              "#dom-document-getselection">getSelection</a> on the <a>context
-              object</a>'s <a href=
-              "https://www.w3.org/TR/html5/browsers.html#dom-document-0"><code>document</code></a>
-              ([[!HTML]]) property.
+            <p>
+              The method must invoke and return the result of
+              {{getSelection()}} on the <a>context object</a>'s
+              {{Window.document}} attribute.
             </p>
           </dd>
         </dl>
       </section>
       <section data-dfn-for="GlobalEventHandlers">
         <h3>
-          Extensions to <code>GlobalEventHandlers</code>
+          Extensions to `GlobalEventHandlers` interface
         </h3>
         <p>
-          The <code><dfn>GlobalEventHandlers</dfn></code> interface is defined
-          in [[!HTML]].
+          The <code><dfn data-cite=
+          "html/webappapis.html#globaleventhandlers">GlobalEventHandlers</dfn></code>
+          interface is defined in [[HTML]].
         </p>
         <pre class="idl">
           partial interface mixin GlobalEventHandlers {
@@ -841,16 +790,9 @@
           </dt>
           <dd>
             <p>
-              The attribute must be an <a href=
-              "https://html.spec.whatwg.org/#event-handler-idl-attributess">event
-              handler IDL attribute</a> for the <a>selectstart</a> event
-              supported by all <a href=
-              "https://html.spec.whatwg.org/#html-elements">HTML elements</a>,
-              <a href=
-              "https://html.spec.whatwg.org/#the-document-object">Document</a>
-              objects, and <a href=
-              "https://html.spec.whatwg.org/#the-window-object">Window</a>
-              objects.
+              The attribute must be an <a>event handler IDL attribute</a> for
+              the <a>selectstart</a> event supported by all <a>HTML
+              elements</a>, {{Document}} objects, and {{Window}} objects.
             </p>
           </dd>
           <dt>
@@ -858,16 +800,9 @@
           </dt>
           <dd>
             <p>
-              The attribute must be an <a href=
-              "https://html.spec.whatwg.org/#event-handler-idl-attributess">event
-              handler IDL attribute</a> for the <a>selectionchange</a> event
-              supported by all <a href=
-              "https://html.spec.whatwg.org/#html-elements">HTML elements</a>,
-              <a href=
-              "https://html.spec.whatwg.org/#the-document-object">Document</a>
-              objects, and <a href=
-              "https://html.spec.whatwg.org/#the-window-object">Window</a>
-              objects.
+              The attribute must be an <a>event handler IDL attribute</a> for
+              the <a>selectionchange</a> event supported by all <a>HTML
+              elements</a>, {{Document}} objects, and {{Window}} objects.
             </p>
           </dd>
         </dl>
@@ -879,22 +814,16 @@
       </h2>
       <p>
         The user agent should allow the user to change the <a>selection</a>
-        associated with the <dfn>active document</dfn> (<a href=
-        "https://www.w3.org/TR/html5/browsers.html#active-document">defined</a>
-        in [[!HTML]]). If the user makes any modification to a
-        <a>selection</a>, the user agent must create a new <a>range</a> with
-        suitable <a href=
-        "https://www.w3.org/TR/dom/#concept-range-start"><dfn id=
-        "range-start">start</dfn></a> and <a href=
-        "https://www.w3.org/TR/dom/#concept-range-end"><dfn id=
-        "range-end">end</dfn></a> of the <a>range</a> ([[!DOM]]) and associate
-        the <a>selection</a> with this new <a>range</a> (not modify the
-        existing <a>range</a>), and set update <a>selection</a>'s
-        <a>direction</a> to <a>forwards</a> if the <a>start</a> is
-        <a>before</a> or equal to the <a>end</a>, <a>backwards</a> if if the
-        <a>end</a> is <a>before</a> the <a>start</a>, or <a>directionless</a>
-        if the <a>start</a> and the <a>end</a> cannot be ordered due to the
-        platform convention.
+        associated with the <a>active document</a>. If the user makes any
+        modification to a <a>selection</a>, the user agent must create a new
+        <a>range</a> with suitable <a>start</a> and <a>end</a> of the
+        <a>range</a> and associate the <a>selection</a> with this new
+        <a>range</a> (not modify the existing <a>range</a>), and set update
+        <a>selection</a>'s <a>direction</a> to <a>forwards</a> if the
+        <a>start</a> is <a>before</a> or equal to the <a>end</a>,
+        <a>backwards</a> if if the <a>end</a> is <a>before</a> the
+        <a>start</a>, or <a>directionless</a> if the <a>start</a> and the
+        <a>end</a> cannot be ordered due to the platform convention.
       </p>
       <p>
         The user agent must not make a <a>selection</a> <a>empty</a> if it was
@@ -915,23 +844,21 @@
         <p>
           When the user agent is about to associate a new range
           <var>newRange</var> to the <a>selection</a> in response to a user
-          initiated action, the user agent must <dfn><a href=
-          "https://www.w3.org/TR/dom/#concept-event-fire">fire</a></dfn>
-          ([[!DOM]]) an event with the name <code>selectstart</code>, which
-          <a data-cite="DOM#dom-event-bubbles">bubbles</a> and is <a data-cite=
-          "DOM#dom-event-cancelable">cancelable</a>, at the <a>node</a>
-          associated with the <a>boundary point</a> of <var>newRange</var>'s
-          <a>start</a> prior to changing the selection if the <a>selection</a>
-          was previously <a>empty</a> or the previously associated range was
-          <a>collapsed</a>.
+          initiated action, the user agent must <a>fire an event</a> with the
+          name <code>selectstart</code>, which bubbles and is cancelable, at
+          the <a>node</a> associated with the <a>boundary point</a> of
+          <var>newRange</var>'s <a>start</a> prior to changing the selection if
+          the <a>selection</a> was previously <a>empty</a> or the previously
+          associated range was <a data-cite=
+          "dom#range-collapsed">collapsed</a>.
         </p>
         <p>
           If the event is canceled, the user agent must not change the
           <a>selection</a>.
         </p>
         <p>
-          The user agent must not <a>fire</a> the event when the user agent
-          sets the <a>selection</a> <a>empty</a>.
+          The user agent must not <a>fire an event</a> when the user agent sets
+          the <a>selection</a> <a>empty</a>.
         </p>
       </section>
       <section>
@@ -942,15 +869,19 @@
           When the <a>selection</a> is dissociated with its <a>range</a>,
           associated with a new <a>range</a> or the associated <a>range</a>'s
           <a>boundary point</a> is mutated either by the user or the content
-          script, the user agent must <dfn><a href=
-          "https://www.w3.org/html/wg/drafts/html/master/webappapis.html#queue-a-task">
-          queue a task</a></dfn> to <a>fire</a> an event with the name
-          <code>selectionchange</code>, which does not <a data-cite=
-          "DOM#dom-event-bubbles">bubble</a> and is not <a data-cite=
-          "DOM#dom-event-cancelable">cancelable</a>, at the <a>document</a>
-          associated with the <a>selection</a>.
+          script, the user agent must <a>queue a task</a> to <a>fire an
+          event</a> with the name <code>selectionchange</code>, which does not
+          bubble and is not cancelable, at the <a>document</a> associated with
+          the <a>selection</a>.
         </p>
       </section>
+    </section>
+    <section id='conformance'>
+      <p>
+        This specification defines conformance criteria that apply to a single
+        product: the <dfn id="ua">user agent</dfn> that implements the
+        interfaces that it contains.
+      </p>
     </section>
     <section class='appendix'>
       <h2>
@@ -976,9 +907,6 @@
         Steen, Roland Steiner, Annie Sullivan, timeless, Ojan Vafai, Brett
         Zamir, and Boris Zbarsky for their feedback, participation, or other
         helpful contributions
-        </li>
-        <li>Robin Berjon for making our lives so much easier with his cool
-        tool.
         </li>
       </ul>
     </section>
