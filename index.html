@@ -401,10 +401,9 @@
             <li>Otherwise, let <var>newRange</var> be a new <a>range</a>.
             </li>
             <li>
-              <dfn id="range-set"><a href=
-              "https://www.w3.org/TR/dom/#concept-range-bp-set">Set</a></dfn>
-              the <a>start</a> and the <a>end</a> of <var>newRange</var> to
-              (<var>node</var>, <var>offset</var>).
+              <a data-lt="set the start">Set</a> the <a>start</a> and the
+              <a>end</a> of <var>newRange</var> to (<var>node</var>,
+              <var>offset</var>).
             </li>
             <li>Set the <a>context object</a>'s <a>range</a> to
             <var>newRange</var>.
@@ -427,7 +426,7 @@
           <p>
             The method must throw {{InvalidStateError}} exception if the
             <a>context object</a> is <a>empty</a>. Otherwise, it must create a
-            new <a>range</a>, <a href="#range-set">set</a> both its
+            new <a>range</a>, <a data-lt="set the start">set</a> both its
             <a>start</a> and <a>end</a> to the <a>start</a> of the <a>context
             object</a>'s <a>range</a>, and then set the <a>context object</a>'s
             <a>range</a> to the newly-created <a>range</a>.
@@ -446,7 +445,7 @@
           <p>
             The method must throw {{InvalidStateError}} exception if the
             <a>context object</a> is <a>empty</a>. Otherwise, it must create a
-            new <a>range</a>, <a href="#range-set">set</a> both its
+            new <a>range</a>, <a data-lt="set the start">set</a> both its
             <a>start</a> and <a>end</a> to the <a>end</a> of the <a>context
             object</a>'s <a>range</a>, and then set the <a>context object</a>'s
             <a>range</a> to the newly-created <a>range</a>.
@@ -474,18 +473,20 @@
             <li>Let <var>newRange</var> be a new <a>range</a>.
             </li>
             <li>If <var>node</var>'s [=tree/root=] is not the same as the
-            <a>context object</a>'s <a>range</a>'s [=tree/root=], <a href=
-            "#range-set">set</a> <var>newRange</var>'s <a>start</a> and
-            <a>end</a> to <var>newFocus</var>.
+            <a>context object</a>'s <a>range</a>'s [=tree/root=], <a data-lt=
+            "set the start">set</a> <var>newRange</var>'s <a>start</a> and <a>
+              end</a> to <var>newFocus</var>.
             </li>
             <li>Otherwise, if <var>oldAnchor</var> is <a>before</a> or equal to
-            <var>newFocus</var>, <a href="#range-set">set</a>
+            <var>newFocus</var>, <a data-lt="set the start">set</a>
             <var>newRange</var>'s <a>start</a> to <var>oldAnchor</var>, then
-            <a href="#range-set">set</a> its <a>end</a> to <var>newFocus</var>.
+            <a data-lt="set the end">set</a> its <a>end</a> to
+            <var>newFocus</var>.
             </li>
-            <li>Otherwise, <a href="#range-set">set</a> <var>newRange</var>'s
-            <a>start</a> to <var>newFocus</var>, then <a href=
-            "#range-set">set</a> its <a>end</a> to <var>oldAnchor</var>.
+            <li>Otherwise, <a data-lt="set the start">set</a>
+            <var>newRange</var>'s <a>start</a> to <var>newFocus</var>, then
+            <a data-lt="set the end">set</a> its <a>end</a> to
+            <var>oldAnchor</var>.
             </li>
             <li>Set the <a>context object</a>'s <a>range</a> to
             <var>newRange</var>.
@@ -533,10 +534,10 @@
             <li>Let <var>newRange</var> be a new <a>range</a>.
             </li>
             <li>If <var>anchor</var> is <a>before</a> <var>focus</var>,
-              <a href="#range-set">set</a> the <var>newRange</var>'s
-              <a>start</a> to <var>anchor</var> and its <a>end</a> to
-              <var>focus</var>. Otherwise, <a href="#range-set">set</a> them to
-              <var>focus</var> and <var>anchor</var> respectively.
+            <a data-lt="set the start">set</a> the <var>newRange</var>'s
+            <a>start</a> to <var>anchor</var> and its <a>end</a> to
+            <var>focus</var>. Otherwise, <a data-lt="set the start">set</a>
+            them to <var>focus</var> and <var>anchor</var> respectively.
             </li>
             <li>Set the <a>context object</a>'s <a>range</a> to
             <var>newRange</var>.
