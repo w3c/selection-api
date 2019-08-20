@@ -10,7 +10,7 @@ cache:
     - node_modules
 env:
   global:
-    - URL="http://w3c.github.io/selection-api/W3CTRMANIFEST"
+    - URL="https://w3c.github.io/selection-api/W3CTRMANIFEST"
     - DECISION="https://lists.w3.org/Archives/Public/public-webapps/2014JulSep/0627.html"
     - secure: "lKRt+pehDA4qR89jTE+QzUHlfxmwShuNZRkkrHLjNbUc0MpzKJcxW1MWZb65dFEEgDA9hKcu8NV79fbhBF/jWD7XgSiZw0n3lHrNr/8jrufCr8owVDH+LBAqGQJYMnM7GaSwMTgBNWF2+r40Oj7x5BXeNEQmc1YDZaWeixyLuzA="
 
