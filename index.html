@@ -144,7 +144,7 @@
       </p>
       <p>
         If the <a>selection</a>'s <a>range</a> is not null and is
-        <a>collapsed</a>, then the caret position must be at that
+        [=range/collapsed=], then the caret position must be at that
         <a>range</a>'s <a>boundary point</a>. When the <a>selection</a> is not
         empty, this specification does not define the caret position; user
         agents should follow platform conventions in deciding whether the caret
@@ -161,20 +161,20 @@
         a <a>selection</a> by indicating first one <a>boundary point</a> of the
         <a>range</a> and then the other (such as by clicking on one point and
         dragging to another), and the first indicated <a>boundary point</a> is
-        <a>after</a> the second, then the corresponding <a>selection</a> must
-        initially be <a>backwards</a>. If the first indicated <a>boundary
-        point</a> is <a>before</a> the second, then the corresponding
-        <a>selection</a> must initially be <a>forwards</a>. Otherwise, it must
-        be <a>directionless</a>.
+        [=boundary point/after=] the second, then the corresponding
+        <a>selection</a> must initially be <a>backwards</a>. If the first
+        indicated <a>boundary point</a> is [=boundary point/before=] the
+        second, then the corresponding <a>selection</a> must initially be
+        <a>forwards</a>. Otherwise, it must be <a>directionless</a>.
       </p>
       <p>
         Each <a>selection</a>s also have an <dfn>anchor</dfn> and a
         <dfn>focus</dfn>. If the <a>selection</a>'s <a>range</a> is null, its
         <a>anchor</a> and <a>focus</a> are both null. If the <a>selection</a>'s
         <a>range</a> is not null and its <a>direction</a> is <a>forwards</a>,
-        its <a>anchor</a> is the <a>range</a>'s <a>start</a>, and its
-        <a>focus</a> is the <a>end</a>. Otherwise, its <a>focus</a> is the
-        <a>start</a> and its <a>anchor</a> is the <a>end</a>.
+        its <a>anchor</a> is the <a>range</a>'s [=range/start=], and its
+        <a>focus</a> is the [=range/end=]. Otherwise, its <a>focus</a> is the
+        [=range/start=] and its <a>anchor</a> is the [=range/end=].
       </p>
     </section>
     <section data-dfn-for="Selection">
@@ -219,8 +219,9 @@
         </dt>
         <dd>
           <p>
-            The attribute must return the <a>anchor</a> <a>node</a> of the
-            <a>context object</a>, or `null` if the <a>anchor</a> is null.
+            The attribute must return the <a>anchor</a> [=boundary point/node=]
+            of the <a>context object</a>, or `null` if the <a>anchor</a> is
+            null.
           </p>
         </dd>
         <dt>
@@ -228,9 +229,9 @@
         </dt>
         <dd>
           <p>
-            The attribute must return the <a>anchor</a> <a>offset</a> of the
-            <a>context object</a>, or <code>0</code> if the <a>anchor</a> is
-            null.
+            The attribute must return the <a>anchor</a> [=boundary
+            point/offset=] of the <a>context object</a>, or <code>0</code> if
+            the <a>anchor</a> is null.
           </p>
         </dd>
         <dt>
@@ -238,8 +239,9 @@
         </dt>
         <dd>
           <p>
-            The attribute must return the <a>focus</a> <a>node</a> of the
-            <a>context object</a>, or `null` if the <a>anchor</a> is null.
+            The attribute must return the <a>focus</a> [=boundary point/node=]
+            of the <a>context object</a>, or `null` if the <a>anchor</a> is
+            null.
           </p>
         </dd>
         <dt>
@@ -247,9 +249,9 @@
         </dt>
         <dd>
           <p>
-            The attribute must return the <a>focus</a> <a>offset</a> of the
-            <a>context object</a>, or <code>0</code> if the <a>focus</a> is
-            null.
+            The attribute must return the <a>focus</a> [=boundary
+            point/offset=] of the <a>context object</a>, or <code>0</code> if
+            the <a>focus</a> is null.
           </p>
         </dd>
         <dt>
@@ -279,7 +281,7 @@
           <p>
             The attribute must return `"None"` if the <a>context object</a> is
             <a>empty</a>, `"Caret"` if the <a>context object</a>'s <a>range</a>
-            is <a>collapsed</a>, and `"Range"` otherwise.
+            is [=range/collapsed=], and `"Range"` otherwise.
           </p>
         </dd>
         <dt>
@@ -390,18 +392,17 @@
             as <code>removeAllRanges()</code> and abort these steps.
             </li>
             <li>The method must throw an {{IndexSizeError}} exception if <var>
-              offset</var> is longer than <var>node</var>'s <a data-cite=
-              "DOM">length</a> and abort these steps.
+              offset</var> is longer than <var>node</var>'s [=Node/length=] and
+              abort these steps.
             </li>
             <li>If <var>node</var>'s [=tree/root=] is not the <a>document</a>
             associated with the <a>context object</a>, abort these steps.
             </li>
             <li>Otherwise, let <var>newRange</var> be a new <a>range</a>.
             </li>
-            <li>
-              <a data-lt="set the start">Set</a> the <a>start</a> and the
-              <a>end</a> of <var>newRange</var> to (<var>node</var>,
-              <var>offset</var>).
+            <li>[=Range/Set the start=] the [=range/start=] and the
+            [=range/end=] of <var>newRange</var> to (<var>node</var>,
+            <var>offset</var>).
             </li>
             <li>Set the <a>context object</a>'s <a>range</a> to
             <var>newRange</var>.
@@ -424,8 +425,8 @@
           <p>
             The method must throw {{InvalidStateError}} exception if the
             <a>context object</a> is <a>empty</a>. Otherwise, it must create a
-            new <a>range</a>, <a data-lt="set the start">set</a> both its
-            <a>start</a> and <a>end</a> to the <a>start</a> of the <a>context
+            new <a>range</a>, [=Range/set the start=] both its [=range/start=]
+            and [=range/end=] to the [=range/start=] of the <a>context
             object</a>'s <a>range</a>, and then set the <a>context object</a>'s
             <a>range</a> to the newly-created <a>range</a>.
           </p>
@@ -443,8 +444,8 @@
           <p>
             The method must throw {{InvalidStateError}} exception if the
             <a>context object</a> is <a>empty</a>. Otherwise, it must create a
-            new <a>range</a>, <a data-lt="set the start">set</a> both its
-            <a>start</a> and <a>end</a> to the <a>end</a> of the <a>context
+            new <a>range</a>, [=Range/set the start=] both its [=range/start=]
+            and [=range/end=] to the [=range/end=] of the <a>context
             object</a>'s <a>range</a>, and then set the <a>context object</a>'s
             <a>range</a> to the newly-created <a>range</a>.
           </p>
@@ -471,27 +472,26 @@
             <li>Let <var>newRange</var> be a new <a>range</a>.
             </li>
             <li>If <var>node</var>'s [=tree/root=] is not the same as the
-            <a>context object</a>'s <a>range</a>'s [=tree/root=], <a data-lt=
-            "set the start">set</a> <var>newRange</var>'s <a>start</a> and <a>
-              end</a> to <var>newFocus</var>.
+            <a>context object</a>'s <a>range</a>'s [=tree/root=], [=Range/set
+            the start=] <var>newRange</var>'s [=range/start=] and [=range/end=]
+            to <var>newFocus</var>.
             </li>
-            <li>Otherwise, if <var>oldAnchor</var> is <a>before</a> or equal to
-            <var>newFocus</var>, <a data-lt="set the start">set</a>
-            <var>newRange</var>'s <a>start</a> to <var>oldAnchor</var>, then
-            <a data-lt="set the end">set</a> its <a>end</a> to
-            <var>newFocus</var>.
+            <li>Otherwise, if <var>oldAnchor</var> is [=boundary point/before=]
+            or equal to <var>newFocus</var>, [=Range/set the start=]
+            <var>newRange</var>'s [=range/start=] to <var>oldAnchor</var>, then
+            set its [=range/end=] to <var>newFocus</var>.
             </li>
-            <li>Otherwise, <a data-lt="set the start">set</a>
-            <var>newRange</var>'s <a>start</a> to <var>newFocus</var>, then
-            <a data-lt="set the end">set</a> its <a>end</a> to
-            <var>oldAnchor</var>.
+            <li>Otherwise, [=Range/set the start=] <var>newRange</var>'s
+            [=range/start=] to <var>newFocus</var>, then set its [=range/end=]
+            to <var>oldAnchor</var>.
             </li>
             <li>Set the <a>context object</a>'s <a>range</a> to
             <var>newRange</var>.
             </li>
-            <li>If <var>newFocus</var> is <a>before</a> <var>oldAnchor</var>,
-            set the <a>context object</a>'s <a>direction</a> to
-            <a>backwards</a>. Otherwise, set it to <a>forwards</a>.
+            <li>If <var>newFocus</var> is [=boundary point/before=]
+            <var>oldAnchor</var>, set the <a>context object</a>'s
+            <a>direction</a> to <a>backwards</a>. Otherwise, set it to
+            <a>forwards</a>.
             </li>
           </ol>
           <p class="note">
@@ -531,18 +531,18 @@
             </li>
             <li>Let <var>newRange</var> be a new <a>range</a>.
             </li>
-            <li>If <var>anchor</var> is <a>before</a> <var>focus</var>,
-            <a data-lt="set the start">set</a> the <var>newRange</var>'s
-            <a>start</a> to <var>anchor</var> and its <a>end</a> to
-            <var>focus</var>. Otherwise, <a data-lt="set the start">set</a>
-            them to <var>focus</var> and <var>anchor</var> respectively.
+            <li>If <var>anchor</var> is [=boundary point/before=]
+            <var>focus</var>, [=Range/set the start=] the <var>newRange</var>'s
+            [=range/start=] to <var>anchor</var> and its [=range/end=] to <var>
+              focus</var>. Otherwise, [=Range/set the start=] them to
+              <var>focus</var> and <var>anchor</var> respectively.
             </li>
             <li>Set the <a>context object</a>'s <a>range</a> to
             <var>newRange</var>.
             </li>
-            <li>If <var>focus</var> is <a>before</a> <var>anchor</var>, set <a>
-              context object</a>'s <a>direction</a> to <a>backwards</a>.
-              Otherwise, set it to <a>forwards</a>
+            <li>If <var>focus</var> is [=boundary point/before=]
+            <var>anchor</var>, set <a>context object</a>'s <a>direction</a> to
+            <a>backwards</a>. Otherwise, set it to <a>forwards</a>
             </li>
           </ol>
         </dd>
@@ -561,11 +561,11 @@
             <var>nodeLength</var> be the <a data-cite="DOM">length</a> of <var>
               node</var>.
             </li>
-            <li>Set <var>newRange</var>'s <a>start</a> to (<var>node</var>,
+            <li>Set <var>newRange</var>'s [=range/start=] to (<var>node</var>,
             <code>0</code>).
             </li>
-            <li>Set <var>newRange</var>'s <a>end</a> to (<var>node</var>, <var>
-              nodeLength</var>).
+            <li>Set <var>newRange</var>'s [=range/end=] to (<var>node</var>,
+            <var>nodeLength</var>).
             </li>
             <li>Set the <a>context object</a>'s <a>range</a> to
             <var>newRange</var>.
@@ -608,7 +608,7 @@
         </dt>
         <dd>
           <p>
-            The method must invoke {{deleteContents()}} on the <a>context
+            The method must invoke {{Range/deleteContents()}} on the <a>context
             object</a>'s <a>range</a> if the <a>context object</a> is not
             <a>empty</a>. Otherwise the method must do nothing.
           </p>
@@ -631,20 +631,21 @@
           <p>
             Otherwise, if <var>allowPartialContainment</var> is
             <code>false</code>, the method must return <code>true</code> if and
-            only if <a>start</a> of its <a>range</a> is <a>before</a> or
-            visually equivalent to the first <a>boundary point</a> in the
-            <var>node</var> <strong>and</strong> <a>end</a> of its <a>range</a>
-            is <a>after</a> or visually equivalent to the last <a>boundary
-            point</a> in the <var>node</var>.
+            only if [=range/start=] of its <a>range</a> is [=boundary
+            point/before=] or visually equivalent to the first <a>boundary
+            point</a> in the <var>node</var> <strong>and</strong> [=range/end=]
+            of its <a>range</a> is [=boundary point/after=] or visually
+            equivalent to the last <a>boundary point</a> in the
+            <var>node</var>.
           </p>
           <p>
             If <var>allowPartialContainment</var> is <code>true</code>, the
-            method must return <code>true</code> if and only if <a>start</a> of
-            its <a>range</a> is <a>before</a> or visually equivalent to the
-            first <a>boundary point</a> in the <var>node</var>
-            <strong>or</strong> <a>end</a> of its <a>range</a> is <a>after</a>
-            or visually equivalent to the last <a>boundary point</a> in the
-            <var>node</var>.
+            method must return <code>true</code> if and only if [=range/start=]
+            of its <a>range</a> is [=boundary point/before=] or visually
+            equivalent to the first <a>boundary point</a> in the
+            <var>node</var> <strong>or</strong> [=range/end=] of its
+            <a>range</a> is [=boundary point/after=] or visually equivalent to
+            the last <a>boundary point</a> in the <var>node</var>.
           </p>
         </dd>
         <dt>
@@ -815,14 +816,15 @@
         The user agent should allow the user to change the <a>selection</a>
         associated with the <a>active document</a>. If the user makes any
         modification to a <a>selection</a>, the user agent must create a new
-        <a>range</a> with suitable <a>start</a> and <a>end</a> of the
+        <a>range</a> with suitable [=range/start=] and [=range/end=] of the
         <a>range</a> and associate the <a>selection</a> with this new
         <a>range</a> (not modify the existing <a>range</a>), and set update
         <a>selection</a>'s <a>direction</a> to <a>forwards</a> if the
-        <a>start</a> is <a>before</a> or equal to the <a>end</a>,
-        <a>backwards</a> if if the <a>end</a> is <a>before</a> the
-        <a>start</a>, or <a>directionless</a> if the <a>start</a> and the
-        <a>end</a> cannot be ordered due to the platform convention.
+        [=range/start=] is [=boundary point/before=] or equal to the
+        [=range/end=], <a>backwards</a> if if the [=range/end=] is [=boundary
+        point/before=] the [=range/start=], or <a>directionless</a> if the
+        [=range/start=] and the [=range/end=] cannot be ordered due to the
+        platform convention.
       </p>
       <p>
         The user agent must not make a <a>selection</a> <a>empty</a> if it was
@@ -845,10 +847,10 @@
           <var>newRange</var> to the <a>selection</a> in response to a user
           initiated action, the user agent must <a>fire an event</a> with the
           name <code>selectstart</code>, which bubbles and is cancelable, at
-          the <a>node</a> associated with the <a>boundary point</a> of
-          <var>newRange</var>'s <a>start</a> prior to changing the selection if
-          the <a>selection</a> was previously <a>empty</a> or the previously
-          associated range was <a>collapsed</a>.
+          the [=boundary point/node=] associated with the <a>boundary point</a>
+          of <var>newRange</var>'s [=range/start=] prior to changing the
+          selection if the <a>selection</a> was previously <a>empty</a> or the
+          previously associated range was [=range/collapsed=].
         </p>
         <p>
           If the event is canceled, the user agent must not change the
