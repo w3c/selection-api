@@ -218,8 +218,7 @@
         <dd>
           <p>
             The attribute must return the <a>anchor</a> [=boundary point/node=]
-            of [=this=], or `null` if the <a>anchor</a> is
-            null.
+            of [=this=], or `null` if the <a>anchor</a> is null.
           </p>
         </dd>
         <dt>
@@ -228,8 +227,8 @@
         <dd>
           <p>
             The attribute must return the <a>anchor</a> [=boundary
-            point/offset=] of [=this=], or <code>0</code> if
-            the <a>anchor</a> is null.
+            point/offset=] of [=this=], or <code>0</code> if the <a>anchor</a>
+            is null.
           </p>
         </dd>
         <dt>
@@ -238,8 +237,7 @@
         <dd>
           <p>
             The attribute must return the <a>focus</a> [=boundary point/node=]
-            of [=this=], or `null` if the <a>anchor</a> is
-            null.
+            of [=this=], or `null` if the <a>anchor</a> is null.
           </p>
         </dd>
         <dt>
@@ -248,8 +246,8 @@
         <dd>
           <p>
             The attribute must return the <a>focus</a> [=boundary
-            point/offset=] of [=this=], or <code>0</code> if
-            the <a>focus</a> is null.
+            point/offset=] of [=this=], or <code>0</code> if the <a>focus</a>
+            is null.
           </p>
         </dd>
         <dt>
@@ -276,9 +274,9 @@
         </dt>
         <dd>
           <p>
-            The attribute must return `"None"` if [=this=] is
-            <a>empty</a>, `"Caret"` if [=this=]'s <a>range</a>
-            is [=range/collapsed=], and `"Range"` otherwise.
+            The attribute must return `"None"` if [=this=] is <a>empty</a>,
+            `"Caret"` if [=this=]'s <a>range</a> is [=range/collapsed=], and
+            `"Range"` otherwise.
           </p>
         </dd>
         <dt>
@@ -288,13 +286,13 @@
           <p>
             The method must throw an {{IndexSizeError}} exception if
             <var>index</var> is not <code>0</code>, or if [=this=] is
-            <a>empty</a>. Otherwise, it must return a reference
-            to (not a copy of) [=this=]'s <a>range</a>.
+            <a>empty</a>. Otherwise, it must return a reference to (not a copy
+            of) [=this=]'s <a>range</a>.
           </p>
           <p class="note">
             Thus subsequent calls of this method returns the same <a>range</a>
-            object if nothing has removed [=this=]'s range in
-            the meantime. In particular, <code>getSelection().getRangeAt(0) ===
+            object if nothing has removed [=this=]'s range in the meantime. In
+            particular, <code>getSelection().getRangeAt(0) ===
             getSelection().getRangeAt(0)</code> evaluates to <code>true</code>
             if the <a>selection</a> is not <a>empty</a>.
           </p>
@@ -313,14 +311,14 @@
           </p>
           <ol>
             <li>If the [=tree/root=] of the <var>range</var>'s boundary points
-            are not the <a>document</a> associated with [=this=],
-            abort these steps.
+            are not the <a>document</a> associated with [=this=], abort these
+            steps.
             </li>
             <li>If <code>rangeCount</code> is not <code>0</code>, abort these
             steps.
             </li>
-            <li>Set [=this=]'s range to <var>range</var> by a
-            strong reference (not by making a copy).
+            <li>Set [=this=]'s range to <var>range</var> by a strong reference
+            (not by making a copy).
             </li>
           </ol>
           <p class="note">
@@ -328,8 +326,8 @@
             <code>getRangeAt(0)</code> returns the same object, and any changes
             that a script makes to <a>range</a> after it is added must be
             reflected in the <a>selection</a>, until something else removes or
-            replaces [=this=]'s <a>range</a>. In particular,
-            the <a>selection</a> will contain <var>b</var> as opposed to
+            replaces [=this=]'s <a>range</a>. In particular, the
+            <a>selection</a> will contain <var>b</var> as opposed to
             <var>a</var> after running the following code: <code>var r =
             document.createRange(); r.selectNode(a);
             getSelection().addRange(r); r.selectNode(b);</code>
@@ -352,10 +350,9 @@
         </dt>
         <dd>
           <p>
-            The method must make [=this=] <a>empty</a> by
-            disassociating its <a>range</a> if [=this=]'s
-            <a>range</a> is <var>range</var>. Otherwise, it must throw a
-            {{NotFoundError}}.
+            The method must make [=this=] <a>empty</a> by disassociating its
+            <a>range</a> if [=this=]'s <a>range</a> is <var>range</var>.
+            Otherwise, it must throw a {{NotFoundError}}.
           </p>
         </dd>
         <dt>
@@ -363,9 +360,8 @@
         </dt>
         <dd>
           <p>
-            The method must make [=this=] <a>empty</a> by
-            disassociating its <a>range</a> if [=this=] has an
-            associated <a>range</a>.
+            The method must make [=this=] <a>empty</a> by disassociating its
+            <a>range</a> if [=this=] has an associated <a>range</a>.
           </p>
         </dd>
         <dt>
@@ -401,8 +397,7 @@
             [=range/end=] of <var>newRange</var> to (<var>node</var>,
             <var>offset</var>).
             </li>
-            <li>Set [=this=]'s <a>range</a> to
-            <var>newRange</var>.
+            <li>Set [=this=]'s <a>range</a> to <var>newRange</var>.
             </li>
           </ol>
         </dd>
@@ -421,11 +416,11 @@
         <dd>
           <p>
             The method must throw {{InvalidStateError}} exception if the
-            [=this=] is <a>empty</a>. Otherwise, it must create a
-            new <a>range</a>, [=Range/set the start=] both its [=range/start=]
-            and [=range/end=] to the [=range/start=] of [=this=]'s
-            <a>range</a>, and then set [=this=]'s
-            <a>range</a> to the newly-created <a>range</a>.
+            [=this=] is <a>empty</a>. Otherwise, it must create a new
+            <a>range</a>, [=Range/set the start=] both its [=range/start=] and
+            [=range/end=] to the [=range/start=] of [=this=]'s <a>range</a>,
+            and then set [=this=]'s <a>range</a> to the newly-created
+            <a>range</a>.
           </p>
           <p class="note">
             For collapseToStart/End, IE9 mutates the existing range, while
@@ -440,11 +435,10 @@
         <dd>
           <p>
             The method must throw {{InvalidStateError}} exception if the
-            [=this=] is <a>empty</a>. Otherwise, it must create a
-            new <a>range</a>, [=Range/set the start=] both its [=range/start=]
-            and [=range/end=] to the [=range/end=] of [=this=]'s
-            <a>range</a>, and then set [=this=]'s
-            <a>range</a> to the newly-created <a>range</a>.
+            [=this=] is <a>empty</a>. Otherwise, it must create a new
+            <a>range</a>, [=Range/set the start=] both its [=range/start=] and
+            [=range/end=] to the [=range/end=] of [=this=]'s <a>range</a>, and
+            then set [=this=]'s <a>range</a> to the newly-created <a>range</a>.
           </p>
         </dd>
         <dt>
@@ -458,8 +452,8 @@
             <li>If <var>node</var>'s [=tree/root=] is not the <a>document</a>
             associated with [=this=], abort these steps.
             </li>
-            <li>If [=this=] is <a>empty</a>, throw an
-            {{InvalidStateError}} exception and abort these steps.
+            <li>If [=this=] is <a>empty</a>, throw an {{InvalidStateError}}
+            exception and abort these steps.
             </li>
             <li>Let <var>oldAnchor</var> and <var>oldFocus</var> be the
             [=this=]'s <a>anchor</a> and <a>focus</a>, and let
@@ -469,9 +463,9 @@
             <li>Let <var>newRange</var> be a new <a>range</a>.
             </li>
             <li>If <var>node</var>'s [=tree/root=] is not the same as the
-            [=this=]'s <a>range</a>'s [=tree/root=], [=Range/set
-            the start=] <var>newRange</var>'s [=range/start=] and [=range/end=]
-            to <var>newFocus</var>.
+            [=this=]'s <a>range</a>'s [=tree/root=], [=Range/set the start=]
+            <var>newRange</var>'s [=range/start=] and [=range/end=] to
+            <var>newFocus</var>.
             </li>
             <li>Otherwise, if <var>oldAnchor</var> is [=boundary point/before=]
             or equal to <var>newFocus</var>, [=Range/set the start=]
@@ -482,13 +476,11 @@
             [=range/start=] to <var>newFocus</var>, then set its [=range/end=]
             to <var>oldAnchor</var>.
             </li>
-            <li>Set [=this=]'s <a>range</a> to
-            <var>newRange</var>.
+            <li>Set [=this=]'s <a>range</a> to <var>newRange</var>.
             </li>
             <li>If <var>newFocus</var> is [=boundary point/before=]
-            <var>oldAnchor</var>, set [=this=]'s
-            <a>direction</a> to <a>backwards</a>. Otherwise, set it to
-            <a>forwards</a>.
+            <var>oldAnchor</var>, set [=this=]'s <a>direction</a> to
+            <a>backwards</a>. Otherwise, set it to <a>forwards</a>.
             </li>
           </ol>
           <p class="note">
@@ -534,8 +526,7 @@
               focus</var>. Otherwise, [=Range/set the start=] them to
               <var>focus</var> and <var>anchor</var> respectively.
             </li>
-            <li>Set [=this=]'s <a>range</a> to
-            <var>newRange</var>.
+            <li>Set [=this=]'s <a>range</a> to <var>newRange</var>.
             </li>
             <li>If <var>focus</var> is [=boundary point/before=]
             <var>anchor</var>, set [=this=]'s <a>direction</a> to
@@ -555,7 +546,8 @@
             associated with [=this=], abort these steps.
             </li>
             <li>Let <var>newRange</var> be a new <a>range</a> and
-            <var>childCount</var> be the number of [=tree/children=] of <var>node</var>.
+            <var>childCount</var> be the number of [=tree/children=] of
+            <var>node</var>.
             </li>
             <li>Set <var>newRange</var>'s [=range/start=] to (<var>node</var>,
             <code>0</code>).
@@ -563,11 +555,9 @@
             <li>Set <var>newRange</var>'s [=range/end=] to (<var>node</var>,
             <var>childCount</var>).
             </li>
-            <li>Set [=this=]'s <a>range</a> to
-            <var>newRange</var>.
+            <li>Set [=this=]'s <a>range</a> to <var>newRange</var>.
             </li>
-            <li>Set [=this=]'s <a>direction</a> to
-            <var>forwards</var>.
+            <li>Set [=this=]'s <a>direction</a> to <var>forwards</var>.
             </li>
           </ol>
           <div class="note">
@@ -605,8 +595,8 @@
         <dd>
           <p>
             The method must invoke {{Range/deleteContents()}} on [=this=]'s
-            <a>range</a> if [=this=] is not
-            <a>empty</a>. Otherwise the method must do nothing.
+            <a>range</a> if [=this=] is not <a>empty</a>. Otherwise the method
+            must do nothing.
           </p>
           <p class="note">
             This is the one method that actually mutates the range instead of
@@ -621,8 +611,8 @@
         <dd>
           <p>
             The method must return <code>false</code> if [=this=] is
-            <a>empty</a> or if <var>node</var>'s [=tree/root=] is
-            not the document associated with [=this=].
+            <a>empty</a> or if <var>node</var>'s [=tree/root=] is not the
+            document associated with [=this=].
           </p>
           <p>
             Otherwise, if <var>allowPartialContainment</var> is
@@ -720,9 +710,8 @@
           <dd>
             <p>
               The method must return the <a>selection</a> associated with
-              [=this=] if [=this=] has an
-              associated [=Document/browsing context=], and it must return
-              `null` otherwise.
+              [=this=] if [=this=] has an associated [=Document/browsing
+              context=], and it must return `null` otherwise.
             </p>
           </dd>
         </dl>
