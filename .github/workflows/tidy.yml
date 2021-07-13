@@ -18,3 +18,6 @@ jobs:
           title: "chore(tidy): tidy up document"
           commit-message: "Tidied up document using tidy-html5"
           branch: html-tidy
+          # A custom token is needed to trigger further workflow runs
+          # https://github.com/peter-evans/create-pull-request/blob/master/docs/concepts-guidelines.md#triggering-further-workflow-runs
+          token: ${{ secrets.GH_TOKEN }}
