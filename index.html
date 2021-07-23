@@ -24,6 +24,7 @@
         testSuiteURI: "https://github.com/web-platform-tests/wpt/tree/master/selection",
         github: "w3c/selection-api",
         xref: "web-platform",
+        testSuiteURI: "https://wpt.fyi/results/selection/",
       };
     </script>
   </head>
@@ -283,7 +284,7 @@
           <dfn>getRangeAt()</dfn> method
         </dt>
         <dd>
-          <p>
+          <p data-tests="getRangeAt.html">
             The method must throw an {{IndexSizeError}} exception if
             <var>index</var> is not <code>0</code>, or if [=this=] is
             <a>empty</a>. Otherwise, it must return a reference to (not a copy
@@ -295,11 +296,6 @@
             particular, <code>getSelection().getRangeAt(0) ===
             getSelection().getRangeAt(0)</code> evaluates to <code>true</code>
             if the <a>selection</a> is not <a>empty</a>.
-          </p>
-          <p class="note">
-            IE9 and Firefox 4.0 return the same object every time, as the spec
-            says. Chrome 12 dev and Opera 11.10 return a different object every
-            time.
           </p>
         </dd>
         <dt>
