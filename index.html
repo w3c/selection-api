@@ -110,7 +110,7 @@
         This one <a>selection</a> must be shared by all the content of the
         <a>document</a> (though not by nested <a>documents</a>), including any
         [=editing hosts=] in the document. [=Editing hosts=] that are not
-        inside a <a>document</a> cannot have a <a>selection</a>
+        inside a <a>document</a> cannot have a <a>selection</a>.
       </p>
       <p>
         Each <a>selection</a> can be associated with a single <a>range</a>.
@@ -150,12 +150,8 @@
         is at the start of the <a>selection</a>, the end of the
         <a>selection</a>, or somewhere else.
       </p>
-      <p class="note">
-        This short-changes Mac users. See <a href=
-        "https://www.w3.org/Bugs/Public/show_bug.cgi?id=13909">bug 13909</a>.
-      </p>
       <p>
-        Each <a>selection</a> has a <dfn>direction</dfn>, <dfn>forwards</dfn>,
+        Each <a>selection</a> has a <dfn>direction</dfn>: <dfn>forwards</dfn>,
         <dfn>backwards</dfn>, or <dfn>directionless</dfn>. If the user creates
         a <a>selection</a> by indicating first one <a>boundary point</a> of the
         <a>range</a> and then the other (such as by clicking on one point and
@@ -165,6 +161,11 @@
         indicated <a>boundary point</a> is [=boundary point/before=] the
         second, then the corresponding <a>selection</a> must initially be
         <a>forwards</a>. Otherwise, it must be <a>directionless</a>.
+      </p>
+      <p>
+        When the <a>selection</a>'s <a>range</a> is mutated by scripts,
+        e.g. via {{Range/selectNode(node)}}, <a>direction</a> of the <a>selection</a>
+        must be preserved.
       </p>
       <p>
         Each <a>selection</a>s also have an <dfn>anchor</dfn> and a
@@ -855,7 +856,7 @@
     <section id='conformance'>
       <p>
         This specification defines conformance criteria that apply to a single
-        product: the <dfn id="ua">user agent</dfn> that implements the
+        product: the <a>user agent</a> that implements the
         interfaces that it contains.
       </p>
     </section>
