@@ -625,10 +625,10 @@
             If <var>allowPartialContainment</var> is <code>true</code>, the
             method must return <code>true</code> if and only if [=range/start=]
             of its <a>range</a> is [=boundary point/before=] or visually
-            equivalent to the first <a>boundary point</a> in the
-            <var>node</var> <strong>or</strong> [=range/end=] of its
+            equivalent to the last <a>boundary point</a> in the
+            <var>node</var> <strong>and</strong> [=range/end=] of its
             <a>range</a> is [=boundary point/after=] or visually equivalent to
-            the last <a>boundary point</a> in the <var>node</var>.
+            the first <a>boundary point</a> in the <var>node</var>.
           </p>
         </dd>
         <dt>
@@ -810,13 +810,13 @@
       </p>
       <section>
         <h3>
-          <code><dfn>selectstart</dfn></code> event
+          <code><dfn data-dfn-type=event>selectstart</dfn></code> event
         </h3>
         <p>
           When the user agent is about to associate a new range
           <var>newRange</var> to the <a>selection</a> in response to a user
-          initiated action, the user agent must <a>fire an event</a> with the
-          name <code>selectstart</code>, which bubbles and is cancelable, at
+          initiated action, the user agent must <a>fire an event</a> named
+          <code>selectstart</code>, which bubbles and is cancelable, at
           the [=boundary point/node=] associated with the <a>boundary point</a>
           of <var>newRange</var>'s [=range/start=] prior to changing the
           selection if the <a>selection</a> was previously <a>empty</a> or the
@@ -833,22 +833,22 @@
       </section>
       <section>
         <h3>
-          <code><dfn>selectionchange</dfn></code> event
+          <code><dfn data-dfn-type=event>selectionchange</dfn></code> event
         </h3>
         <p>
           When the <a>selection</a> is dissociated with its <a>range</a>,
           associated with a new <a>range</a> or the associated <a>range</a>'s
           <a>boundary point</a> is mutated either by the user or the content
           script, the user agent must <a>queue a task</a> to <a>fire an
-          event</a> with the name <code>selectionchange</code>, which does not
+          event</a> named <code>selectionchange</code>, which does not
           bubble and is not cancelable, at the <a>document</a> associated with
           the <a>selection</a>.
         </p>
         <p>
           When an [^input^] or [^textarea^] element provide a text selection
           and its selection changes (in either extent or [=direction=]), the
-          user agent must [=queue a task=] to [=fire an event=] with the name
-          <code>selectionchange</code>, which does bubble but is not
+          user agent must [=queue a task=] to [=fire an event=] named
+          <code>selectionchange</code>, which bubbles but is not
           cancelable, at the element.
         </p>
       </section>
