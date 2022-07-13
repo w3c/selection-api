@@ -206,8 +206,8 @@
           undefined extend(Node node, optional unsigned long offset = 0);
           undefined setBaseAndExtent(Node anchorNode, unsigned long anchorOffset, Node focusNode, unsigned long focusOffset);
           undefined selectAllChildren(Node node);
-          [CEReactions]
-          undefined deleteFromDocument();
+          undefined modify(optional DOMString alter, optional DOMString direction, optional DOMString granularity);
+          [CEReactions] undefined deleteFromDocument();
           boolean containsNode(Node node, optional boolean allowPartialContainment = false);
           stringifier;
         };
@@ -584,6 +584,50 @@
               anyway.)
             </p>
           </div>
+        </dd>
+        <dt>
+            <dfn>modify()</dfn> method
+        </dt>
+        <dd data-cite="css-writing-modes-4">
+          <p>
+            The method must follow these steps:
+          </p>
+          <ol>
+            <li>If <var>alter</var> is not <a>ASCII case-insensitive</a> match with
+            "extend" or "move", abort these steps.</li>
+            <li>If <var>direction</var> is not <a>ASCII case-insensitive</a> match with
+            "forward", "backward", "left", or "right", abort these steps.</li>
+            <li>If <var>granularity</var> is not <a>ASCII case-insensitive</a> match with
+            "character", "word", "sentence", "line", "paragraph", "lineboundary",
+            "sentenceboundary", "paragraphboundary", "documentboundary", abort these steps.</li>
+            <li>If <a>this</a> <a>selection</a> is empty, abort these steps.</li>
+
+            <li>Let <var>effectiveDirection</var> be <a>backwards</a>.</li>
+            <li>If <var>direction</var> is <a>ASCII case-insensitive</a> match with "forward",
+              set <var>effectiveDirection</var> to <a>forwards</a>.</li>
+            <li>If <var>direction</var> is <a>ASCII case-insensitive</a> match with "right"
+              and [=inline base direction=] of <a>this</a> <a>selection</a>'s <a>focus</a> is
+              <a data-xref-type="css-value" data-xref-for="direction">ltr</a>,
+              set <var>effectiveDirection</var> to <a>forwards</a>.</li>
+            <li>If <var>direction</var> is <a>ASCII case-insensitive</a> match with "left"
+              and [=inline base direction=] of <a>this</a> <a>selection</a>'s <a>focus</a> is
+              <a data-xref-type="css-value" data-xref-for="direction">rtl</a>,
+              set <var>effectiveDirection</var> to <a>forwards</a>.</li>
+
+            <li>Set <a>this</a> <a>selection</a>'s <a>direction</a> to <var>effectiveDirection<var>.</li>
+            <li>
+              If <var>alter</var> is <a>ASCII case-insensitive</a> match with "extend",
+              set <a>this</a> <a>selection</a>'s <a>focus</a> to the location
+              as if the user had requested to extend selection by <var>granularity</var>.</li>
+            </li>
+            <li>
+              Otherwise, set <a>this</a> <a>selection</a>'s <a>focus</a> and <a>anchor</a> to the location
+              as if the user had requested to move selection by <var>granularity</var>.
+            </li>
+          </ol>
+          <p class="note">
+            We need to more precisely define what it means to extend or move selection by each granularity.
+          </p>
         </dd>
         <dt>
           <dfn>deleteFromDocument()</dfn> method
