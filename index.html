@@ -144,7 +144,7 @@
         If the <a>selection</a>'s <a>range</a> is not null and is
         [=range/collapsed=], then the caret position must be at that
         <a>range</a>'s <a>boundary point</a>. When the <a>selection</a> is not
-        empty, this specification does not define the caret position; user
+        [=range/collapsed=], this specification does not define the caret position; user
         agents should follow platform conventions in deciding whether the caret
         is at the start of the <a>selection</a>, the end of the
         <a>selection</a>, or somewhere else.
@@ -175,6 +175,11 @@
         <a>focus</a> is the [=range/end=]. Otherwise, its <a>focus</a> is the
         [=range/start=] and its <a>anchor</a> is the [=range/end=].
       </p>
+      <p class="note">
+        <a>anchor</a> and <a>focus</a> of <a>selection</a> need not to be
+        in the [=document tree=]. It could be in a [=shadow tree=] of
+        the same [=document=].
+      </p>
     </section>
     <section data-dfn-for="Selection">
       <h2>
@@ -199,6 +204,7 @@
           undefined removeRange(Range range);
           undefined removeAllRanges();
           undefined empty();
+          StaticRange getComposedRange(ShadowRoot... shadowRoots);
           undefined collapse(Node? node, optional unsigned long offset = 0);
           undefined setPosition(Node? node, optional unsigned long offset = 0);
           undefined collapseToStart();
@@ -219,7 +225,8 @@
         <dd>
           <p>
             The attribute must return the <a>anchor</a> [=boundary point/node=]
-            of [=this=], or `null` if the <a>anchor</a> is null.
+            of [=this=], or `null` if the <a>anchor</a> is null or <a>anchor</a>
+            is not in the [=document tree=].
           </p>
         </dd>
         <dt>
@@ -229,7 +236,7 @@
           <p>
             The attribute must return the <a>anchor</a> [=boundary
             point/offset=] of [=this=], or <code>0</code> if the <a>anchor</a>
-            is null.
+            is null or <a>anchor</a> is not in the [=document tree=].
           </p>
         </dd>
         <dt>
@@ -238,7 +245,8 @@
         <dd>
           <p>
             The attribute must return the <a>focus</a> [=boundary point/node=]
-            of [=this=], or `null` if the <a>focus</a> is null.
+            of [=this=], or `null` if the <a>focus</a> is null or <a>focus</a>
+            is not in the [=document tree=].
           </p>
         </dd>
         <dt>
@@ -248,7 +256,7 @@
           <p>
             The attribute must return the <a>focus</a> [=boundary
             point/offset=] of [=this=], or <code>0</code> if the <a>focus</a>
-            is null.
+            is null or <a>focus</a> is not in the [=document tree=].
           </p>
         </dd>
         <dt>
@@ -267,7 +275,8 @@
         <dd>
           <p>
             The attribute must return <code>0</code> if [=this=] is
-            <a>empty</a>, and must return <code>1</code> otherwise.
+            <a>empty</a> or either <a>focus</a> or <a>anchor</a> is not in the
+            [=document tree=], and must return <code>1</code> otherwise.
           </p>
         </dd>
         <dt>
@@ -275,7 +284,8 @@
         </dt>
         <dd>
           <p>
-            The attribute must return `"None"` if [=this=] is <a>empty</a>,
+            The attribute must return `"None"` if [=this=] is <a>empty</a> or
+            either <a>focus</a> or <a>anchor</a> is not in the [=document tree=],
             `"Caret"` if [=this=]'s <a>range</a> is [=range/collapsed=], and
             `"Range"` otherwise.
           </p>
@@ -287,7 +297,8 @@
           <p data-tests="getRangeAt.html">
             The method must throw an {{IndexSizeError}} exception if
             <var>index</var> is not <code>0</code>, or if [=this=] is
-            <a>empty</a>. Otherwise, it must return a reference to (not a copy
+            <a>empty</a> or either <a>focus</a> or <a>anchor</a> is not in the
+            [=document tree=]. Otherwise, it must return a reference to (not a copy
             of) [=this=]'s <a>range</a>.
           </p>
           <p class="note">
@@ -361,13 +372,44 @@
           </p>
         </dd>
         <dt>
-          <dfn>empty</dfn>
+          <dfn>empty()</dfn> method
         </dt>
         <dd>
           <p>
             The method must be an alias, and behave identically, to
             <code>removeAllRanges()</code>.
           </p>
+        </dd>
+        <dt>
+          <dfn>getComposedRange()</dfn> method
+        </dt>
+        <dd>
+          <ol>
+            <li>If [=this=] is <a>empty</a>, return a new {{StaticRange}} whose [=range/start node=]
+            and [=range/end node=] are null and whose [=range/start offset=] and [=range/end offset=] are 0.</li>
+            <li>Let <var>startNode</var> be [=range/start node=] of the [=range=] associated with [=this=],
+              and let <var>startOffset</var> be [=range/start offset=] of the [=range=].</li>
+            <li>While <var>startNode</var> is a [=node=], <var>startNode</var>'s [=tree/root=] is a [=shadow root=],
+              and <var>startNode</var> is not a [=shadow-including inclusive ancestor=] of any of <var>shadowRoots</var>,
+              repeat these steps:
+              <ol>
+                <li>Set <var>startOffset</var> to [=tree/index=] of <var>startNode</var>'s [=tree/root=]'s [=host=].</li>
+                <li>Set <var>startNode</var> to <var>startNode</var>'s [=tree/root=]'s [=host=]'s [=tree/parent=].</li>
+              </ol>
+            </li>
+            <li>Let <var>endNode</var> be [=range/end node=] of the [=range=] associated with [=this=],
+              and let <var>endOffset</var> be [=range/end offset=] of the [=range=].</li>
+            <li>While <var>endNode</var> is a [=node=], <var>endNode</var>'s [=tree/root=] is a [=shadow root=],
+              and <var>endNode</var> is not a [=shadow-including inclusive ancestor=] of any of <var>shadowRoots</var>,
+              repeat these steps:
+              <ol>
+                <li>Set <var>endOffset</var> to [=tree/index=] of <var>endNode</var>'s [=tree/root=]'s [=host=] plus 1.</li>
+                <li>Set <var>endNode</var> to <var>endNode</var>'s [=tree/root=]'s [=host=]'s [=tree/parent=].</li>
+              </ol>
+            </li>
+            <li>Return a new {{StaticRange}} whose [=range/start node=] is <var>startNode</var>, [=range/start offset=]
+              is <var>startOffset</var>, [=range/end node=] is <var>endNode</var>, and [=range/end offset=] is <var>endOffset</var>.</li>
+          </ol>
         </dd>
         <dt>
           <dfn>collapse()</dfn> method
@@ -634,8 +676,8 @@
         <dd>
           <p>
             The method must invoke {{Range/deleteContents()}} on [=this=]'s
-            <a>range</a> if [=this=] is not <a>empty</a>. Otherwise the method
-            must do nothing.
+            <a>range</a> if [=this=] is not <a>empty</a> and both <a>focus</a> and <a>anchor</a>
+            are in the [=document tree=]. Otherwise the method must do nothing.
           </p>
           <p class="note">
             This is the one method that actually mutates the range instead of
@@ -822,11 +864,33 @@
     </section>
     <section>
       <h2>
+        Responding to DOM Mutations
+      </h2>
+      <p>
+        When the user agent is to [=replace data=] or [=CharacterData/substring data=] on {{CharacterData}},
+        the user agent must update the <a>range</a> associated with <a>selection</a> of the [=Node/node document=]
+        of the {{CharacterData}} as if it's a <a>live range</a>.
+      </p>
+      <p>
+        When the user agent is to split a {{Text}} [=node=], the user agent must update the <a>range</a> associated with
+        <a>selection</a> of the [=Node/node document=] of the {{Text}} as if it's a <a>live range</a>.
+      </p>
+      <p>
+        When the user agent is to run steps for <code>normalize()</code> method, the user agent must update
+        the <a>range</a> associated with <a>selection</a> of the [=Node/node document=] of [=this=] as if it's a <a>live range</a>.
+      </p>
+      <p>
+        When the user agent is to [=remove=] or [=insert=] a [=node=], the user agent must update
+        the <a>range</a> associated with <a>selection</a> of the [=Node/node document=] of the [=node=] as if it's a <a>live range</a>.
+      </p>
+    </section>
+    <section>
+      <h2>
         User Interactions
       </h2>
       <p>
         The user agent should allow the user to change the <a>selection</a>
-        associated with the <a>active document</a>. If the user makes any
+        associated with the [=navigable/active document=]. If the user makes any
         modification to a <a>selection</a>, the user agent must create a new
         <a>range</a> with suitable [=range/start=] and [=range/end=] of the
         <a>range</a> and associate the <a>selection</a> with this new
