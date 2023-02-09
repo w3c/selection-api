@@ -199,6 +199,7 @@
           readonly attribute boolean isCollapsed;
           readonly attribute unsigned long rangeCount;
           readonly attribute DOMString type;
+          readonly attribute DOMString direction;
           Range getRangeAt(unsigned long index);
           undefined addRange(Range range);
           undefined removeRange(Range range);
@@ -288,6 +289,17 @@
             either <a>focus</a> or <a>anchor</a> is not in the [=document tree=],
             `"Caret"` if [=this=]'s <a>range</a> is [=range/collapsed=], and
             `"Range"` otherwise.
+          </p>
+        </dd>
+        <dt>
+          <dfn>direction</dfn>
+        </dt>
+        <dd>
+          <p>
+            The attribute must return `"none"` if [=this=] is <a>empty</a> or
+            this selection is <a>directionless</a>. `"forward"` if this selection's
+            direction is <a>forwards</a> and `"backward"` if this selection's
+            direction is <a>backwards</a>.
           </p>
         </dd>
         <dt>
