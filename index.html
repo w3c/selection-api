@@ -205,7 +205,7 @@
           undefined removeRange(Range range);
           undefined removeAllRanges();
           undefined empty();
-          StaticRange getComposedRange(ShadowRoot... shadowRoots);
+          sequence&lt;StaticRange&gt; getComposedRanges(ShadowRoot... shadowRoots);
           undefined collapse(Node? node, optional unsigned long offset = 0);
           undefined setPosition(Node? node, optional unsigned long offset = 0);
           undefined collapseToStart();
@@ -393,13 +393,12 @@
           </p>
         </dd>
         <dt>
-          <dfn>getComposedRange()</dfn> method
+          <dfn>getComposedRanges()</dfn> method
         </dt>
         <dd>
           <ol>
-            <li>If [=this=] is <a>empty</a>, return a new {{StaticRange}} whose [=range/start node=]
-            and [=range/end node=] are null and whose [=range/start offset=] and [=range/end offset=] are 0.</li>
-            <li>Let <var>startNode</var> be [=range/start node=] of the [=range=] associated with [=this=],
+            <li>If [=this=] is <a>empty</a>, return an empty array.</li>
+            <li>Otherwise, let <var>startNode</var> be [=range/start node=] of the [=range=] associated with [=this=],
               and let <var>startOffset</var> be [=range/start offset=] of the [=range=].</li>
             <li>While <var>startNode</var> is a [=node=], <var>startNode</var>'s [=tree/root=] is a [=shadow root=],
               and <var>startNode</var> is not a [=shadow-including inclusive ancestor=] of any of <var>shadowRoots</var>,
@@ -419,7 +418,7 @@
                 <li>Set <var>endNode</var> to <var>endNode</var>'s [=tree/root=]'s [=host=]'s [=tree/parent=].</li>
               </ol>
             </li>
-            <li>Return a new {{StaticRange}} whose [=range/start node=] is <var>startNode</var>, [=range/start offset=]
+            <li>Return an array consisting of new {{StaticRange}} whose [=range/start node=] is <var>startNode</var>, [=range/start offset=]
               is <var>startOffset</var>, [=range/end node=] is <var>endNode</var>, and [=range/end offset=] is <var>endOffset</var>.</li>
           </ol>
         </dd>
