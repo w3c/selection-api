@@ -401,7 +401,7 @@
             <li>Otherwise, let <var>startNode</var> be [=range/start node=] of the [=range=] associated with [=this=],
               and let <var>startOffset</var> be [=range/start offset=] of the [=range=].</li>
             <li>While <var>startNode</var> is a [=node=], <var>startNode</var>'s [=tree/root=] is a [=shadow root=],
-              and <var>startNode</var> is not a [=shadow-including inclusive ancestor=] of any of <var>shadowRoots</var>,
+              and <var>startNode</var>'s [=tree/root=] is not a [=shadow-including inclusive ancestor=] of any of <var>shadowRoots</var>,
               repeat these steps:
               <ol>
                 <li>Set <var>startOffset</var> to [=tree/index=] of <var>startNode</var>'s [=tree/root=]'s [=host=].</li>
@@ -411,7 +411,7 @@
             <li>Let <var>endNode</var> be [=range/end node=] of the [=range=] associated with [=this=],
               and let <var>endOffset</var> be [=range/end offset=] of the [=range=].</li>
             <li>While <var>endNode</var> is a [=node=], <var>endNode</var>'s [=tree/root=] is a [=shadow root=],
-              and <var>endNode</var> is not a [=shadow-including inclusive ancestor=] of any of <var>shadowRoots</var>,
+              and <var>endNode</var>'s [=tree/root=] is not a [=shadow-including inclusive ancestor=] of any of <var>shadowRoots</var>,
               repeat these steps:
               <ol>
                 <li>Set <var>endOffset</var> to [=tree/index=] of <var>endNode</var>'s [=tree/root=]'s [=host=] plus 1.</li>
