@@ -437,8 +437,9 @@
               offset</var> is longer than <var>node</var>'s [=Node/length=] and
               abort these steps.
             </li>
-            <li>If <var>node</var>'s [=tree/root=] is not the <a>document</a>
-            associated with [=this=], abort these steps.
+            <li>
+              If <a>document</a> associated with [=this=] is not a [=shadow-including inclusive ancestor=]
+              of <var>node</var>, abort these steps.
             </li>
             <li>Otherwise, let <var>newRange</var> be a new <a>range</a>.
             </li>
@@ -498,8 +499,9 @@
             The method must follow these steps:
           </p>
           <ol>
-            <li>If <var>node</var>'s [=tree/root=] is not the <a>document</a>
-            associated with [=this=], abort these steps.
+            <li>
+              If the <a>document</a> associated with [=this=] is not a [=shadow-including inclusive ancestor=] of
+              <var>node</var>, abort these steps.
             </li>
             <li>If [=this=] is <a>empty</a>, throw an {{InvalidStateError}}
             exception and abort these steps.
@@ -558,9 +560,9 @@
             [=Node/length=], throw an {{IndexSizeError}} exception and abort
             these steps.
             </li>
-            <li>If the [=tree/root=]s of <var>anchorNode</var> or
-            <var>focusNode</var> are not the <a>document</a> associated with
-            [=this=], abort these steps.
+            <li>
+              If <a>document</a> associated with [=this=] is not a [=shadow-including inclusive ancestor=]
+              of <var>anchorNode</var> or <var>focusNode</var>, abort these steps.
             </li>
             <li>Let <var>anchor</var> be the <a>boundary point</a>
             (<var>anchorNode</var>, <var>anchorOffset</var>) and let
