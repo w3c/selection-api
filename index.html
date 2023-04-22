@@ -729,12 +729,13 @@
           </p>
         </dd>
         <dt>
-          stringifier
+          <dfn>stringifier</dfn>
         </dt>
         <dd>
-          See <a href=
-          "https://www.w3.org/Bugs/Public/show_bug.cgi?id=10583">W3C bug
-          10583</a>.
+          <p>The stringification must return the string, which is the concatenation of
+            the rendered text if there is a [=range=] associated with [=this=].</p>
+          <p>If the selection is within a <a>textarea</a> or <a>input</a> element,
+            it must return the selected substring in its value.</p>
         </dd>
       </dl>
       <p class="note">
