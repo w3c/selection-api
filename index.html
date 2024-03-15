@@ -180,6 +180,10 @@
         in the [=document tree=]. It could be in a [=shadow tree=] of
         the same [=document=].
       </p>
+      <p>
+        Each <a>document</a>, <a>input</a> element, and <a>textarea</a> element has a boolean
+        <dfn>has scheduled selectionchange event</dfn>, which is initially false.
+      </p>
     </section>
     <section data-dfn-for="Selection">
       <h2>
@@ -957,20 +961,46 @@
         </h3>
         <p>
           When the <a>selection</a> is dissociated with its <a>range</a>,
-          associated with a new <a>range</a> or the associated <a>range</a>'s
+          associated with a new <a>range</a>, or the associated <a>range</a>'s
           <a>boundary point</a> is mutated either by the user or the content script,
-          the user agent must <a>queue a task</a> on the <a>user interaction task source</a>
-          to <a>fire an event</a> named <code>selectionchange</code>,
-          which does not bubble and is not cancelable,
-          at the <a>document</a> associated with the <a>selection</a>.
+          the user agent must <a>schedule a selectionchange event</a> on <a>document</a>.
         </p>
         <p>
           When an [^input^] or [^textarea^] element provide a text selection
           and its selection changes (in either extent or [=direction=]),
-          the user agent must <a>queue a task</a> on the <a>user interaction task source</a>
-          to <a>fire an event</a> named <code>selectionchange</code>,
-          which bubbles but is not cancelable, at the element.
+          the user agent must <a>schedule a selectionchange event</a> on the element.
         </p>
+        <section>
+          <h4>Scheduling <code>selectionhange</code> event</h4>
+          <p>To <dfn>schedule a selectionchange event</dfn> on a node <var>target</var>, run these steps:</p>
+          <ol>
+            <li>
+              If <var>target</var>'s <a>has scheduled selectionchange event</a> is true,
+              abort these steps.
+            </li>
+            <li>
+              <a>Queue a task</a> on the <a>user interaction task source</a> to
+              <a>fire a selectionchange event</a> on <var>target</var>.
+            </li>
+          </ol>
+        </section>
+        <section>
+          <h4>Firing <code>selectionhange</code> event</h4>
+          <p>To <dfn>fire a selectionchange event</dfn> on a node <var>target</var>, run these steps:</p>
+          <ol>
+            <li>
+              Set <var>target</var>'s <a>has scheduled selectionchange event</a> to false.
+            </li>
+            <li>
+              If <var>target</var> is an element, <a>fire an event</a> named <code>selectionchange</code>,
+              which bubbles and not cancelable, at <var>target</var>.
+            </li>
+            <li>
+              Otherwise, if <var>target</var> is a document, <a>fire an event</a> named <code>selectionchange</code>,
+              which does not bubble and not cancelable, at <var>target</var>.
+            </li>
+          </ol>
+        </section>
       </section>
     </section>
     <section id='conformance'>
