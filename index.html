@@ -144,10 +144,10 @@
         If the <a>selection</a>'s <a>range</a> is not null and is
         [=range/collapsed=], then the caret position must be at that
         <a>range</a>'s <a>boundary point</a>. When the <a>selection</a> is not
-        [=range/collapsed=], this specification does not define the caret position; user
-        agents should follow platform conventions in deciding whether the caret
-        is at the start of the <a>selection</a>, the end of the
-        <a>selection</a>, or somewhere else.
+        [=range/collapsed=], this specification does not define the caret
+        position; user agents should follow platform conventions in deciding
+        whether the caret is at the start of the <a>selection</a>, the end of
+        the <a>selection</a>, or somewhere else.
       </p>
       <p>
         Each <a>selection</a> has a <dfn>direction</dfn>: <dfn>forwards</dfn>,
@@ -162,9 +162,9 @@
         <a>forwards</a>. Otherwise, it must be <a>directionless</a>.
       </p>
       <p>
-        When the <a>selection</a>'s <a>range</a> is mutated by scripts,
-        e.g. via {{Range/selectNode(node)}}, <a>direction</a> of the <a>selection</a>
-        must be preserved.
+        When the <a>selection</a>'s <a>range</a> is mutated by scripts, e.g.
+        via {{Range/selectNode(node)}}, <a>direction</a> of the
+        <a>selection</a> must be preserved.
       </p>
       <p>
         Each <a>selection</a>s also have an <dfn>anchor</dfn> and a
@@ -176,13 +176,14 @@
         [=range/start=] and its <a>anchor</a> is the [=range/end=].
       </p>
       <p class="note">
-        <a>anchor</a> and <a>focus</a> of <a>selection</a> need not to be
-        in the [=document tree=]. It could be in a [=shadow tree=] of
-        the same [=document=].
+        <a>anchor</a> and <a>focus</a> of <a>selection</a> need not to be in
+        the [=document tree=]. It could be in a [=shadow tree=] of the same
+        [=document=].
       </p>
       <p>
-        Each <a>document</a>, <a>input</a> element, and <a>textarea</a> element has a boolean
-        <dfn>has scheduled selectionchange event</dfn>, which is initially false.
+        Each <a>document</a>, <a>input</a> element, and <a>textarea</a> element
+        has a boolean <dfn>has scheduled selectionchange event</dfn>, which is
+        initially false.
       </p>
     </section>
     <section data-dfn-for="Selection">
@@ -230,8 +231,8 @@
         <dd>
           <p>
             The attribute must return the <a>anchor</a> [=boundary point/node=]
-            of [=this=], or `null` if the <a>anchor</a> is null or <a>anchor</a>
-            is not in the [=document tree=].
+            of [=this=], or `null` if the <a>anchor</a> is null or
+            <a>anchor</a> is not in the [=document tree=].
           </p>
         </dd>
         <dt>
@@ -290,9 +291,9 @@
         <dd>
           <p>
             The attribute must return `"None"` if [=this=] is <a>empty</a> or
-            either <a>focus</a> or <a>anchor</a> is not in the [=document tree=],
-            `"Caret"` if [=this=]'s <a>range</a> is [=range/collapsed=], and
-            `"Range"` otherwise.
+            either <a>focus</a> or <a>anchor</a> is not in the [=document
+            tree=], `"Caret"` if [=this=]'s <a>range</a> is
+            [=range/collapsed=], and `"Range"` otherwise.
           </p>
         </dd>
         <dt>
@@ -301,9 +302,9 @@
         <dd>
           <p>
             The attribute must return `"none"` if [=this=] is <a>empty</a> or
-            this selection is <a>directionless</a>. `"forward"` if this selection's
-            direction is <a>forwards</a> and `"backward"` if this selection's
-            direction is <a>backwards</a>.
+            this selection is <a>directionless</a>. `"forward"` if this
+            selection's direction is <a>forwards</a> and `"backward"` if this
+            selection's direction is <a>backwards</a>.
           </p>
         </dd>
         <dt>
@@ -314,8 +315,8 @@
             The method must throw an {{IndexSizeError}} exception if
             <var>index</var> is not <code>0</code>, or if [=this=] is
             <a>empty</a> or either <a>focus</a> or <a>anchor</a> is not in the
-            [=document tree=]. Otherwise, it must return a reference to (not a copy
-            of) [=this=]'s <a>range</a>.
+            [=document tree=]. Otherwise, it must return a reference to (not a
+            copy of) [=this=]'s <a>range</a>.
           </p>
           <p class="note">
             Thus subsequent calls of this method returns the same <a>range</a>
@@ -401,29 +402,49 @@
         </dt>
         <dd>
           <ol>
-            <li>If [=this=] is <a>empty</a>, return an empty array.</li>
-            <li>Otherwise, let <var>startNode</var> be [=range/start node=] of the [=range=] associated with [=this=],
-              and let <var>startOffset</var> be [=range/start offset=] of the [=range=].</li>
-            <li>While <var>startNode</var> is a [=node=], <var>startNode</var>'s [=tree/root=] is a [=shadow root=],
-              and <var>startNode</var>'s [=tree/root=] is not a [=shadow-including inclusive ancestor=] of any of <var>shadowRoots</var>,
-              repeat these steps:
+            <li>If [=this=] is <a>empty</a>, return an empty array.
+            </li>
+            <li>Otherwise, let <var>startNode</var> be [=range/start node=] of
+            the [=range=] associated with [=this=], and let
+            <var>startOffset</var> be [=range/start offset=] of the [=range=].
+            </li>
+            <li>While <var>startNode</var> is a [=node=],
+            <var>startNode</var>'s [=tree/root=] is a [=shadow root=], and
+            <var>startNode</var>'s [=tree/root=] is not a [=shadow-including
+            inclusive ancestor=] of any of <var>shadowRoots</var>, repeat these
+            steps:
               <ol>
-                <li>Set <var>startOffset</var> to [=tree/index=] of <var>startNode</var>'s [=tree/root=]'s [=host=].</li>
-                <li>Set <var>startNode</var> to <var>startNode</var>'s [=tree/root=]'s [=host=]'s [=tree/parent=].</li>
+                <li>Set <var>startOffset</var> to [=tree/index=] of
+                <var>startNode</var>'s [=tree/root=]'s [=host=].
+                </li>
+                <li>Set <var>startNode</var> to <var>startNode</var>'s
+                [=tree/root=]'s [=host=]'s [=tree/parent=].
+                </li>
               </ol>
             </li>
-            <li>Let <var>endNode</var> be [=range/end node=] of the [=range=] associated with [=this=],
-              and let <var>endOffset</var> be [=range/end offset=] of the [=range=].</li>
-            <li>While <var>endNode</var> is a [=node=], <var>endNode</var>'s [=tree/root=] is a [=shadow root=],
-              and <var>endNode</var>'s [=tree/root=] is not a [=shadow-including inclusive ancestor=] of any of <var>shadowRoots</var>,
-              repeat these steps:
+            <li>Let <var>endNode</var> be [=range/end node=] of the [=range=]
+            associated with [=this=], and let <var>endOffset</var> be
+            [=range/end offset=] of the [=range=].
+            </li>
+            <li>While <var>endNode</var> is a [=node=], <var>endNode</var>'s
+            [=tree/root=] is a [=shadow root=], and <var>endNode</var>'s
+            [=tree/root=] is not a [=shadow-including inclusive ancestor=] of
+            any of <var>shadowRoots</var>, repeat these steps:
               <ol>
-                <li>Set <var>endOffset</var> to [=tree/index=] of <var>endNode</var>'s [=tree/root=]'s [=host=] plus 1.</li>
-                <li>Set <var>endNode</var> to <var>endNode</var>'s [=tree/root=]'s [=host=]'s [=tree/parent=].</li>
+                <li>Set <var>endOffset</var> to [=tree/index=] of
+                <var>endNode</var>'s [=tree/root=]'s [=host=] plus 1.
+                </li>
+                <li>Set <var>endNode</var> to <var>endNode</var>'s
+                [=tree/root=]'s [=host=]'s [=tree/parent=].
+                </li>
               </ol>
             </li>
-            <li>Return an array consisting of new {{StaticRange}} whose [=range/start node=] is <var>startNode</var>, [=range/start offset=]
-              is <var>startOffset</var>, [=range/end node=] is <var>endNode</var>, and [=range/end offset=] is <var>endOffset</var>.</li>
+            <li>Return an array consisting of new {{StaticRange}} whose
+            [=range/start node=] is <var>startNode</var>, [=range/start
+            offset=] is <var>startOffset</var>, [=range/end node=] is
+            <var>endNode</var>, and [=range/end offset=] is
+            <var>endOffset</var>.
+            </li>
           </ol>
         </dd>
         <dt>
@@ -441,9 +462,9 @@
               offset</var> is longer than <var>node</var>'s [=Node/length=] and
               abort these steps.
             </li>
-            <li>
-              If <a>document</a> associated with [=this=] is not a [=shadow-including inclusive ancestor=]
-              of <var>node</var>, abort these steps.
+            <li>If <a>document</a> associated with [=this=] is not a
+            [=shadow-including inclusive ancestor=] of <var>node</var>, abort
+            these steps.
             </li>
             <li>Otherwise, let <var>newRange</var> be a new <a>range</a>.
             </li>
@@ -503,9 +524,9 @@
             The method must follow these steps:
           </p>
           <ol>
-            <li>
-              If the <a>document</a> associated with [=this=] is not a [=shadow-including inclusive ancestor=] of
-              <var>node</var>, abort these steps.
+            <li>If the <a>document</a> associated with [=this=] is not a
+            [=shadow-including inclusive ancestor=] of <var>node</var>, abort
+            these steps.
             </li>
             <li>If [=this=] is <a>empty</a>, throw an {{InvalidStateError}}
             exception and abort these steps.
@@ -564,9 +585,9 @@
             [=Node/length=], throw an {{IndexSizeError}} exception and abort
             these steps.
             </li>
-            <li>
-              If <a>document</a> associated with [=this=] is not a [=shadow-including inclusive ancestor=]
-              of <var>anchorNode</var> or <var>focusNode</var>, abort these steps.
+            <li>If <a>document</a> associated with [=this=] is not a
+            [=shadow-including inclusive ancestor=] of <var>anchorNode</var> or
+            <var>focusNode</var>, abort these steps.
             </li>
             <li>Let <var>anchor</var> be the <a>boundary point</a>
             (<var>anchorNode</var>, <var>anchorOffset</var>) and let
@@ -645,46 +666,61 @@
           </div>
         </dd>
         <dt>
-            <dfn>modify()</dfn> method
+          <dfn>modify()</dfn> method
         </dt>
         <dd data-cite="css-writing-modes-4">
           <p>
             The method must follow these steps:
           </p>
           <ol>
-            <li>If <var>alter</var> is not <a>ASCII case-insensitive</a> match with
-            "extend" or "move", abort these steps.</li>
-            <li>If <var>direction</var> is not <a>ASCII case-insensitive</a> match with
-            "forward", "backward", "left", or "right", abort these steps.</li>
-            <li>If <var>granularity</var> is not <a>ASCII case-insensitive</a> match with
-            "character", "word", "sentence", "line", "paragraph", "lineboundary",
-            "sentenceboundary", "paragraphboundary", "documentboundary", abort these steps.</li>
-            <li>If <a>this</a> <a>selection</a> is empty, abort these steps.</li>
-
-            <li>Let <var>effectiveDirection</var> be <a>backwards</a>.</li>
-            <li>If <var>direction</var> is <a>ASCII case-insensitive</a> match with "forward",
-              set <var>effectiveDirection</var> to <a>forwards</a>.</li>
-            <li>If <var>direction</var> is <a>ASCII case-insensitive</a> match with "right"
-              and [=inline base direction=] of <a>this</a> <a>selection</a>'s <a>focus</a> is
-              <a data-xref-type="css-value" data-xref-for="direction">ltr</a>,
-              set <var>effectiveDirection</var> to <a>forwards</a>.</li>
-            <li>If <var>direction</var> is <a>ASCII case-insensitive</a> match with "left"
-              and [=inline base direction=] of <a>this</a> <a>selection</a>'s <a>focus</a> is
-              <a data-xref-type="css-value" data-xref-for="direction">rtl</a>,
-              set <var>effectiveDirection</var> to <a>forwards</a>.</li>
-
-            <li>Set <a>this</a> <a>selection</a>'s <a>direction</a> to <var>effectiveDirection</var>.</li>
-            <li>
-              If <var>alter</var> is <a>ASCII case-insensitive</a> match with "extend",
-              set <a>this</a> <a>selection</a>'s <a>focus</a> to the location
-              as if the user had requested to extend selection by <var>granularity</var>.</li>
-            <li>
-              Otherwise, set <a>this</a> <a>selection</a>'s <a>focus</a> and <a>anchor</a> to the location
-              as if the user had requested to move selection by <var>granularity</var>.
+            <li>If <var>alter</var> is not <a>ASCII case-insensitive</a> match
+            with "extend" or "move", abort these steps.
+            </li>
+            <li>If <var>direction</var> is not <a>ASCII case-insensitive</a>
+            match with "forward", "backward", "left", or "right", abort these
+            steps.
+            </li>
+            <li>If <var>granularity</var> is not <a>ASCII case-insensitive</a>
+            match with "character", "word", "sentence", "line", "paragraph",
+            "lineboundary", "sentenceboundary", "paragraphboundary",
+            "documentboundary", abort these steps.
+            </li>
+            <li>If <a>this</a> <a>selection</a> is empty, abort these steps.
+            </li>
+            <li>Let <var>effectiveDirection</var> be <a>backwards</a>.
+            </li>
+            <li>If <var>direction</var> is <a>ASCII case-insensitive</a> match
+            with "forward", set <var>effectiveDirection</var> to
+            <a>forwards</a>.
+            </li>
+            <li>If <var>direction</var> is <a>ASCII case-insensitive</a> match
+            with "right" and [=inline base direction=] of <a>this</a>
+            <a>selection</a>'s <a>focus</a> is <a data-xref-type="css-value"
+            data-xref-for="direction">ltr</a>, set
+            <var>effectiveDirection</var> to <a>forwards</a>.
+            </li>
+            <li>If <var>direction</var> is <a>ASCII case-insensitive</a> match
+            with "left" and [=inline base direction=] of <a>this</a>
+            <a>selection</a>'s <a>focus</a> is <a data-xref-type="css-value"
+            data-xref-for="direction">rtl</a>, set
+            <var>effectiveDirection</var> to <a>forwards</a>.
+            </li>
+            <li>Set <a>this</a> <a>selection</a>'s <a>direction</a> to
+            <var>effectiveDirection</var>.
+            </li>
+            <li>If <var>alter</var> is <a>ASCII case-insensitive</a> match with
+            "extend", set <a>this</a> <a>selection</a>'s <a>focus</a> to the
+            location as if the user had requested to extend selection by <var>
+              granularity</var>.
+            </li>
+            <li>Otherwise, set <a>this</a> <a>selection</a>'s <a>focus</a> and
+            <a>anchor</a> to the location as if the user had requested to move
+            selection by <var>granularity</var>.
             </li>
           </ol>
           <p class="note">
-            We need to more precisely define what it means to extend or move selection by each granularity.
+            We need to more precisely define what it means to extend or move
+            selection by each granularity.
           </p>
         </dd>
         <dt>
@@ -693,8 +729,9 @@
         <dd>
           <p>
             The method must invoke {{Range/deleteContents()}} on [=this=]'s
-            <a>range</a> if [=this=] is not <a>empty</a> and both <a>focus</a> and <a>anchor</a>
-            are in the [=document tree=]. Otherwise the method must do nothing.
+            <a>range</a> if [=this=] is not <a>empty</a> and both <a>focus</a>
+            and <a>anchor</a> are in the [=document tree=]. Otherwise the
+            method must do nothing.
           </p>
           <p class="note">
             This is the one method that actually mutates the range instead of
@@ -726,20 +763,25 @@
             If <var>allowPartialContainment</var> is <code>true</code>, the
             method must return <code>true</code> if and only if [=range/start=]
             of its <a>range</a> is [=boundary point/before=] or visually
-            equivalent to the last <a>boundary point</a> in the
-            <var>node</var> <strong>and</strong> [=range/end=] of its
-            <a>range</a> is [=boundary point/after=] or visually equivalent to
-            the first <a>boundary point</a> in the <var>node</var>.
+            equivalent to the last <a>boundary point</a> in the <var>node</var>
+            <strong>and</strong> [=range/end=] of its <a>range</a> is
+            [=boundary point/after=] or visually equivalent to the first
+            <a>boundary point</a> in the <var>node</var>.
           </p>
         </dd>
         <dt>
           <dfn>stringifier</dfn>
         </dt>
         <dd>
-          <p>The stringification must return the string, which is the concatenation of
-            the rendered text if there is a [=range=] associated with [=this=].</p>
-          <p>If the selection is within a <a>textarea</a> or <a>input</a> element,
-            it must return the selected substring in its value.</p>
+          <p>
+            The stringification must return the string, which is the
+            concatenation of the rendered text if there is a [=range=]
+            associated with [=this=].
+          </p>
+          <p>
+            If the selection is within a <a>textarea</a> or <a>input</a>
+            element, it must return the selected substring in its value.
+          </p>
         </dd>
       </dl>
       <p class="note">
@@ -885,21 +927,27 @@
         Responding to DOM Mutations
       </h2>
       <p>
-        When the user agent is to [=replace data=] or [=CharacterData/substring data=] on {{CharacterData}},
-        the user agent must update the <a>range</a> associated with <a>selection</a> of the [=Node/node document=]
-        of the {{CharacterData}} as if it's a <a>live range</a>.
+        When the user agent is to [=replace data=] or [=CharacterData/substring
+        data=] on {{CharacterData}}, the user agent must update the
+        <a>range</a> associated with <a>selection</a> of the [=Node/node
+        document=] of the {{CharacterData}} as if it's a <a>live range</a>.
       </p>
       <p>
-        When the user agent is to split a {{Text}} [=node=], the user agent must update the <a>range</a> associated with
-        <a>selection</a> of the [=Node/node document=] of the {{Text}} as if it's a <a>live range</a>.
+        When the user agent is to split a {{Text}} [=node=], the user agent
+        must update the <a>range</a> associated with <a>selection</a> of the
+        [=Node/node document=] of the {{Text}} as if it's a <a>live range</a>.
       </p>
       <p>
-        When the user agent is to run steps for <code>normalize()</code> method, the user agent must update
-        the <a>range</a> associated with <a>selection</a> of the [=Node/node document=] of [=this=] as if it's a <a>live range</a>.
+        When the user agent is to run steps for <code>normalize()</code>
+        method, the user agent must update the <a>range</a> associated with
+        <a>selection</a> of the [=Node/node document=] of [=this=] as if it's a
+        <a>live range</a>.
       </p>
       <p>
-        When the user agent is to [=remove=] or [=insert=] a [=node=], the user agent must update
-        the <a>range</a> associated with <a>selection</a> of the [=Node/node document=] of the [=node=] as if it's a <a>live range</a>.
+        When the user agent is to [=remove=] or [=insert=] a [=node=], the user
+        agent must update the <a>range</a> associated with <a>selection</a> of
+        the [=Node/node document=] of the [=node=] as if it's a <a>live
+        range</a>.
       </p>
     </section>
     <section>
@@ -908,9 +956,9 @@
       </h2>
       <p>
         The user agent should allow the user to change the <a>selection</a>
-        associated with the [=navigable/active document=]. If the user makes any
-        modification to a <a>selection</a>, the user agent must create a new
-        <a>range</a> with suitable [=range/start=] and [=range/end=] of the
+        associated with the [=navigable/active document=]. If the user makes
+        any modification to a <a>selection</a>, the user agent must create a
+        new <a>range</a> with suitable [=range/start=] and [=range/end=] of the
         <a>range</a> and associate the <a>selection</a> with this new
         <a>range</a> (not modify the existing <a>range</a>), and set update
         <a>selection</a>'s <a>direction</a> to <a>forwards</a> if the
@@ -934,17 +982,17 @@
       </p>
       <section>
         <h3>
-          <code><dfn data-dfn-type=event>selectstart</dfn></code> event
+          <code><dfn data-dfn-type="event">selectstart</dfn></code> event
         </h3>
         <p>
           When the user agent is about to associate a new range
           <var>newRange</var> to the <a>selection</a> in response to a user
           initiated action, the user agent must <a>fire an event</a> named
-          <code>selectstart</code>, which bubbles and is cancelable, at
-          the [=boundary point/node=] associated with the <a>boundary point</a>
-          of <var>newRange</var>'s [=range/start=] prior to changing the
-          selection if the <a>selection</a> was previously <a>empty</a> or the
-          previously associated range was [=range/collapsed=].
+          <code>selectstart</code>, which bubbles and is cancelable, at the
+          [=boundary point/node=] associated with the <a>boundary point</a> of
+          <var>newRange</var>'s [=range/start=] prior to changing the selection
+          if the <a>selection</a> was previously <a>empty</a> or the previously
+          associated range was [=range/collapsed=].
         </p>
         <p>
           If the event is canceled, the user agent must not change the
@@ -957,26 +1005,32 @@
       </section>
       <section>
         <h3>
-          <code><dfn data-dfn-type=event>selectionchange</dfn></code> event
+          <code><dfn data-dfn-type="event">selectionchange</dfn></code> event
         </h3>
         <p>
           When the <a>selection</a> is dissociated with its <a>range</a>,
           associated with a new <a>range</a>, or the associated <a>range</a>'s
-          <a>boundary point</a> is mutated either by the user or the content script,
-          the user agent must <a>schedule a selectionchange event</a> on <a>document</a>.
+          <a>boundary point</a> is mutated either by the user or the content
+          script, the user agent must <a>schedule a selectionchange event</a>
+          on <a>document</a>.
         </p>
         <p>
           When an [^input^] or [^textarea^] element provide a text selection
-          and its selection changes (in either extent or [=direction=]),
-          the user agent must <a>schedule a selectionchange event</a> on the element.
+          and its selection changes (in either extent or [=direction=]), the
+          user agent must <a>schedule a selectionchange event</a> on the
+          element.
         </p>
         <section>
-          <h4>Scheduling <code>selectionhange</code> event</h4>
-          <p>To <dfn>schedule a selectionchange event</dfn> on a node <var>target</var>, run these steps:</p>
+          <h4>
+            Scheduling <code>selectionhange</code> event
+          </h4>
+          <p>
+            To <dfn>schedule a selectionchange event</dfn> on a node
+            <var>target</var>, run these steps:
+          </p>
           <ol>
-            <li>
-              If <var>target</var>'s <a>has scheduled selectionchange event</a> is true,
-              abort these steps.
+            <li>If <var>target</var>'s <a>has scheduled selectionchange
+            event</a> is true, abort these steps.
             </li>
             <li>
               <a>Queue a task</a> on the <a>user interaction task source</a> to
@@ -985,19 +1039,24 @@
           </ol>
         </section>
         <section>
-          <h4>Firing <code>selectionhange</code> event</h4>
-          <p>To <dfn>fire a selectionchange event</dfn> on a node <var>target</var>, run these steps:</p>
+          <h4>
+            Firing <code>selectionhange</code> event
+          </h4>
+          <p>
+            To <dfn>fire a selectionchange event</dfn> on a node
+            <var>target</var>, run these steps:
+          </p>
           <ol>
-            <li>
-              Set <var>target</var>'s <a>has scheduled selectionchange event</a> to false.
+            <li>Set <var>target</var>'s <a>has scheduled selectionchange
+            event</a> to false.
             </li>
-            <li>
-              If <var>target</var> is an element, <a>fire an event</a> named <code>selectionchange</code>,
-              which bubbles and not cancelable, at <var>target</var>.
+            <li>If <var>target</var> is an element, <a>fire an event</a> named
+            <code>selectionchange</code>, which bubbles and not cancelable, at
+            <var>target</var>.
             </li>
-            <li>
-              Otherwise, if <var>target</var> is a document, <a>fire an event</a> named <code>selectionchange</code>,
-              which does not bubble and not cancelable, at <var>target</var>.
+            <li>Otherwise, if <var>target</var> is a document, <a>fire an
+            event</a> named <code>selectionchange</code>, which does not bubble
+            and not cancelable, at <var>target</var>.
             </li>
           </ol>
         </section>
@@ -1006,8 +1065,8 @@
     <section id='conformance'>
       <p>
         This specification defines conformance criteria that apply to a single
-        product: the <a>user agent</a> that implements the
-        interfaces that it contains.
+        product: the <a>user agent</a> that implements the interfaces that it
+        contains.
       </p>
     </section>
     <section>
@@ -1018,9 +1077,11 @@
         There are no known security considerations for this standard.
       </p>
       <p>
-        To mitigate potential privacy risks of exposing user's use of assistive technologies, for example,
-        <a>user agent</a> may elect to emulate mouse and keyboard events typically associated with
-        <a>selectstart</a> or <a>selectionchange</a> events when the user opts to modify the <a>selection</a> of a document.
+        To mitigate potential privacy risks of exposing user's use of assistive
+        technologies, for example, <a>user agent</a> may elect to emulate mouse
+        and keyboard events typically associated with <a>selectstart</a> or
+        <a>selectionchange</a> events when the user opts to modify the
+        <a>selection</a> of a document.
       </p>
     </section>
     <section class='appendix'>
