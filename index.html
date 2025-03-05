@@ -133,26 +133,29 @@
        <var>end</var>, run these steps:
       </p>
       <ol>
-       <li>Let <var>liveRange</var> be a new {{Range/}} object.</li>
-       <li>[=Range/Set the start=] of <var>liveRange</var> to <var>start</var>.
-       </li>
-       <li>[=Range/Set the end=] of <var>liveRange</var> to <var>end</var>.</li>
-       <li>Let <var>composedRange</var> be a new
-       <a href="">composed selection range</a>
-       whose [=Range/start=] is <var>start</var>, [=Range/end=] is
-       <var>end</var> and <var>legacy selection range</var> is
-       <var>liveRange</var>.</li>
-       <p class="note">
-        While the above steps might look identical, <var>liveRange</var> and
+        <li>Let <var>liveRange</var> be a new {{Range/}} object.</li>
+        <li>[=Range/Set the start=] of <var>liveRange</var> to <var>start</var>.
+        </li>
+        <li>[=Range/Set the end=] of <var>liveRange</var> to <var>end</var>.
+        </li>
+        <li>Let <var>composedRange</var> be a new
+        <a href="">composed selection range</a>
+        whose [=Range/start=] is <var>start</var>, [=Range/end=] is
+        <var>end</var> and <var>legacy selection range</var> is
+        <var>liveRange</var>.
+        </li>
+        <li>Set [=this=]'s <a href="">composed selection range</a> to
+        <var>composedRange</var>.
+        </li>
+      </ol>
+      <p class="note">
+        While the steps 2-3 and 4 might look identical, <var>liveRange</var> and
         <var>composedRange</var> could end up in very different states. The
         <var>liveRange</var> follows [=Range/set the start=] and
         [=Range/set the end=] algorithms, which will collapse in cross-root
         cases. On the other hand, <var>composedRange</var> is set directly
         without any collapsing logic.
-       </p>
-       <li>Set [=this=]'s <a href="">composed selection range</a> to
-       <var>composedRange</var>.</li>
-     </ol>
+      </p>
       <p>
         Once a <a>selection</a> is associated with a given <a>range</a>, it
         must continue to be associated with that same <a>range</a> until this
