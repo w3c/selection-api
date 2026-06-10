@@ -112,10 +112,10 @@
         [=editing hosts=] in the <a>document</a>.
       </p>
       <p>
-        Each <a>selection</a> can be associated with a single <a>range</a>.
-        When there is no <a>range</a> associated with the <a>selection</a>, the
-        selection is <dfn>empty</dfn>. The selection must be initially
-        <a>empty</a>.
+        Each <a>selection</a> can be associated with one or more
+        <a>ranges</a>. When there are no <a>ranges</a> associated with the
+        <a>selection</a>, the selection is <dfn>empty</dfn>. The selection
+        must be initially <a>empty</a>.
       </p>
       <p class="note">
         A <a>document</a>'s <a>selection</a> is a singleton object associated
@@ -137,14 +137,15 @@
         boundary points, or a script modifies the boundary points of the range,
         the same range object must continue to be associated with the
         selection. However, if the user changes the selection or a script calls
-        {{addRange()}}, the selection must be associated with a new range
-        object, as required elsewhere in this specification.
+        methods that replace or remove associated <a>ranges</a>, the set of
+        associated <a>ranges</a> changes as required elsewhere in this
+        specification.
       </p>
       <p>
-        If the <a>selection</a>'s <a>range</a> is not null and is
-        [=range/collapsed=], then the caret position must be at that
-        <a>range</a>'s <a>boundary point</a>. When the <a>selection</a> is not
-        [=range/collapsed=], this specification does not define the caret
+        If the <a>selection</a> has exactly one associated <a>range</a> and
+        that <a>range</a> is [=range/collapsed=], then the caret position must
+        be at that <a>range</a>'s <a>boundary point</a>. Otherwise, this
+        specification does not define the caret
         position; user agents should follow platform conventions in deciding
         whether the caret is at the start of the <a>selection</a>, the end of
         the <a>selection</a>, or somewhere else.
@@ -168,12 +169,12 @@
       </p>
       <p>
         Each <a>selection</a>s also have an <dfn>anchor</dfn> and a
-        <dfn>focus</dfn>. If the <a>selection</a>'s <a>range</a> is null, its
-        <a>anchor</a> and <a>focus</a> are both null. If the <a>selection</a>'s
-        <a>range</a> is not null and its <a>direction</a> is <a>forwards</a>,
-        its <a>anchor</a> is the <a>range</a>'s [=range/start=], and its
-        <a>focus</a> is the [=range/end=]. Otherwise, its <a>focus</a> is the
-        [=range/start=] and its <a>anchor</a> is the [=range/end=].
+        <dfn>focus</dfn>. If the <a>selection</a> is <a>empty</a>, its
+        <a>anchor</a> and <a>focus</a> are both null. Otherwise, its
+        <a>anchor</a> is the [=range/start=] of its first associated
+        <a>range</a>, and its <a>focus</a> is the [=range/end=] of its last
+        associated <a>range</a>, where associated <a>ranges</a> are ordered by
+        increasing [=range/start=] in <a>document</a> order.
       </p>
       <p class="note">
         <a>anchor</a> and <a>focus</a> of <a>selection</a> need not to be in
@@ -284,9 +285,8 @@
         </dt>
         <dd>
           <p>
-            The attribute must return <code>0</code> if [=this=] is
-            <a>empty</a> or either <a>focus</a> or <a>anchor</a> is not in the
-            [=document tree=], and must return <code>1</code> otherwise.
+            The attribute must return the number of associated <a>ranges</a>
+            in [=this=].
           </p>
         </dd>
         <dt>
@@ -294,10 +294,10 @@
         </dt>
         <dd>
           <p>
-            The attribute must return `"None"` if [=this=] is <a>empty</a> or
-            either <a>focus</a> or <a>anchor</a> is not in the [=document
-            tree=], `"Caret"` if [=this=]'s <a>range</a> is
-            [=range/collapsed=], and `"Range"` otherwise.
+            The attribute must return `"None"` if [=this=] is <a>empty</a>,
+            `"Caret"` if [=this=] has exactly one associated <a>range</a> and
+            that <a>range</a> is [=range/collapsed=], and `"Range"`
+            otherwise.
           </p>
         </dd>
         <dt>
@@ -317,17 +317,19 @@
         <dd>
           <p data-tests="getRangeAt.html">
             The method must throw an {{IndexSizeError}} exception if
-            <var>index</var> is not <code>0</code>, or if [=this=] is
-            <a>empty</a> or either <a>focus</a> or <a>anchor</a> is not in the
-            [=document tree=]. Otherwise, it must return a reference to (not a
-            copy of) [=this=]'s <a>range</a>.
+            <var>index</var> is greater than or equal to [=this=]'s
+            <a>rangeCount</a>. Otherwise, it must return a reference to (not a
+            copy of) the associated <a>range</a> at <var>index</var> in
+            [=this=].
           </p>
           <p class="note">
             Thus subsequent calls of this method returns the same <a>range</a>
-            object if nothing has removed [=this=]'s range in the meantime. In
-            particular, <code>getSelection().getRangeAt(0) ===
+            object for the same index if nothing has removed or replaced that
+            associated <a>range</a> in the meantime. In particular,
+            <code>getSelection().getRangeAt(0) ===
             getSelection().getRangeAt(0)</code> evaluates to <code>true</code>
-            if the <a>selection</a> is not <a>empty</a>.
+            if the <a>selection</a> has at least one associated
+            <a>range</a>.
           </p>
         </dd>
         <dt>
@@ -342,11 +344,16 @@
             are not the <a>document</a> associated with [=this=], abort these
             steps.
             </li>
-            <li>If <code>rangeCount</code> is not <code>0</code>, abort these
-            steps.
+            <li>Add <var>range</var> to [=this=]'s associated <a>ranges</a> by
+            a strong reference (not by making a copy).
             </li>
-            <li>Set [=this=]'s range to <var>range</var> by a strong reference
-            (not by making a copy).
+            <li>Sort [=this=]'s associated <a>ranges</a> by increasing
+            [=range/start=] in <a>document</a> order.
+            </li>
+            <li>While there are two adjacent associated <a>ranges</a> that
+            overlap or are adjacent, replace them with a single
+            [=range=] whose [=range/start=] is the earlier [=range/start=]
+            and whose [=range/end=] is the later [=range/end=].
             </li>
           </ol>
           <p class="note">
@@ -354,7 +361,7 @@
             <code>getRangeAt(0)</code> returns the same object, and any changes
             that a script makes to <a>range</a> after it is added must be
             reflected in the <a>selection</a>, until something else removes or
-            replaces [=this=]'s <a>range</a>. In particular, the
+            replaces that associated <a>range</a>. In particular, the
             <a>selection</a> will contain <var>b</var> as opposed to
             <var>a</var> after running the following code: <code>var r =
             document.createRange(); r.selectNode(a);
@@ -378,9 +385,9 @@
         </dt>
         <dd>
           <p>
-            The method must make [=this=] <a>empty</a> by disassociating its
-            <a>range</a> if [=this=]'s <a>range</a> is <var>range</var>.
-            Otherwise, it must throw a {{NotFoundError}}.
+            The method must disassociate <var>range</var> from [=this=] if
+            [=this=] has an associated <a>range</a> that is
+            <var>range</var>. Otherwise, it must throw a {{NotFoundError}}.
           </p>
         </dd>
         <dt>
@@ -388,8 +395,8 @@
         </dt>
         <dd>
           <p>
-            The method must make [=this=] <a>empty</a> by disassociating its
-            <a>range</a> if [=this=] has an associated <a>range</a>.
+            The method must make [=this=] <a>empty</a> by disassociating all
+            associated <a>ranges</a> from [=this=].
           </p>
         </dd>
         <dt>
@@ -408,49 +415,59 @@
           <ol>
             <li>If [=this=] is <a>empty</a>, return an empty array.
             </li>
-            <li>Otherwise, let <var>startNode</var> be [=range/start node=] of
-            the [=range=] associated with [=this=], and let
-            <var>startOffset</var> be [=range/start offset=] of the [=range=].
+            <li>Let <var>composedRanges</var> be an empty array.
             </li>
-            <li>While <var>startNode</var> is a [=node=],
-            <var>startNode</var>'s [=tree/root=] is a [=shadow root=], and
-            <var>startNode</var>'s [=tree/root=] is not a [=shadow-including
-            inclusive ancestor=] of any of
-            <var>options</var>["{{GetComposedRangesOptions/shadowRoots}}"],
-            repeat these steps:
+            <li>For each associated <a>range</a> <var>range</var> in [=this=],
+            in order, run these steps:
               <ol>
-                <li>Set <var>startOffset</var> to [=tree/index=] of
-                <var>startNode</var>'s [=tree/root=]'s [=host=].
+                <li>Let <var>startNode</var> be [=range/start node=] of
+                <var>range</var>, and let <var>startOffset</var> be
+                [=range/start offset=] of <var>range</var>.
                 </li>
-                <li>Set <var>startNode</var> to <var>startNode</var>'s
-                [=tree/root=]'s [=host=]'s [=tree/parent=].
+                <li>While <var>startNode</var> is a [=node=],
+                <var>startNode</var>'s [=tree/root=] is a [=shadow root=], and
+                <var>startNode</var>'s [=tree/root=] is not a
+                [=shadow-including inclusive ancestor=] of any of
+                <var>options</var>["{{GetComposedRangesOptions/shadowRoots}}"],
+                repeat these steps:
+                  <ol>
+                    <li>Set <var>startOffset</var> to [=tree/index=] of
+                    <var>startNode</var>'s [=tree/root=]'s [=host=].
+                    </li>
+                    <li>Set <var>startNode</var> to
+                    <var>startNode</var>'s [=tree/root=]'s [=host=]'s
+                    [=tree/parent=].
+                    </li>
+                  </ol>
+                </li>
+                <li>Let <var>endNode</var> be [=range/end node=] of
+                <var>range</var>, and let <var>endOffset</var> be
+                [=range/end offset=] of <var>range</var>.
+                </li>
+                <li>While <var>endNode</var> is a [=node=],
+                <var>endNode</var>'s [=tree/root=] is a [=shadow root=], and
+                <var>endNode</var>'s [=tree/root=] is not a
+                [=shadow-including inclusive ancestor=] of any of
+                <var>options</var>["{{GetComposedRangesOptions/shadowRoots}}"],
+                repeat these steps:
+                  <ol>
+                    <li>Set <var>endOffset</var> to [=tree/index=] of
+                    <var>endNode</var>'s [=tree/root=]'s [=host=] plus 1.
+                    </li>
+                    <li>Set <var>endNode</var> to <var>endNode</var>'s
+                    [=tree/root=]'s [=host=]'s [=tree/parent=].
+                    </li>
+                  </ol>
+                </li>
+                <li>Append a new {{StaticRange}} whose [=range/start node=] is
+                <var>startNode</var>, [=range/start offset=] is
+                <var>startOffset</var>, [=range/end node=] is
+                <var>endNode</var>, and [=range/end offset=] is
+                <var>endOffset</var>, to <var>composedRanges</var>.
                 </li>
               </ol>
             </li>
-            <li>Let <var>endNode</var> be [=range/end node=] of the [=range=]
-            associated with [=this=], and let <var>endOffset</var> be
-            [=range/end offset=] of the [=range=].
-            </li>
-            <li>While <var>endNode</var> is a [=node=], <var>endNode</var>'s
-            [=tree/root=] is a [=shadow root=], and <var>endNode</var>'s
-            [=tree/root=] is not a [=shadow-including inclusive ancestor=] of
-            any of
-            <var>options</var>["{{GetComposedRangesOptions/shadowRoots}}"],
-            repeat these steps:
-              <ol>
-                <li>Set <var>endOffset</var> to [=tree/index=] of
-                <var>endNode</var>'s [=tree/root=]'s [=host=] plus 1.
-                </li>
-                <li>Set <var>endNode</var> to <var>endNode</var>'s
-                [=tree/root=]'s [=host=]'s [=tree/parent=].
-                </li>
-              </ol>
-            </li>
-            <li>Return an array consisting of new {{StaticRange}} whose
-            [=range/start node=] is <var>startNode</var>, [=range/start
-            offset=] is <var>startOffset</var>, [=range/end node=] is
-            <var>endNode</var>, and [=range/end offset=] is
-            <var>endOffset</var>.
+            <li>Return <var>composedRanges</var>.
             </li>
           </ol>
         </dd>
@@ -482,7 +499,8 @@
             [=range/end=] of <var>newRange</var> to (<var>node</var>,
             <var>offset</var>).
             </li>
-            <li>Set [=this=]'s <a>range</a> to <var>newRange</var>.
+            <li>Set [=this=]'s associated <a>ranges</a> to contain only
+            <var>newRange</var>.
             </li>
           </ol>
         </dd>
@@ -503,8 +521,9 @@
             The method must throw {{InvalidStateError}} exception if the
             [=this=] is <a>empty</a>. Otherwise, it must create a new
             <a>range</a>, [=Range/set the start=] both its [=range/start=] and
-            [=range/end=] to the [=range/start=] of [=this=]'s <a>range</a>,
-            and then set [=this=]'s <a>range</a> to the newly-created
+            [=range/end=] to the [=range/start=] of [=this=]'s first
+            associated <a>range</a>, and then set [=this=]'s associated
+            <a>ranges</a> to contain only the newly-created
             <a>range</a>.
           </p>
           <p class="note">
@@ -522,8 +541,9 @@
             The method must throw {{InvalidStateError}} exception if the
             [=this=] is <a>empty</a>. Otherwise, it must create a new
             <a>range</a>, [=Range/set the start=] both its [=range/start=] and
-            [=range/end=] to the [=range/end=] of [=this=]'s <a>range</a>, and
-            then set [=this=]'s <a>range</a> to the newly-created <a>range</a>.
+            [=range/end=] to the [=range/end=] of [=this=]'s last associated
+            <a>range</a>, and then set [=this=]'s associated <a>ranges</a> to
+            contain only the newly-created <a>range</a>.
           </p>
         </dd>
         <dt>
@@ -546,10 +566,13 @@
             <var>newFocus</var> be the <a>boundary point</a> (<var>node</var>,
             <var>offset</var>).
             </li>
+            <li>Let <var>focusedRange</var> be the last associated
+            <a>range</a> in [=this=].
+            </li>
             <li>Let <var>newRange</var> be a new <a>range</a>.
             </li>
             <li>If <var>node</var>'s [=tree/root=] is not the same as the
-            [=this=]'s <a>range</a>'s [=tree/root=], [=Range/set the start=]
+            <var>focusedRange</var>'s [=tree/root=], [=Range/set the start=]
             <var>newRange</var>'s [=range/start=] and [=range/end=] to
             <var>newFocus</var>.
             </li>
@@ -562,7 +585,16 @@
             [=range/start=] to <var>newFocus</var>, then set its [=range/end=]
             to <var>oldAnchor</var>.
             </li>
-            <li>Set [=this=]'s <a>range</a> to <var>newRange</var>.
+            <li>Replace <var>focusedRange</var> in [=this=]'s associated
+            <a>ranges</a> with <var>newRange</var>.
+            </li>
+            <li>Sort [=this=]'s associated <a>ranges</a> by increasing
+            [=range/start=] in <a>document</a> order.
+            </li>
+            <li>While there are two adjacent associated <a>ranges</a> that
+            overlap or are adjacent, replace them with a single
+            [=range=] whose [=range/start=] is the earlier [=range/start=]
+            and whose [=range/end=] is the later [=range/end=].
             </li>
             <li>If <var>newFocus</var> is [=boundary point/before=]
             <var>oldAnchor</var>, set [=this=]'s <a>direction</a> to
@@ -612,7 +644,8 @@
               focus</var>. Otherwise, [=Range/set the start=] them to
               <var>focus</var> and <var>anchor</var> respectively.
             </li>
-            <li>Set [=this=]'s <a>range</a> to <var>newRange</var>.
+            <li>Set [=this=]'s associated <a>ranges</a> to contain only
+            <var>newRange</var>.
             </li>
             <li>If <var>focus</var> is [=boundary point/before=]
             <var>anchor</var>, set [=this=]'s <a>direction</a> to
@@ -644,7 +677,8 @@
             <li>Set <var>newRange</var>'s [=range/end=] to (<var>node</var>,
             <var>childCount</var>).
             </li>
-            <li>Set [=this=]'s <a>range</a> to <var>newRange</var>.
+            <li>Set [=this=]'s associated <a>ranges</a> to contain only
+            <var>newRange</var>.
             </li>
             <li>Set [=this=]'s <a>direction</a> to <var>forwards</var>.
             </li>
@@ -724,7 +758,8 @@
             <li>If <var>alter</var> is <a>ASCII case-insensitive</a> match with
             "extend", set <a>this</a> <a>selection</a>'s <a>focus</a> to the
             location as if the user had requested to extend selection by <var>
-              granularity</var>.
+              granularity</var>, updating the focused associated <a>range</a>
+              as in {{Selection/extend(node, offset)}}.
             </li>
             <li>Otherwise, set <a>this</a> <a>selection</a>'s <a>focus</a> and
             <a>anchor</a> to the location as if the user had requested to move
@@ -741,10 +776,10 @@
         </dt>
         <dd>
           <p>
-            The method must invoke {{Range/deleteContents()}} on [=this=]'s
-            <a>range</a> if [=this=] is not <a>empty</a> and both <a>focus</a>
-            and <a>anchor</a> are in the [=document tree=]. Otherwise the
-            method must do nothing.
+            If [=this=] is <a>empty</a>, the method must do nothing.
+            Otherwise, the method must invoke {{Range/deleteContents()}} on
+            each associated <a>range</a> in descending [=range/start=]
+            <a>document</a> order.
           </p>
           <p class="note">
             This is the one method that actually mutates the range instead of
@@ -765,21 +800,22 @@
           <p>
             Otherwise, if <var>allowPartialContainment</var> is
             <code>false</code>, the method must return <code>true</code> if and
-            only if [=range/start=] of its <a>range</a> is [=boundary
-            point/before=] or visually equivalent to the first <a>boundary
-            point</a> in the <var>node</var> <strong>and</strong> [=range/end=]
-            of its <a>range</a> is [=boundary point/after=] or visually
-            equivalent to the last <a>boundary point</a> in the
-            <var>node</var>.
+            only if there exists an associated <a>range</a> in [=this=] whose
+            [=range/start=] is [=boundary point/before=] or visually
+            equivalent to the first <a>boundary point</a> in the
+            <var>node</var> <strong>and</strong> whose [=range/end=] is
+            [=boundary point/after=] or visually equivalent to the last
+            <a>boundary point</a> in the <var>node</var>.
           </p>
           <p>
             If <var>allowPartialContainment</var> is <code>true</code>, the
-            method must return <code>true</code> if and only if [=range/start=]
-            of its <a>range</a> is [=boundary point/before=] or visually
-            equivalent to the last <a>boundary point</a> in the <var>node</var>
-            <strong>and</strong> [=range/end=] of its <a>range</a> is
-            [=boundary point/after=] or visually equivalent to the first
-            <a>boundary point</a> in the <var>node</var>.
+            method must return <code>true</code> if and only if there exists an
+            associated <a>range</a> in [=this=] whose [=range/start=] is
+            [=boundary point/before=] or visually equivalent to the last
+            <a>boundary point</a> in the <var>node</var> <strong>and</strong>
+            whose [=range/end=] is [=boundary point/after=] or visually
+            equivalent to the first <a>boundary point</a> in the
+            <var>node</var>.
           </p>
         </dd>
         <dt>
@@ -788,8 +824,8 @@
         <dd>
           <p>
             The stringification must return the string, which is the
-            concatenation of the rendered text if there is a [=range=]
-            associated with [=this=].
+            concatenation of the rendered text of all associated <a>ranges</a>
+            in [=this=], in associated-range order.
           </p>
           <p>
             If the selection is within a <a>textarea</a> or <a>input</a>
@@ -812,24 +848,17 @@
           feature was later implemented independently by other browser engines.
           The Netscape implementation always allowed multiple ranges in a
           single selection, for instance so the user could select a column of a
-          table However, multi-range selections proved to be an unpleasant
-          corner case that web developers didn't know about and even Gecko
-          developers rarely handled correctly. Other browser engines never
-          implemented the feature, and clamped selections to a single range in
-          various incompatible fashions.
+          table.
         </p>
         <p>
-          This specification follows non-Gecko engines in restricting
-          selections to at most one range, but the API was still originally
-          designed for selections with arbitrary numbers of ranges. This
-          explains oddities like the coexistence of <code>removeRange()</code>
-          and <code>removeAllRanges()</code>, and a <code>getRangeAt()</code>
-          method that takes an integer argument that must always be zero.
+          This specification defines interoperable behavior for selections with
+          arbitrary numbers of associated <a>ranges</a>, including ordering,
+          merging, and API semantics that operate across multiple ranges.
         </p>
       </div>
       <p>
         All of the members of the {{Selection}} interface are defined in terms
-        of operations on the <code><a>range</a></code> object (if any)
+        of operations on associated <code><a>range</a></code> objects (if any)
         represented by the object. These operations can raise exceptions, as
         defined for the {{Range}} interface; this can therefore result in the
         members of the <a>Selection</a> interface raising exceptions as well,
