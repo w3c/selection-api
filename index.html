@@ -681,7 +681,7 @@
         <dt>
           <dfn>modify()</dfn> method
         </dt>
-        <dd data-cite="css-writing-modes-4">
+        <dd data-cite="css-writing-modes-4 UAX9">
           <p>
             The method must follow these steps:
           </p>
@@ -707,13 +707,13 @@
             <a>forwards</a>.
             </li>
             <li>If <var>direction</var> is <a>ASCII case-insensitive</a> match
-            with "right" and [=inline base direction=] of <a>this</a>
+            with "right" and the <a>resolved text direction</a> at <a>this</a>
             <a>selection</a>'s <a>focus</a> is <a data-xref-type="css-value"
             data-xref-for="direction">ltr</a>, set
             <var>effectiveDirection</var> to <a>forwards</a>.
             </li>
             <li>If <var>direction</var> is <a>ASCII case-insensitive</a> match
-            with "left" and [=inline base direction=] of <a>this</a>
+            with "left" and the <a>resolved text direction</a> at <a>this</a>
             <a>selection</a>'s <a>focus</a> is <a data-xref-type="css-value"
             data-xref-for="direction">rtl</a>, set
             <var>effectiveDirection</var> to <a>forwards</a>.
@@ -731,6 +731,24 @@
             selection by <var>granularity</var>.
             </li>
           </ol>
+          <p>
+            The <dfn>resolved text direction</dfn> at a <a>boundary point</a>
+            is <a data-xref-type="css-value"
+            data-xref-for="direction">ltr</a> if the <a
+            href="https://www.unicode.org/reports/tr9/#BD3">embedding
+            direction</a> ([[!UAX9]] BD3) of the character at that position
+            is L, and <a data-xref-type="css-value"
+            data-xref-for="direction">rtl</a> if the <a
+            href="https://www.unicode.org/reports/tr9/#BD3">embedding
+            direction</a> is R.
+          </p>
+          <p class="note">
+            At a bidi boundary—where adjacent characters have different
+            embedding directions—user agents may use additional context
+            (such as caret affinity based on the direction of cursor
+            movement) to determine which character's embedding direction
+            to use.
+          </p>
           <p class="note">
             We need to more precisely define what it means to extend or move
             selection by each granularity.
