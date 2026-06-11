@@ -733,21 +733,19 @@
           </ol>
           <p>
             The <dfn>resolved text direction</dfn> at a <a>boundary point</a>
-            is <a data-xref-type="css-value"
-            data-xref-for="direction">ltr</a> if the <a
-            href="https://www.unicode.org/reports/tr9/#BD3">embedding
-            direction</a> ([[!UAX9]] BD3) of the character at that position
-            is L, and <a data-xref-type="css-value"
-            data-xref-for="direction">rtl</a> if the <a
-            href="https://www.unicode.org/reports/tr9/#BD3">embedding
-            direction</a> is R.
+            is <a data-xref-type="css-value" data-xref-for="direction">ltr</a>
+            if the <a href="https://www.unicode.org/reports/tr9/#BD3">embedding
+            direction</a> ([[!UAX9]] BD3) of the character at that position is
+            L, and <a data-xref-type="css-value" data-xref-for=
+            "direction">rtl</a> if the <a href=
+            "https://www.unicode.org/reports/tr9/#BD3">embedding direction</a>
+            is R.
           </p>
           <p class="note">
             At a bidi boundary—where adjacent characters have different
-            embedding directions—user agents may use additional context
-            (such as caret affinity based on the direction of cursor
-            movement) to determine which character's embedding direction
-            to use.
+            embedding directions—user agents may use additional context (such
+            as caret affinity based on the direction of cursor movement) to
+            determine which character's embedding direction to use.
           </p>
           <p class="note">
             We need to more precisely define what it means to extend or move
