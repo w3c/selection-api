@@ -976,10 +976,11 @@
         <a>live range</a>.
       </p>
       <p>
-        When the user agent is to [=remove=] or [=insert=] a [=node=], the user
-        agent must update the <a>range</a> associated with <a>selection</a> of
-        the [=Node/node document=] of the [=node=] as if it's a <a>live
-        range</a>.
+        When the user agent is to [=remove=], or, [=insert=], or [=move=] a
+        [=node=], the user agent must update the <a>range</a> associated with
+        <a>selection</a> of the [=Node/node document=] of the [=node=] as if
+        it's a <a>live range</a>, according to the {{Range}} updating logic in
+        the respective algorithms.
       </p>
     </section>
     <section>
