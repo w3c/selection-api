@@ -112,10 +112,12 @@
         [=editing hosts=] in the <a>document</a>.
       </p>
       <p>
-        Each <a>selection</a> can be associated with a single <a>range</a>.
-        When there is no <a>range</a> associated with the <a>selection</a>, the
-        selection is <dfn>empty</dfn>. The selection must be initially
-        <a>empty</a>.
+        Each <a>selection</a> can be associated with a single
+        <a href="TODO">composed range</a> <dfn>composed range</dfn>,
+        which will have an associated <a href="TODO">legacy uncomposed range</a>
+        <dfn>uncomposed range</dfn>. When there is no <a>composed range</a>
+        associated with the <a>selection</a>, the selection is <dfn>empty</dfn>.
+        The selection must be initially <a>empty</a>.
       </p>
       <p class="note">
         A <a>document</a>'s <a>selection</a> is a singleton object associated
@@ -127,10 +129,37 @@
         dev do not. We follow Gecko/WebKit, because it lessens the chance of
         getRangeAt(0) throwing.
       </p>
+      <p>To <dfn>set the composed range</dfn> of [=this=], given the
+       <a>boundary point</a> <var>start</var> and <a>boundary point</a>
+       <var>end</var>, run these steps:
+      </p>
+      <ol>
+        <li>Let <var>liveRange</var> be a new {{Range}} object.</li>
+        <li>[=Range/Set the start=] of <var>liveRange</var> to <var>start</var>.
+        </li>
+        <li>[=Range/Set the end=] of <var>liveRange</var> to <var>end</var>.
+        </li>
+        <li>Let <var>composedRange</var> be a new
+        <a href="TODO">composed range</a> whose [=Range/start=] is
+        <var>start</var>, [=Range/end=] is <var>end</var> and
+        <var>legacy uncomposed range</var> is <var>liveRange</var>.
+        </li>
+        <li>Set [=this=]'s <a>composed range</a> to
+        <var>composedRange</var>.
+        </li>
+      </ol>
+      <p class="note">
+        While the steps 2-3 and 4 might look identical, <var>liveRange</var> and
+        <var>composedRange</var> could end up in very different states. The
+        <var>liveRange</var> follows [=Range/set the start=] and
+        [=Range/set the end=] algorithms, which will collapse in cross-root
+        cases. On the other hand, <var>composedRange</var> is set directly
+        without any collapsing logic.
+      </p>
       <p>
-        Once a <a>selection</a> is associated with a given <a>range</a>, it
-        must continue to be associated with that same <a>range</a> until this
-        specification requires otherwise.
+        Once a <a>selection</a> is associated with a given
+        <a>composed range</a>, it must continue to be associated with that same
+        <a>composed range</a> until this specification requires otherwise.
       </p>
       <p class="note" data-link-for="Selection">
         For instance, if the DOM changes in a way that changes the range's
@@ -141,39 +170,41 @@
         object, as required elsewhere in this specification.
       </p>
       <p>
-        If the <a>selection</a>'s <a>range</a> is not null and is
+        If the <a>selection</a>'s <a>uncomposed range</a> is not null and is
         [=range/collapsed=], then the caret position must be at that
-        <a>range</a>'s <a>boundary point</a>. When the <a>selection</a> is not
-        [=range/collapsed=], this specification does not define the caret
-        position; user agents should follow platform conventions in deciding
-        whether the caret is at the start of the <a>selection</a>, the end of
-        the <a>selection</a>, or somewhere else.
+        <a>uncomposed range</a>'s <a>boundary point</a>. When the
+        <a>selection</a> is not [=range/collapsed=], this specification does not
+        define the caret position; user agents should follow platform
+        conventions in deciding whether the caret is at the start of the
+        <a>selection</a>, the end of the <a>selection</a>, or somewhere else.
       </p>
       <p>
         Each <a>selection</a> has a <dfn>direction</dfn>: <dfn>forwards</dfn>,
         <dfn>backwards</dfn>, or <dfn>directionless</dfn>. If the user creates
         a <a>selection</a> by indicating first one <a>boundary point</a> of the
-        <a>range</a> and then the other (such as by clicking on one point and
-        dragging to another), and the first indicated <a>boundary point</a> is
-        [=boundary point/after=] the second, then the corresponding
-        <a>selection</a> must initially be <a>backwards</a>. If the first
-        indicated <a>boundary point</a> is [=boundary point/before=] the
-        second, then the corresponding <a>selection</a> must initially be
-        <a>forwards</a>. Otherwise, it must be <a>directionless</a>.
+        <a>composed range</a> and then the other (such as by clicking on one
+        point and dragging to another), and the first indicated
+        <a>boundary point</a> is [=boundary point/after=] the second, then the
+        corresponding <a>selection</a> must initially be <a>backwards</a>.
+        If the first indicated <a>boundary point</a> is
+        [=boundary point/before=] the second, then the corresponding
+        <a>selection</a> must initially be <a>forwards</a>.
+        Otherwise, it must be <a>directionless</a>.
       </p>
       <p>
-        When the <a>selection</a>'s <a>range</a> is mutated by scripts, e.g.
-        via {{Range/selectNode(node)}}, <a>direction</a> of the
+        When the <a>selection</a>'s <a>composed range</a> is mutated by scripts,
+        e.g. via {{Range/selectNode(node)}}, <a>direction</a> of the
         <a>selection</a> must be preserved.
       </p>
       <p>
-        Each <a>selection</a>s also have an <dfn>anchor</dfn> and a
-        <dfn>focus</dfn>. If the <a>selection</a>'s <a>range</a> is null, its
-        <a>anchor</a> and <a>focus</a> are both null. If the <a>selection</a>'s
-        <a>range</a> is not null and its <a>direction</a> is <a>forwards</a>,
-        its <a>anchor</a> is the <a>range</a>'s [=range/start=], and its
-        <a>focus</a> is the [=range/end=]. Otherwise, its <a>focus</a> is the
-        [=range/start=] and its <a>anchor</a> is the [=range/end=].
+        Each <a>selection</a> also has an <dfn>anchor</dfn> and a
+        <dfn>focus</dfn>. If the <a>selection</a>'s <a>uncomposed range</a> is
+        null, its <a>anchor</a> and <a>focus</a> are both null. If the
+        <a>selection</a>'s <a>uncomposed range</a> is not null and its
+        <a>direction</a> is <a>forwards</a>, its <a>anchor</a> is the
+        <a>uncomposed range</a>'s [=range/start=], and its <a>focus</a> is the
+        [=range/end=]. Otherwise, its <a>focus</a> is the [=range/start=] and
+        its <a>anchor</a> is the [=range/end=].
       </p>
       <p class="note">
         <a>anchor</a> and <a>focus</a> of <a>selection</a> need not to be in
@@ -296,7 +327,7 @@
           <p>
             The attribute must return `"None"` if [=this=] is <a>empty</a> or
             either <a>focus</a> or <a>anchor</a> is not in the [=document
-            tree=], `"Caret"` if [=this=]'s <a>range</a> is
+            tree=], `"Caret"` if [=this=]'s <a>uncomposed range</a> is
             [=range/collapsed=], and `"Range"` otherwise.
           </p>
         </dd>
@@ -320,12 +351,13 @@
             <var>index</var> is not <code>0</code>, or if [=this=] is
             <a>empty</a> or either <a>focus</a> or <a>anchor</a> is not in the
             [=document tree=]. Otherwise, it must return a reference to (not a
-            copy of) [=this=]'s <a>range</a>.
+            copy of) [=this=]'s <a>uncomposed range</a>.
           </p>
           <p class="note">
-            Thus subsequent calls of this method returns the same <a>range</a>
-            object if nothing has removed [=this=]'s range in the meantime. In
-            particular, <code>getSelection().getRangeAt(0) ===
+            Thus subsequent calls of this method returns the same
+            <a>uncomposed range</a> object if nothing has removed [=this=]'s
+            range in the meantime. In particular,
+            <code>getSelection().getRangeAt(0) ===
             getSelection().getRangeAt(0)</code> evaluates to <code>true</code>
             if the <a>selection</a> is not <a>empty</a>.
           </p>
@@ -345,31 +377,37 @@
             <li>If <code>rangeCount</code> is not <code>0</code>, abort these
             steps.
             </li>
-            <li>Set [=this=]'s range to <var>range</var> by a strong reference
-            (not by making a copy).
+            <li>Set [=this=]'s uncomposed range to <var>range</var>
+            by a strong reference (not by making a copy).
+            </li>
+            <li>Set [=this=]'s composed range's [=Range/start=] to
+            <var>range</var>'s start.
+            </li>
+            <li>Set [=this=]'s composed range's [=Range/end=] to
+            <var>range</var>'s end.
             </li>
           </ol>
           <p class="note">
-            Since <a>range</a> is added by reference, subsequent calls to
-            <code>getRangeAt(0)</code> returns the same object, and any changes
-            that a script makes to <a>range</a> after it is added must be
-            reflected in the <a>selection</a>, until something else removes or
-            replaces [=this=]'s <a>range</a>. In particular, the
-            <a>selection</a> will contain <var>b</var> as opposed to
-            <var>a</var> after running the following code: <code>var r =
-            document.createRange(); r.selectNode(a);
+            Since <a>uncomposed range</a> is added by reference, subsequent
+            calls to <code>getRangeAt(0)</code> returns the same object, and any
+            changes that a script makes to <a>uncomposed range</a> after it is
+            added must be reflected in the <a>selection</a>, until something
+            else removes or replaces [=this=]'s <a>uncomposed range</a>.
+            In particular, the <a>selection</a> will contain <var>b</var> as
+            opposed to <var>a</var> after running the following code:
+            <code>var r = document.createRange(); r.selectNode(a);
             getSelection().addRange(r); r.selectNode(b);</code>
           </p>
           <div class="note">
             <p>
               At Step 2, Chrome 58 and Edge 25 do nothing. Firefox 51 gives you
               a multi-range selection. At least they keep the exisiting
-              <a>range</a>.
+              <a>uncomposed range</a>.
             </p>
             <p>
               At Step 3, Chrome 58 and Firefox 51 store a reference, as
               described here. Edge 25 stores a copy. Firefox 51 changes its
-              selection if the <a>range</a> is modified.
+              selection if the <a>uncomposed range</a> is modified.
             </p>
           </div>
         </dd>
@@ -379,8 +417,8 @@
         <dd>
           <p>
             The method must make [=this=] <a>empty</a> by disassociating its
-            <a>range</a> if [=this=]'s <a>range</a> is <var>range</var>.
-            Otherwise, it must throw a {{NotFoundError}}.
+            <a>composed range</a> if [=this=]'s <a>uncomposed range</a> is
+            <var>range</var>. Otherwise, it must throw a {{NotFoundError}}.
           </p>
         </dd>
         <dt>
@@ -389,7 +427,8 @@
         <dd>
           <p>
             The method must make [=this=] <a>empty</a> by disassociating its
-            <a>range</a> if [=this=] has an associated <a>range</a>.
+            <a>composed range</a> if [=this=] has an associated
+            <a>composed range</a>.
           </p>
         </dd>
         <dt>
@@ -409,8 +448,9 @@
             <li>If [=this=] is <a>empty</a>, return an empty array.
             </li>
             <li>Otherwise, let <var>startNode</var> be [=range/start node=] of
-            the [=range=] associated with [=this=], and let
-            <var>startOffset</var> be [=range/start offset=] of the [=range=].
+            the <a>composed range</a> associated with [=this=], and let
+            <var>startOffset</var> be [=range/start offset=] of the
+            <a>composed range</a>.
             </li>
             <li>While <var>startNode</var> is a [=node=],
             <var>startNode</var>'s [=tree/root=] is a [=shadow root=], and
@@ -427,9 +467,10 @@
                 </li>
               </ol>
             </li>
-            <li>Let <var>endNode</var> be [=range/end node=] of the [=range=]
-            associated with [=this=], and let <var>endOffset</var> be
-            [=range/end offset=] of the [=range=].
+            <li>Let <var>endNode</var> be [=range/end node=] of the
+            <a>composed range</a> associated with [=this=], and let
+            <var>endOffset</var> be [=range/end offset=] of the
+            <a>composed range</a>.
             </li>
             <li>While <var>endNode</var> is a [=node=], <var>endNode</var>'s
             [=tree/root=] is a [=shadow root=], and <var>endNode</var>'s
@@ -476,13 +517,9 @@
             [=shadow-including inclusive ancestor=] of <var>node</var>, abort
             these steps.
             </li>
-            <li>Otherwise, let <var>newRange</var> be a new <a>range</a>.
-            </li>
-            <li>[=Range/Set the start=] the [=range/start=] and the
-            [=range/end=] of <var>newRange</var> to (<var>node</var>,
-            <var>offset</var>).
-            </li>
-            <li>Set [=this=]'s <a>range</a> to <var>newRange</var>.
+            <li>Otherwise, <a>set the composed range</a> with
+            (<var>node</var>, <var>offset</var>) and
+            (<var>node</var>, <var>offset</var>).
             </li>
           </ol>
         </dd>
@@ -500,13 +537,19 @@
         </dt>
         <dd>
           <p>
-            The method must throw {{InvalidStateError}} exception if the
-            [=this=] is <a>empty</a>. Otherwise, it must create a new
-            <a>range</a>, [=Range/set the start=] both its [=range/start=] and
-            [=range/end=] to the [=range/start=] of [=this=]'s <a>range</a>,
-            and then set [=this=]'s <a>range</a> to the newly-created
-            <a>range</a>.
+           The method must follow these steps:
           </p>
+          <ol>
+           <li>If [=this=] is <a>empty</a>, throw an {{InvalidStateError}}
+           exception and abort these steps.
+           </li>
+           <li>Let <var>bp</var> be the [=Range/start=] of [=this=]'s
+           <a>uncomposed range</a>.
+           </li>
+           <li><a>Set the composed range</a> with <var>bp</var> and
+           <var>bp</var>.
+           </li>
+         </ol>
           <p class="note">
             For collapseToStart/End, IE9 mutates the existing range, while
             Firefox 9.0a2 and Chrome 15 dev replace it with a new one. The spec
@@ -518,13 +561,20 @@
           <dfn>collapseToEnd()</dfn> method
         </dt>
         <dd>
-          <p>
-            The method must throw {{InvalidStateError}} exception if the
-            [=this=] is <a>empty</a>. Otherwise, it must create a new
-            <a>range</a>, [=Range/set the start=] both its [=range/start=] and
-            [=range/end=] to the [=range/end=] of [=this=]'s <a>range</a>, and
-            then set [=this=]'s <a>range</a> to the newly-created <a>range</a>.
-          </p>
+         <p>
+          The method must follow these steps:
+         </p>
+         <ol>
+          <li>If [=this=] is <a>empty</a>, throw an {{InvalidStateError}}
+          exception and abort these steps.
+          </li>
+          <li>Let <var>bp</var> be the [=Range/end=] of [=this=]'s
+          <a>uncomposed range</a>.
+          </li>
+          <li><a>Set the composed range</a> with <var>bp</var> and
+          <var>bp</var>.
+          </li>
+        </ol>
         </dd>
         <dt>
           <dfn>extend()</dfn> method
@@ -546,23 +596,17 @@
             <var>newFocus</var> be the <a>boundary point</a> (<var>node</var>,
             <var>offset</var>).
             </li>
-            <li>Let <var>newRange</var> be a new <a>range</a>.
-            </li>
-            <li>If <var>node</var>'s [=tree/root=] is not the same as the
-            [=this=]'s <a>range</a>'s [=tree/root=], [=Range/set the start=]
-            <var>newRange</var>'s [=range/start=] and [=range/end=] to
-            <var>newFocus</var>.
+            <li>If <var>node</var>'s [=tree/root=] is not the same as
+            [=this=]'s <a>uncomposed range</a>'s [=tree/root=],
+            <a>set the composed range</a> with
+            <var>newFocus</var> and <var>newFocus</var>.
             </li>
             <li>Otherwise, if <var>oldAnchor</var> is [=boundary point/before=]
-            or equal to <var>newFocus</var>, [=Range/set the start=]
-            <var>newRange</var>'s [=range/start=] to <var>oldAnchor</var>, then
-            set its [=range/end=] to <var>newFocus</var>.
+            or equal to <var>newFocus</var>, <a>set the composed range</a>
+            with <var>oldAnchor</var> and <var>newFocus</var>.
             </li>
-            <li>Otherwise, [=Range/set the start=] <var>newRange</var>'s
-            [=range/start=] to <var>newFocus</var>, then set its [=range/end=]
-            to <var>oldAnchor</var>.
-            </li>
-            <li>Set [=this=]'s <a>range</a> to <var>newRange</var>.
+            <li>Otherwise, <a>set the composed range</a> with
+            <var>newFocus</var> and <var>oldAnchor</var>.
             </li>
             <li>If <var>newFocus</var> is [=boundary point/before=]
             <var>oldAnchor</var>, set [=this=]'s <a>direction</a> to
@@ -604,15 +648,12 @@
             <var>focus</var> be the <a>boundary point</a>
             (<var>focusNode</var>, <var>focusOffset</var>).
             </li>
-            <li>Let <var>newRange</var> be a new <a>range</a>.
-            </li>
+            <!-- TODO: use definition of composed before -->
             <li>If <var>anchor</var> is [=boundary point/before=]
-            <var>focus</var>, [=Range/set the start=] the <var>newRange</var>'s
-            [=range/start=] to <var>anchor</var> and its [=range/end=] to <var>
-              focus</var>. Otherwise, [=Range/set the start=] them to
-              <var>focus</var> and <var>anchor</var> respectively.
-            </li>
-            <li>Set [=this=]'s <a>range</a> to <var>newRange</var>.
+            <var>focus</var>, <a>set the composed range</a> with
+            <var>anchor</var> and <var>focus</var>. Otherwise,
+            <a>set the composed range</a> with
+            <var>focus</var> and <var>anchor</var>.
             </li>
             <li>If <var>focus</var> is [=boundary point/before=]
             <var>anchor</var>, set [=this=]'s <a>direction</a> to
@@ -634,17 +675,12 @@
             <li>If <var>node</var>'s [=tree/root=] is not the <a>document</a>
             associated with [=this=], abort these steps.
             </li>
-            <li>Let <var>newRange</var> be a new <a>range</a> and
-            <var>childCount</var> be the number of [=tree/children=] of
+            <li>Let <var>childCount</var> be the number of [=tree/children=] of
             <var>node</var>.
             </li>
-            <li>Set <var>newRange</var>'s [=range/start=] to (<var>node</var>,
-            <code>0</code>).
-            </li>
-            <li>Set <var>newRange</var>'s [=range/end=] to (<var>node</var>,
-            <var>childCount</var>).
-            </li>
-            <li>Set [=this=]'s <a>range</a> to <var>newRange</var>.
+            <li><a>Set the composed range</a> with
+            (<var>node</var>, <code>0</code>)
+            and (<var>node</var>, <var>childCount</var>).
             </li>
             <li>Set [=this=]'s <a>direction</a> to <var>forwards</var>.
             </li>
@@ -760,9 +796,9 @@
         <dd>
           <p>
             The method must invoke {{Range/deleteContents()}} on [=this=]'s
-            <a>range</a> if [=this=] is not <a>empty</a> and both <a>focus</a>
-            and <a>anchor</a> are in the [=document tree=]. Otherwise the
-            method must do nothing.
+            <a>uncomposed range</a> if [=this=] is not <a>empty</a> and
+            both <a>focus</a> and <a>anchor</a> are in the [=document tree=].
+            Otherwise the method must do nothing.
           </p>
           <p class="note">
             This is the one method that actually mutates the range instead of
@@ -783,21 +819,22 @@
           <p>
             Otherwise, if <var>allowPartialContainment</var> is
             <code>false</code>, the method must return <code>true</code> if and
-            only if [=range/start=] of its <a>range</a> is [=boundary
+            only if [=range/start=] of its <a>uncomposed range</a> is [=boundary
             point/before=] or visually equivalent to the first <a>boundary
             point</a> in the <var>node</var> <strong>and</strong> [=range/end=]
-            of its <a>range</a> is [=boundary point/after=] or visually
-            equivalent to the last <a>boundary point</a> in the
+            of its <a>uncomposed range</a> is [=boundary point/after=] or
+            visually equivalent to the last <a>boundary point</a> in the
             <var>node</var>.
           </p>
           <p>
             If <var>allowPartialContainment</var> is <code>true</code>, the
             method must return <code>true</code> if and only if [=range/start=]
-            of its <a>range</a> is [=boundary point/before=] or visually
-            equivalent to the last <a>boundary point</a> in the <var>node</var>
-            <strong>and</strong> [=range/end=] of its <a>range</a> is
-            [=boundary point/after=] or visually equivalent to the first
-            <a>boundary point</a> in the <var>node</var>.
+            of its <a>uncomposed range</a> is [=boundary point/before=] or
+            visually equivalent to the last <a>boundary point</a> in the
+            <var>node</var> <strong>and</strong> [=range/end=] of its
+            <a>uncomposed range</a> is [=boundary point/after=] or visually
+            equivalent to the first <a>boundary point</a> in the
+            <var>node</var>.
           </p>
         </dd>
         <dt>
@@ -806,8 +843,8 @@
         <dd>
           <p>
             The stringification must return the string, which is the
-            concatenation of the rendered text if there is a [=range=]
-            associated with [=this=].
+            concatenation of the rendered text if there is a
+            <a>uncomposed range</a> associated with [=this=].
           </p>
           <p>
             If the selection is within a <a>textarea</a> or <a>input</a>
@@ -847,7 +884,7 @@
       </div>
       <p>
         All of the members of the {{Selection}} interface are defined in terms
-        of operations on the <code><a>range</a></code> object (if any)
+        of operations on the <code><a>composed range</a></code> object (if any)
         represented by the object. These operations can raise exceptions, as
         defined for the {{Range}} interface; this can therefore result in the
         members of the <a>Selection</a> interface raising exceptions as well,
@@ -961,25 +998,26 @@
       <p>
         When the user agent is to [=replace data=] or [=CharacterData/substring
         data=] on {{CharacterData}}, the user agent must update the
-        <a>range</a> associated with <a>selection</a> of the [=Node/node
-        document=] of the {{CharacterData}} as if it's a <a>live range</a>.
+        <a>composed range</a> and <a>uncomposed range</a> associated with
+        <a>selection</a> of the [=Node/node document=] of the {{CharacterData}}.
       </p>
       <p>
         When the user agent is to split a {{Text}} [=node=], the user agent
-        must update the <a>range</a> associated with <a>selection</a> of the
-        [=Node/node document=] of the {{Text}} as if it's a <a>live range</a>.
+        must update the <a>composed range</a> and <a>uncomposed range</a>
+        associated with <a>selection</a> of the [=Node/node document=] of the
+        {{Text}}.
       </p>
       <p>
         When the user agent is to run steps for <code>normalize()</code>
-        method, the user agent must update the <a>range</a> associated with
-        <a>selection</a> of the [=Node/node document=] of [=this=] as if it's a
-        <a>live range</a>.
+        method, the user agent must update the <a>composed range</a> and
+        <a>uncomposed range</a> associated with <a>selection</a> of the
+        [=Node/node document=] of [=this=].
       </p>
       <p>
         When the user agent is to [=remove=] or [=insert=] a [=node=], the user
-        agent must update the <a>range</a> associated with <a>selection</a> of
-        the [=Node/node document=] of the [=node=] as if it's a <a>live
-        range</a>.
+        agent must update the <a>composed range</a> and <a>uncomposed range</a>
+        associated with <a>selection</a> of the [=Node/node document=] of the
+        [=node=].
       </p>
     </section>
     <section>
@@ -990,15 +1028,15 @@
         The user agent should allow the user to change the <a>selection</a>
         associated with the [=navigable/active document=]. If the user makes
         any modification to a <a>selection</a>, the user agent must create a
-        new <a>range</a> with suitable [=range/start=] and [=range/end=] of the
-        <a>range</a> and associate the <a>selection</a> with this new
-        <a>range</a> (not modify the existing <a>range</a>), and set update
-        <a>selection</a>'s <a>direction</a> to <a>forwards</a> if the
-        [=range/start=] is [=boundary point/before=] or equal to the
-        [=range/end=], <a>backwards</a> if if the [=range/end=] is [=boundary
-        point/before=] the [=range/start=], or <a>directionless</a> if the
-        [=range/start=] and the [=range/end=] cannot be ordered due to the
-        platform convention.
+        new <a>composed range</a> with suitable [=range/start=] and
+        [=range/end=] of the <a>composed range</a> and associate the
+        <a>selection</a> with this new <a>composed range</a> (not modify the
+        existing <a>composed range</a>), and set update <a>selection</a>'s
+        <a>direction</a> to <a>forwards</a> if the [=range/start=] is
+        [=boundary point/before=] or equal to the [=range/end=],
+        <a>backwards</a> if if the [=range/end=] is [=boundary point/before=]
+        the [=range/start=], or <a>directionless</a> if the [=range/start=] and
+        the [=range/end=] cannot be ordered due to the platform convention.
       </p>
       <p>
         The user agent must not make a <a>selection</a> <a>empty</a> if it was
@@ -1040,8 +1078,9 @@
           <code><dfn data-dfn-type="event">selectionchange</dfn></code> event
         </h3>
         <p>
-          When the <a>selection</a> is dissociated with its <a>range</a>,
-          associated with a new <a>range</a>, or the associated <a>range</a>'s
+          When the <a>selection</a> is dissociated with its <a>composed range</a>,
+          associated with a new <a>composed range</a>, or the associated
+          <a>composed range</a> or <a>uncomposed range</a>'s
           <a>boundary point</a> is mutated either by the user or the content
           script, the user agent must <a>schedule a selectionchange event</a>
           on <a>document</a>.
